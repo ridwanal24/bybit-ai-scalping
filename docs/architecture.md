@@ -1,8 +1,27 @@
 # Arsitektur M0
 
 Tanggal: 5 November 2026, Asia/Jakarta. Status: rancangan M0 diterima melalui
-`oke ku approve`; belum diimplementasikan. Dasar: [spesifikasi](../PROJECT_SPEC.md) bagian 7–8,
+`oke ku approve`; foundation M1 kini diimplementasikan, komponen berikutnya tetap
+rancangan. Dasar: [spesifikasi](../PROJECT_SPEC.md) bagian 7–8,
 24–33, 36, dan [keputusan](decisions.md).
+
+## Foundation M1 yang sudah diimplementasikan
+
+`apps/api` adalah NestJS 12 ESM dengan ConfigModule (env tervalidasi),
+DatabaseService (Prisma 7/PostgreSQL driver adapter), HealthService/Controller,
+dan bootstrap loopback. Liveness terpisah dari readiness metadata schema versi 1;
+DB failure tidak membuat liveness mengaku dependency sehat.
+
+`services/quant` berisi package src layout dan CLI health JSON dengan Python
+3.12 terisolasi. Belum ada worker protocol, features, simulator atau inference.
+`scripts/` mengelola portable runtime, setup, cluster lokal dan foundation E2E.
+`app_metadata` adalah satu-satunya tabel aplikasi M1; `_prisma_migrations` dikelola
+ORM. Tidak ada tabel domain trading/configuration M2 yang dibuat lebih awal.
+
+Versi exact dan archive checksums: [toolchain.json](../toolchain.json), dependency
+locks npm/uv. Runtime state/credential berada pada ignored paths, bukan source.
+Commands dan batas platform: [operations](operations.md). Verification dan
+cleanup proses test sudah lulus; detail [testing](testing.md).
 
 ## Komponen dan ownership
 
@@ -142,8 +161,10 @@ docs/
   handoffs/
 ```
 
-M0 hanya membuat dokumentasi. Folder aplikasi di atas belum dibuat. Runtime secret,
-dataset, checkpoint, model, dan log harus dikecualikan dari Git pada implementasi.
+M0 hanya membuat dokumentasi. M1 telah membuat `apps/api`, `services/quant`,
+`scripts` dan local runtime yang ignored; `apps/web`, `packages/contracts`,
+features/simulator dan trading tetap rencana. Runtime secret, model dan log
+dikecualikan dari Git.
 
 ## Deployment dan security
 
@@ -156,5 +177,6 @@ redaction log berlaku untuk error dan request headers juga.
 Environment backtest/paper/demo/real bersifat eksplisit dan terpisah dalam config,
 credential, namespace state dan adapter. Real tidak resume otomatis setelah restart.
 Dedicated bot account disarankan; account yang tidak dapat diverifikasi diblokir.
-Versi runtime/ORM/dependency belum dipin: verifikasi kompatibilitas dan lockfile M1;
-Gymnasium/PyTorch/SB3/sb3-contrib dipin bersama saat diperkenalkan M7/M8.
+Runtime/ORM/dependency foundation sudah dipin dan diuji M1. Gymnasium/PyTorch/SB3/
+sb3-contrib dipin bersama saat diperkenalkan M7/M8; foundation belum membuktikan
+kompatibilitas keseluruhan RL stack.

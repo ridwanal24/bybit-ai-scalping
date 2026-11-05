@@ -1,9 +1,54 @@
 # Testing dan verifikasi
 
-## Status aktual M0
+## Hasil M1 — Project Foundation
 
-M0 hanya dokumentasi. Belum ada unit test, integration test, contract test atau
-runtime yang dapat dijalankan. Hasil di bawah adalah pemeriksaan dokumen, bukan
+Tanggal: 5 November 2026, Asia/Jakarta. Runtime aktual: Node 24.22.2, CPython
+3.12.12, PostgreSQL 17.10, NestJS 12.3.3, Prisma/client/adapter 7.10.1, TypeScript
+5.9.3, Vitest 5.1.0, pytest 9.2.0. Dependency exact lainnya pada lockfiles.
+
+| Command / pemeriksaan | Hasil aktual |
+| --- | --- |
+| `python scripts/bootstrap.py` | Exit 0; runtime portable di workspace, archive SHA256 dicatat |
+| `.tools/node/node.exe scripts/tasks.mjs setup` | Exit 0; locked npm/uv deps, Python env, development DB dan migration siap |
+| `.tools/node/npm.cmd run verify:foundation` | Exit 0, PASSED; terakhir 20:10:38–20:11:27 WIB |
+| Prisma generate + TypeScript build/typecheck | Lulus |
+| ESLint API/scripts dan Ruff check/format | Lulus |
+| Prettier format check | Lulus; scope source TS/JS/JSON, tidak memindai Python runtime/cache |
+| Vitest unit | 2 file, 16 tests lulus |
+| Pytest | 2 tests lulus, tanpa cacheprovider agar tidak tergantung ownership cache sandbox |
+| Vitest integration | 1 file, 4 tests lulus, dedicated PostgreSQL nyata |
+| Migration from empty/reapply | Apply satu migration, reapply tanpa pending/duplicate marker |
+| Built API sebelum migration | Actual HTTP readiness 503, liveness 200 |
+| Built API setelah migration | Actual HTTP readiness/liveness 200 |
+| ORM transaction | Read/write dan rollback terverifikasi, probe tidak tertinggal |
+| Invalid marker dan DB unreachable | Readiness 503 tersanitasi, bounded, liveness tetap 200 |
+| Invalid startup environment | Built API exit nonzero |
+| Python subprocess | JSON health valid dan runtime 3.12; dari root melalui isolated executable |
+| Development DB lifecycle | db:stop/status/start/migrate/status exit 0; status false lalu true |
+| Cleanup | Proses built smoke API dan cluster test dihentikan runner |
+| Source secret/ignore check | Generated local DB password tidak ditemukan dalam 51 source files sebelum final docs sync; .env/runtime/venv/generated client ignored |
+| Final documentation/source check | 12 dokumen, 47 tautan lokal valid, 0 trailing whitespace, git diff --check exit 0; password lokal tidak ditemukan pada 52 source files; 0 cluster test aktif |
+
+Report lokal terakhir `.runtime/foundation-report.json`: status passed, UTC
+2026-11-05T13:10:38.335Z sampai 13:11:27.095Z. Report runtime di-ignore; ringkasan
+hasil dipertahankan di dokumen ini dan [handoff M1](handoffs/milestone-01.md).
+Tidak ada network/API Bybit, real/demo order, training atau profit test.
+
+Verification dijalankan dengan execution context pemilik workspace melalui
+eskalasi environment: socket sandbox dibatasi dan native SWC cache menolak SID
+sandbox yang berbeda. Tidak ada test wajib di-skip atau diganti mock sebagai
+pengganti PostgreSQL. Unit test sengaja memakai dependency fake untuk menguji
+timeout/error; integration dan built API smoke menggunakan PostgreSQL nyata.
+
+Masalah yang diperbaiki sebelum final pass: pg_ctl inherited pipe menyebabkan
+runner hang Windows; test ConfigService generic type; native cache path; Ruff
+explicit check=False; formatter traversal cache permission; merge config Vitest
+yang sempat mengulang unit dalam suite integration. Final suite terpisah 16+2+4.
+
+## Catatan penutupan M0 (historis)
+
+M0 hanya dokumentasi. Saat M0 ditutup belum ada unit/integration/contract test
+atau runtime aplikasi. Hasil di bawah adalah pemeriksaan dokumen, bukan
 bukti aplikasi atau trading berhasil. Tanggal: 5 November 2026, Asia/Jakarta.
 
 | Pemeriksaan | Hasil |
@@ -14,7 +59,7 @@ bukti aplikasi atau trading berhasil. Tanggal: 5 November 2026, Asia/Jakarta.
 | Task M0 0.1–0.18 dan task M1–M16 | Lulus; 284 ID task unik spesifikasi tercantum dalam roadmap, 0 hilang |
 | Whitespace diff | Lulus; `git diff --check` exit 0; pemindaian delapan file baru juga menemukan 0 trailing whitespace |
 | Accounting walkthrough | Lulus pemeriksaan aritmetika PowerShell; LONG 4,795 dan SHORT 4,805 dalam toleransi 1e-9 |
-| Konsistensi scope/status | M0 Completed setelah penerimaan pengguna; M1 belum Approved; tidak ada klaim fitur berjalan |
+| Konsistensi scope/status | Pada penutupan M0: Completed setelah penerimaan pengguna, M1 belum Approved |
 | Review/penerimaan pengguna | Diterima melalui `oke ku approve`, 5 November 2026, Asia/Jakarta |
 
 Pemeriksaan PowerShell dijalankan dari root repository: enumerasi delapan file,

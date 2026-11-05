@@ -113,6 +113,32 @@ planning bukan izin eksekusi live. **Deferred** memiliki deadline dalam
 - Konsekuensi: M15 dry-run dipisahkan dari izin real order. Tidak ada target profit
   atau capital rollout yang ditentukan M0.
 
+## ADR-09 — Implementasi foundation lokal M1
+
+- Status: diimplementasikan dalam plan M1 yang disetujui melalui `lakukan`.
+- Konteks: Node global 26.13/Python 3.15 tersedia, Docker tidak ditemukan;
+  PostgreSQL Laragon 14.5 ditemukan belakangan pada lokasi nonstandar.
+- Keputusan: workspace-local Node 24.22.2, uv 0.13.7, CPython 3.12.12,
+  PostgreSQL 17.10 portable; npm/uv cache dan runtime state lokal. Tidak mengubah
+  PATH permanen, global runtime, service atau cluster Laragon.
+- Backend: NestJS 12.3.3 ESM/TypeScript 5.9.3, Prisma/client/adapter 7.10.1 + pg,
+  ConfigModule/Zod, Vitest 5.1.0/SWC, ESLint/Prettier. Python pytest/Ruff,
+  tanpa dependency RL pada foundation.
+- Alternatif: menggunakan runtime global yang belum diverifikasi kompatibel,
+  instalasi Docker/system service atau memakai cluster pengguna existing.
+- Alasan/tradeoff: setup dapat diulang tanpa menimpa mesin pengguna; unduhan
+  cukup besar dan bootstrap saat ini spesifik Windows x64. Native cache/socket
+  memerlukan context pemilik workspace untuk verification dalam environment ini.
+- Konsekuensi: package/runtime locks dan limited npm install-script policy
+  dikomit sebagai source nanti; artifact/secret tetap ignored. Registry `latest`
+  Prisma sempat menunjuk 8 RC, tetapi implementasi tetap pada jalur 7 plan.
+- Database: satu tabel app_metadata + marker schema, migration versioned.
+  Liveness independen, readiness menguji marker DB dengan timeout dan error
+  tersanitasi. Runtime/script/transaction/HTTP integration lulus, bukan hanya mock.
+- Provenance: Node dan uv dibanding checksum upstream; PostgreSQL checksum
+  pertama dihitung dari unduhan HTTPS EDB dan dipin untuk berikutnya. Tidak
+  mengklaim checksum PostgreSQL pertama berasal dari independent upstream digest.
+
 ## Keputusan yang belum ditutup
 
 R01–R16 pada [planning](planning.md) mencatat owner, milestone deadline dan dampak.

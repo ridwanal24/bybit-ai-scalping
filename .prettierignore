@@ -1,0 +1,10 @@
+node_modules
+dist
+.tools
+.runtime
+services/quant/uv.lock
+apps/api/src/generated
+PROJECT_SPEC.md
+docs
+README.md
+package-lock.json

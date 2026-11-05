@@ -28,7 +28,7 @@ yang konkret sebelum persetujuan milestone tersebut.
 | M | Status / approval | Dependency | Acceptance dan checkpoint utama |
 | --- | --- | --- | --- |
 | 0 | Completed; pelaksanaan dan hasil planning Approved | Spesifikasi | 18 task terdokumentasi, ambiguities tercatat, batas MVP/ownership/dependency jelas, dokumen konsisten; hasil diterima melalui `oke ku approve`, 5 November 2026 |
-| 1 | Planned; belum Approved | M0 diterima | Backend/Python berjalan, DB connected, migration dan health check, test commands, integration foundation lulus, setup terdokumentasi |
+| 1 | Completed; [plan Approved](plans/milestone-01.md), [handoff](handoffs/milestone-01.md) | M0 diterima | Backend/Python berjalan, DB connected, migration/health/tests/verification lulus; setup terdokumentasi |
 | 2 | Planned; belum Approved | M1 | Config persist/read, type/range/cross-field invalid ditolak, immutable snapshot, critical integration tests lulus |
 | 3 | Planned; belum Approved | M1–M2 | Download kronologis/resumable, duplicate/gap terdeteksi, dataset fingerprint dan quality report, instrument/funding tersedia atau keterbatasan eksplisit |
 | 4 | Planned; belum Approved | M2–M3 | Indikator benar, HTF no leakage, ordering/shape stabil, normalizer train-only, shared observation contract |
@@ -79,6 +79,9 @@ Daftar ini mempertahankan nomor task spesifikasi. Prioritas internal dan file
 konkret dirinci ulang dalam implementation plan setiap milestone.
 
 ### M1 — Project Foundation
+
+Status: Completed. Seluruh task 1.1–1.14 selesai; evidence per task dan acceptance
+tersedia pada [handoff M1](handoffs/milestone-01.md). M2 tetap Planned.
 
 - 1.1 Repository initialization; 1.2 NestJS setup; 1.3 TypeScript setup.
 - 1.4 Linting/formatting; 1.5 Environment configuration; 1.6 PostgreSQL setup.

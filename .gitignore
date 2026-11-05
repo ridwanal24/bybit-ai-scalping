@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+.tools/
+.runtime/
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+.env
+.env.*
+!.env.example
+artifacts/
+apps/api/src/generated/

@@ -1,0 +1,12 @@
+{
+  "node": "24.22.2",
+  "uv": "0.13.7",
+  "python": "3.12.12",
+  "postgres": "17.10-1",
+  "platform": "win32-x64",
+  "checksums": {
+    "node": "ca1bff5d8ead13c9f2ea404a176db46bd430704d5b5113734049fa365e7799e2",
+    "uv": "0cdc5b38fe5a8168ed6a25814f5ba43c21d313dd3187314fccb37b7cec46e021",
+    "postgres": "f9aafca58e7026a1ef2caeee711acf761671e57904d430adc85f468374f5a821"
+  }
+}

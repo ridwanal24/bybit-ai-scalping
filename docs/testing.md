@@ -1,6 +1,48 @@
 # Testing dan verifikasi
 
-## Hasil M1 — Project Foundation
+## Hasil M2 — Configuration System
+
+Tanggal: 5 November 2026, Asia/Jakarta. Final command
+`.tools/node/npm.cmd run verify:configuration`: exit 0, PASSED.
+Report lokal `.runtime/configuration-report.json`: UTC
+2026-11-05T13:46:49.156Z–13:48:06.783Z (WIB 20:46:49–20:48:06).
+Runtime/dependency M1 tetap; tambahan workspace contracts dan Python dev dependency
+jsonschema4.26.0 beserta transitive packages pada uv.lock.
+
+| Pemeriksaan | Hasil aktual |
+| --- | --- |
+| Contracts build dan artifact export:check | Lulus, schema/preset/fixtures tidak drift |
+| TypeScript build dan typecheck API/contracts/tests | Lulus |
+| ESLint/Ruff/Prettier | Lulus |
+| Contract unit tests | 52 passed: groups/type/range/cross-field, decimal precision/hash, preset, compatibility |
+| Backend unit regression M1 | 16 passed |
+| Python tests | 4 passed: 2 health CLI + shared structural schema + raw-config canonical/hash vectors |
+| PostgreSQL/HTTP integration | 14 passed: 4 foundation + 10 configuration scenarios |
+| Fresh/reapply migration | M1+M2 applied, reapply no pending migration |
+| Upgrade M1 -> M2 | Legacy DB dibuat lewat migration M1 asli; sentinel data dan foundation marker tetap, config marker baru tersedia |
+| Prisma schema diff setelah upgrade | No difference detected, exit 0 |
+| Snapshot immutability | API tidak punya update/delete, raw SQL UPDATE/DELETE/TRUNCATE ditolak, FK parent deletion ditolak |
+| Concurrency | Satu CAS update menang; stale409; concurrent snapshots ID sama; snapshot/edit race tidak mencampur payload/revision |
+| Invalid input/no-write | Create/update invalid400 tanpa record/revision berubah; corrupt/unsupported snapshot409 |
+| Compatibility | Exact/incompatible/retraining/reevaluation report; approval/execution selalu not_assessed |
+| Failure responses | Storage unreachable503 tersanitasi, validation tetap tersedia; M1 health/error regressions lulus |
+| Built-process E2E | API live/ready sebelum/sesudah schema, invalid startup nonzero, Python subprocess valid |
+| Development migration | Additive M2 applied ke bybit_dev127.0.0.1:55432; migrate status up to date |
+| Final documentation/source verification | 14 dokumen, 60 tautan lokal valid, 0 trailing whitespace; git diff --check exit0; password lokal tidak ditemukan pada 79 source files; 0 cluster test aktif |
+
+Total 86 automated test cases ditambah orchestration smoke/migration assertions.
+Tidak ada test wajib di-skip; tidak ada Bybit network call, training atau order.
+Test clusters dan built smoke API dihentikan runner, development DB tetap running.
+Native cache/socket membutuhkan eskalasi context pemilik workspace seperti M1.
+Schema JSON/Python tests hanya structural; semantic execution parity Python belum
+diklaim. PostgreSQL immutability membatasi ordinary DML, bukan admin DDL.
+
+Satu fixture awal duplicate position input melebihi max array length sehingga
+menguji structural length sebelum semantic duplication; fixture diperbaiki dengan
+duplikasi dalam panjang yang valid. Sebelum final verification, nama constraint
+dan updated_at default diselaraskan agar tidak ada schema drift. SQL M1 tidak diubah.
+
+## Hasil historis M1 — Project Foundation
 
 Tanggal: 5 November 2026, Asia/Jakarta. Runtime aktual: Node 24.22.2, CPython
 3.12.12, PostgreSQL 17.10, NestJS 12.3.3, Prisma/client/adapter 7.10.1, TypeScript

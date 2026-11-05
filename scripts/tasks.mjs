@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
+import { pathToFileURL } from 'node:url';
 import {
   root,
   tools,
@@ -34,6 +35,7 @@ async function setup() {
   if (!fs.existsSync(path.join(quant, 'uv.lock')))
     await run(uv, ['lock'], { cwd: quant });
   await run(uv, ['sync', '--locked'], { cwd: quant });
+  await buildContracts();
   const db = await startDatabase();
   if (!fs.existsSync(envPath)) {
     fs.writeFileSync(
@@ -48,11 +50,13 @@ async function setup() {
 }
 
 async function build() {
+  await buildContracts();
   await prisma(['generate']);
   await npm(['run', 'build', '-w', '@bybit/api']);
 }
 
 async function tests() {
+  await npm(['run', 'test', '-w', '@bybit/contracts']);
   await npm(['run', 'test', '-w', '@bybit/api']);
   await run(python, ['-m', 'pytest', '-q'], { cwd: quant });
 }
@@ -61,6 +65,7 @@ async function lint() {
   await run(node, [
     path.join(root, 'node_modules', 'eslint', 'bin', 'eslint.js'),
     'apps/api',
+    'packages/contracts',
     'scripts',
     'eslint.config.mjs',
   ]);
@@ -93,6 +98,7 @@ async function integration() {
     await apiSmoke(db.url, 503);
     await prisma(['migrate', 'deploy'], env);
     await prisma(['migrate', 'deploy'], env);
+    await upgradeFromM1(directory, suffix);
     await npm(['run', 'test:integration', '-w', '@bybit/api'], { env });
     await apiSmoke(db.url);
     const invalid = await run(node, [path.join(api, 'dist', 'main.js')], {
@@ -110,12 +116,89 @@ async function integration() {
     if (health.status !== 'ok' || !health.python.startsWith('3.12.'))
       throw new Error('Python subprocess smoke failed');
     console.log(
-      'Foundation E2E: migration/reapply + ORM + HTTP API + Python subprocess passed.',
+      'Foundation/configuration E2E: fresh + M1 upgrade migrations, ORM/HTTP APIs and Python subprocess passed.',
     );
   } finally {
     if (fs.existsSync(path.join(directory, 'owner.json')))
       await stopDatabase(directory);
   }
+}
+
+async function buildContracts() {
+  await npm(['run', 'build', '-w', '@bybit/contracts']);
+  await npm(['run', 'export:check', '-w', '@bybit/contracts']);
+}
+
+async function upgradeFromM1(directory, suffix) {
+  const upgrade = await startDatabase({
+    directory,
+    port: 55433,
+    database: `bybit_test_${suffix}_upgrade`,
+  });
+  const migrations = path.join(directory, 'm1-migrations');
+  const migrationName = '202611050001_foundation';
+  fs.mkdirSync(path.join(migrations, migrationName), { recursive: true });
+  fs.copyFileSync(
+    path.join(api, 'prisma', 'migrations', migrationName, 'migration.sql'),
+    path.join(migrations, migrationName, 'migration.sql'),
+  );
+  fs.copyFileSync(
+    path.join(api, 'prisma', 'migrations', 'migration_lock.toml'),
+    path.join(migrations, 'migration_lock.toml'),
+  );
+  const config = path.join(directory, 'm1.config.mjs');
+  const configImport = pathToFileURL(
+    path.join(root, 'node_modules', 'prisma', 'config.js'),
+  ).href;
+  fs.writeFileSync(
+    config,
+    `import { defineConfig } from ${JSON.stringify(configImport)};\nexport default defineConfig({ schema: ${JSON.stringify(path.join(api, 'prisma', 'schema.prisma'))}, migrations: { path: ${JSON.stringify(migrations)} }, datasource: { url: process.env.DATABASE_URL } });\n`,
+  );
+  await prisma(['migrate', 'deploy', '--config', config], {
+    DATABASE_URL: upgrade.url,
+  });
+  const { Client } = await import('pg');
+  const client = new Client({
+    connectionString: upgrade.url,
+    connectionTimeoutMillis: 2000,
+  });
+  await client.connect();
+  try {
+    await client.query(
+      "INSERT INTO app_metadata(key, value) VALUES ('upgrade_probe', 'preserve-v1')",
+    );
+    await apiSmoke(upgrade.url, 503);
+    await prisma(['migrate', 'deploy'], { DATABASE_URL: upgrade.url });
+    const result = await client.query(
+      "SELECT key, value FROM app_metadata WHERE key IN ('upgrade_probe', 'foundation_schema_version', 'configuration_schema_version')",
+    );
+    const markers = Object.fromEntries(
+      result.rows.map((row) => [row.key, row.value]),
+    );
+    if (
+      markers.upgrade_probe !== 'preserve-v1' ||
+      markers.foundation_schema_version !== '1' ||
+      markers.configuration_schema_version !== '1'
+    )
+      throw new Error('M1 upgrade failed to preserve data/schema markers');
+    await apiSmoke(upgrade.url);
+  } finally {
+    await client.end();
+  }
+  console.log(
+    'M1 -> M2 additive upgrade preserved existing data and schema markers.',
+  );
+  await prisma(
+    [
+      'migrate',
+      'diff',
+      '--from-config-datasource',
+      '--to-schema',
+      'prisma/schema.prisma',
+      '--exit-code',
+    ],
+    { DATABASE_URL: upgrade.url },
+  );
 }
 
 async function apiSmoke(url, expectedStatus = 200) {
@@ -214,8 +297,10 @@ async function main() {
     case 'build':
       return build();
     case 'typecheck':
+      await buildContracts();
       await prisma(['generate']);
       await npm(['run', 'typecheck', '-w', '@bybit/api']);
+      await npm(['run', 'typecheck', '-w', '@bybit/contracts']);
       return;
     case 'lint':
       return lint();
@@ -228,6 +313,11 @@ async function main() {
       await build();
       await run(node, ['--watch', path.join(api, 'dist', 'main.js')]);
       return;
+    case 'contracts:export':
+      await npm(['run', 'build', '-w', '@bybit/contracts']);
+      await npm(['run', 'export', '-w', '@bybit/contracts']);
+      return;
+    case 'verify:configuration':
     case 'verify': {
       const startedAt = new Date().toISOString();
       const report = {
@@ -239,6 +329,7 @@ async function main() {
       try {
         await build();
         await npm(['run', 'typecheck', '-w', '@bybit/api']);
+        await npm(['run', 'typecheck', '-w', '@bybit/contracts']);
         await lint();
         await npm(['run', 'format:check']);
         await tests();
@@ -247,11 +338,16 @@ async function main() {
       } finally {
         report.finished_at = new Date().toISOString();
         fs.writeFileSync(
-          path.join(runtime, 'foundation-report.json'),
+          path.join(
+            runtime,
+            task === 'verify:configuration'
+              ? 'configuration-report.json'
+              : 'foundation-report.json',
+          ),
           JSON.stringify(report, null, 2) + '\n',
         );
       }
-      console.log('Foundation verification PASSED');
+      console.log('Foundation/configuration verification PASSED');
       return;
     }
     default:

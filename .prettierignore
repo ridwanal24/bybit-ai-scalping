@@ -4,6 +4,7 @@ dist
 .runtime
 services/quant/uv.lock
 apps/api/src/generated
+packages/contracts/dist
 PROJECT_SPEC.md
 docs
 README.md

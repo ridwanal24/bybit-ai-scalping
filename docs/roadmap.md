@@ -29,7 +29,7 @@ yang konkret sebelum persetujuan milestone tersebut.
 | --- | --- | --- | --- |
 | 0 | Completed; pelaksanaan dan hasil planning Approved | Spesifikasi | 18 task terdokumentasi, ambiguities tercatat, batas MVP/ownership/dependency jelas, dokumen konsisten; hasil diterima melalui `oke ku approve`, 5 November 2026 |
 | 1 | Completed; [plan Approved](plans/milestone-01.md), [handoff](handoffs/milestone-01.md) | M0 diterima | Backend/Python berjalan, DB connected, migration/health/tests/verification lulus; setup terdokumentasi |
-| 2 | Planned; belum Approved | M1 | Config persist/read, type/range/cross-field invalid ditolak, immutable snapshot, critical integration tests lulus |
+| 2 | Completed; [plan Approved](plans/milestone-02.md), [handoff](handoffs/milestone-02.md) | M1 | Config persistence/validation, immutable snapshot, presets/compatibility dan integration/regression lulus |
 | 3 | Planned; belum Approved | M1–M2 | Download kronologis/resumable, duplicate/gap terdeteksi, dataset fingerprint dan quality report, instrument/funding tersedia atau keterbatasan eksplisit |
 | 4 | Planned; belum Approved | M2–M3 | Indikator benar, HTF no leakage, ordering/shape stabil, normalizer train-only, shared observation contract |
 | 5 | Planned; belum Approved | M2–M4 | Long/short, costs, funding, sizing, risk, SL/TP event ordering benar; deterministic equity/trades; margin/liquidation model atau restriction disetujui dan terdokumentasi |
@@ -94,6 +94,10 @@ history. Pilih versi Node/Python/PostgreSQL/ORM dan lockfile yang kompatibel.
 Python foundation tidak perlu memasang seluruh stack RL sebelum dibutuhkan.
 
 ### M2 — Configuration System
+
+Completed: task 2.1–2.15 selesai dan diverifikasi. Final verification 86 automated
+tests plus E2E smoke; schema/migration tanpa drift, development migration diterapkan.
+Bukti dan batas kemampuan ada di [handoff M2](handoffs/milestone-02.md).
 
 - 2.1 Market config; 2.2 Risk config; 2.3 SL/TP/RR config.
 - 2.4 Exit mode config; 2.5 Execution config; 2.6 Feature config.

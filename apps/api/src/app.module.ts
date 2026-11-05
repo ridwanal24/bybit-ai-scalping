@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { parseEnvironment } from './config/environment.js';
-import { DatabaseService } from './database/database.service.js';
+import { DatabaseModule } from './database/database.module.js';
+import { ResearchConfigurationsModule } from './research-configurations/configurations.module.js';
 import { HealthController } from './health/health.controller.js';
 import { HealthService } from './health/health.service.js';
 
 @Module({
   imports: [
+    DatabaseModule,
+    ResearchConfigurationsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       ignoreEnvFile: true,
@@ -14,6 +17,6 @@ import { HealthService } from './health/health.service.js';
     }),
   ],
   controllers: [HealthController],
-  providers: [DatabaseService, HealthService],
+  providers: [HealthService],
 })
 export class AppModule {}

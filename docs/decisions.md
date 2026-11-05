@@ -139,6 +139,39 @@ planning bukan izin eksekusi live. **Deferred** memiliki deadline dalam
   pertama dihitung dari unduhan HTTPS EDB dan dipin untuk berikutnya. Tidak
   mengklaim checksum PostgreSQL pertama berasal dari independent upstream digest.
 
+## ADR-10 — Configuration contracts, revisions dan snapshots M2
+
+- Status: diimplementasikan dalam [plan M2](plans/milestone-02.md), Approved
+  melalui `gw approve`; seluruh acceptance dan regression tests lulus.
+- Konteks: konfigurasi berubah selama penelitian tetapi hasil lama harus dapat
+  ditelusuri, dan TypeScript/Python tidak boleh memiliki wire schema berbeda.
+- Keputusan: `@bybit/contracts` menjadi source Zod schema/semantic rules, dengan
+  generated JSON Schema dan shared structural/hash fixtures. Tambahan Python
+  dev dependency jsonschema4.26.0 dipin uv.lock; runtime/ORM M1 tidak di-upgrade.
+- Alternatives: dua schema manual, mutable config yang dirujuk eksperimen,
+  float comparison untuk risk, atau snapshot yang hanya readonly di controller.
+- Alasan/tradeoff: satu structural contract, exact decimal dan immutable DB DML
+  guards membantu reproducibility; JSON Schema tidak membawa seluruh cross-field
+  semantics, sehingga Python runtime semantic conformance tetap gate M4/M5.
+- Canonical/hash: normalize hanya field decimal yang dideklarasikan, sort keys,
+  preserve arrays dan opaque artifact IDs; SHA256 UTF-8. Name/UUID/timestamps di
+  luar config hash. Invalid unknown keys/precision/types ditolak sebelum persistence.
+- Persistence: draft full replacement + expectedRevision CAS. Snapshot memakai
+  row lock dan unique source/revision, retry idempotent; old snapshot tidak berubah
+  sesudah draft edit. DB triggers menolak UPDATE/DELETE/TRUNCATE; superuser/owner
+  DDL bisa bypass dan belum dianggap anti-tamper admin.
+- Compatibility: exact config/schema/behavior comparison, bukan promosi model.
+  Market/features/network/exit/SL/RR/training berubah memerlukan retraining/evaluation;
+  risk/cost/mode berubah memerlukan re-evaluation/behavior review. Semua tetap
+  not_assessed untuk model approval/execution readiness tanpa artifact/bukti.
+- R06/R07: synthetic research preset dan equity/UTC/latch semantics disimpan sesuai
+  plan yang disetujui, bukan tarif Bybit atau hard limit live. Engine baru M5/M11.
+- Consequences: migration M2 additive dengan dua tabel + metadata marker,
+  constraint names dipetakan eksplisit ke Prisma. Fresh/reapply/M1 upgrade dan
+  zero schema diff teruji, development schema up to date; tidak mengubah M1 SQL.
+- Evidence: 52 contract + 16 unit backend + 4 Python + 14 integration tests, plus
+  built process/migration E2E. Source/artifact drift dan static checks lulus.
+
 ## Keputusan yang belum ditutup
 
 R01–R16 pada [planning](planning.md) mencatat owner, milestone deadline dan dampak.

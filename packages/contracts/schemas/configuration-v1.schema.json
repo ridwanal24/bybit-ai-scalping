@@ -1,0 +1,765 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "contract_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "action_schema_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "market": {
+      "type": "object",
+      "properties": {
+        "exchange": {
+          "type": "string",
+          "const": "bybit"
+        },
+        "category": {
+          "type": "string",
+          "const": "linear"
+        },
+        "settlement": {
+          "type": "string",
+          "const": "USDT"
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 30,
+          "pattern": "^[A-Z0-9]+USDT$"
+        },
+        "timeframe": {
+          "type": "string",
+          "enum": [
+            "1m",
+            "3m",
+            "5m",
+            "15m",
+            "30m",
+            "1h",
+            "4h",
+            "1D"
+          ]
+        },
+        "secondary_timeframes": {
+          "maxItems": 7,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "1m",
+              "3m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "4h",
+              "1D"
+            ]
+          }
+        },
+        "historical_start_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "historical_end_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "backtest",
+            "paper",
+            "demo",
+            "real"
+          ]
+        }
+      },
+      "required": [
+        "exchange",
+        "category",
+        "settlement",
+        "symbol",
+        "timeframe",
+        "secondary_timeframes",
+        "historical_start_ms",
+        "historical_end_ms",
+        "mode"
+      ],
+      "additionalProperties": false
+    },
+    "risk": {
+      "type": "object",
+      "properties": {
+        "initial_capital": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "risk_per_trade": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "max_leverage": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "max_position_notional": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "max_margin_fraction": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "max_concurrent_positions": {
+          "type": "number",
+          "const": 1
+        },
+        "daily_loss_limit": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "max_drawdown": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "cooldown_bars": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "max_holding_bars": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "min_available_margin": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "semantics_version": {
+          "type": "string",
+          "const": "equity-utc-latched-v1"
+        },
+        "daily_basis": {
+          "type": "string",
+          "const": "equity_including_unrealized"
+        },
+        "daily_reset_timezone": {
+          "type": "string",
+          "const": "UTC"
+        },
+        "drawdown_reference": {
+          "type": "string",
+          "const": "run_deployment_high_water_equity"
+        },
+        "breach_action": {
+          "type": "string",
+          "const": "block_entries_and_controlled_close_owned_positions"
+        },
+        "external_cashflow_policy": {
+          "type": "string",
+          "const": "block_and_review_anchor"
+        }
+      },
+      "required": [
+        "initial_capital",
+        "risk_per_trade",
+        "max_leverage",
+        "max_position_notional",
+        "max_margin_fraction",
+        "max_concurrent_positions",
+        "daily_loss_limit",
+        "max_drawdown",
+        "cooldown_bars",
+        "max_holding_bars",
+        "min_available_margin",
+        "semantics_version",
+        "daily_basis",
+        "daily_reset_timezone",
+        "drawdown_reference",
+        "breach_action",
+        "external_cashflow_policy"
+      ],
+      "additionalProperties": false
+    },
+    "stop_loss": {
+      "type": "object",
+      "properties": {
+        "hard_stop_required": {
+          "type": "boolean",
+          "const": true
+        },
+        "method": {
+          "type": "string",
+          "const": "atr"
+        },
+        "atr_period": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "atr_multiplier": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "min_stop_fraction": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "max_stop_fraction": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "trigger_reference": {
+          "type": "string",
+          "enum": [
+            "last",
+            "mark",
+            "index"
+          ]
+        },
+        "fee_allowance_rate": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "slippage_allowance_bps": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        }
+      },
+      "required": [
+        "hard_stop_required",
+        "method",
+        "atr_period",
+        "atr_multiplier",
+        "min_stop_fraction",
+        "max_stop_fraction",
+        "trigger_reference",
+        "fee_allowance_rate",
+        "slippage_allowance_bps"
+      ],
+      "additionalProperties": false
+    },
+    "exit": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "AI_EXIT",
+            "FIXED_RR",
+            "HYBRID"
+          ]
+        },
+        "fixed_tp_enabled": {
+          "type": "boolean"
+        },
+        "ai_close_enabled": {
+          "type": "boolean"
+        },
+        "rr": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "mode",
+        "fixed_tp_enabled",
+        "ai_close_enabled",
+        "rr"
+      ],
+      "additionalProperties": false
+    },
+    "execution": {
+      "type": "object",
+      "properties": {
+        "assumptions_label": {
+          "type": "string",
+          "const": "synthetic_research_assumptions"
+        },
+        "maker_fee_rate": {
+          "type": "string",
+          "pattern": "^(?!-0(?:\\.0+)?$)-?(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "taker_fee_rate": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "spread_bps": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "slippage_bps": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "funding": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "historical",
+                "fixed_rate"
+              ]
+            },
+            "rate": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^(?!-0(?:\\.0+)?$)-?(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "mode",
+            "rate"
+          ],
+          "additionalProperties": false
+        },
+        "order_type": {
+          "type": "string",
+          "enum": [
+            "market",
+            "limit"
+          ]
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 30000
+        },
+        "stop_trigger_reference": {
+          "type": "string",
+          "enum": [
+            "last",
+            "mark",
+            "index"
+          ]
+        }
+      },
+      "required": [
+        "assumptions_label",
+        "maker_fee_rate",
+        "taker_fee_rate",
+        "spread_bps",
+        "slippage_bps",
+        "funding",
+        "order_type",
+        "timeout_ms",
+        "stop_trigger_reference"
+      ],
+      "additionalProperties": false
+    },
+    "features": {
+      "type": "object",
+      "properties": {
+        "catalog_version": {
+          "type": "string",
+          "const": "1"
+        },
+        "enabled": {
+          "minItems": 1,
+          "maxItems": 184,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "enum": [
+                  "log_return",
+                  "percentage_return",
+                  "body_ratio",
+                  "upper_wick_ratio",
+                  "lower_wick_ratio",
+                  "range_fraction",
+                  "close_location",
+                  "rolling_return",
+                  "ema_fast_distance",
+                  "ema_slow_distance",
+                  "ema_long_distance",
+                  "ema_spread",
+                  "ema_slope",
+                  "rsi",
+                  "macd_line",
+                  "macd_signal",
+                  "macd_histogram",
+                  "atr",
+                  "atr_fraction",
+                  "volatility",
+                  "volume_change",
+                  "relative_volume",
+                  "volume_ma_ratio"
+                ]
+              },
+              "timeframe": {
+                "type": "string",
+                "enum": [
+                  "1m",
+                  "3m",
+                  "5m",
+                  "15m",
+                  "30m",
+                  "1h",
+                  "4h",
+                  "1D"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "timeframe"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "periods": {
+          "type": "object",
+          "properties": {
+            "ema_fast": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "ema_slow": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "ema_long": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "rsi": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "macd_fast": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "macd_slow": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "macd_signal": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "atr": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "rolling_return": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "volatility": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "volume": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "ema_fast",
+            "ema_slow",
+            "ema_long",
+            "rsi",
+            "macd_fast",
+            "macd_slow",
+            "macd_signal",
+            "atr",
+            "rolling_return",
+            "volatility",
+            "volume"
+          ],
+          "additionalProperties": false
+        },
+        "position_inputs": {
+          "minItems": 1,
+          "maxItems": 7,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "side",
+              "unrealized_pnl",
+              "duration",
+              "distance_to_sl",
+              "distance_to_tp",
+              "exposure",
+              "available_margin"
+            ]
+          }
+        },
+        "risk_inputs": {
+          "minItems": 1,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "drawdown",
+              "remaining_daily_budget",
+              "trading_allowed",
+              "risk_fraction"
+            ]
+          }
+        },
+        "observation_window": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4096
+        },
+        "normalization": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string",
+              "const": "zscore"
+            },
+            "fit_scope": {
+              "type": "string",
+              "const": "train_only"
+            },
+            "artifact_id": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "^[A-Za-z0-9_.:/-]+$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "method",
+            "fit_scope",
+            "artifact_id"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "catalog_version",
+        "enabled",
+        "periods",
+        "position_inputs",
+        "risk_inputs",
+        "observation_window",
+        "normalization"
+      ],
+      "additionalProperties": false
+    },
+    "network": {
+      "type": "object",
+      "properties": {
+        "preset": {
+          "type": "string",
+          "enum": [
+            "Small",
+            "Medium",
+            "Large",
+            "Custom"
+          ]
+        },
+        "policy_layers": {
+          "minItems": 1,
+          "maxItems": 8,
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1024
+          }
+        },
+        "value_layers": {
+          "minItems": 1,
+          "maxItems": 8,
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1024
+          }
+        },
+        "activation": {
+          "type": "string",
+          "enum": [
+            "Tanh",
+            "ReLU"
+          ]
+        },
+        "input_dimension": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "preset",
+        "policy_layers",
+        "value_layers",
+        "activation",
+        "input_dimension"
+      ],
+      "additionalProperties": false
+    },
+    "training": {
+      "type": "object",
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "const": "MaskablePPO"
+        },
+        "policy": {
+          "type": "string",
+          "const": "MlpPolicy"
+        },
+        "device": {
+          "type": "string",
+          "const": "cpu"
+        },
+        "n_envs": {
+          "type": "number",
+          "const": 1
+        },
+        "learning_rate": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "total_timesteps": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "batch_size": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 1000000
+        },
+        "n_steps": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 1000000
+        },
+        "gamma": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "gae_lambda": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "entropy_coefficient": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "clip_range": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,17})(\\.[0-9]{1,18})?$"
+        },
+        "observation_window": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4096
+        },
+        "episode_length_bars": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "reward_version": {
+          "type": "string",
+          "const": "net-equity-delta/initial-capital-v1"
+        }
+      },
+      "required": [
+        "algorithm",
+        "policy",
+        "device",
+        "n_envs",
+        "learning_rate",
+        "total_timesteps",
+        "batch_size",
+        "n_steps",
+        "gamma",
+        "gae_lambda",
+        "entropy_coefficient",
+        "clip_range",
+        "observation_window",
+        "episode_length_bars",
+        "seed",
+        "reward_version"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "contract_version",
+    "action_schema_version",
+    "market",
+    "risk",
+    "stop_loss",
+    "exit",
+    "execution",
+    "features",
+    "network",
+    "training"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:bybit:configuration:1"
+}

@@ -13,7 +13,11 @@ requires = ["hatchling>=1.27,<2"]
 build-backend = "hatchling.build"
 
 [dependency-groups]
-dev = ["pytest>=8.3,<10", "ruff>=0.14,<1"]
+dev = [
+    "jsonschema>=4,<5",
+    "pytest>=8.3,<10",
+    "ruff>=0.14,<1",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

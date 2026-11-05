@@ -1,8 +1,8 @@
-# Arsitektur M0
+# Arsitektur sistem
 
 Tanggal: 5 November 2026, Asia/Jakarta. Status: rancangan M0 diterima melalui
-`oke ku approve`; foundation M1 kini diimplementasikan, komponen berikutnya tetap
-rancangan. Dasar: [spesifikasi](../PROJECT_SPEC.md) bagian 7–8,
+`oke ku approve`; foundation M1 dan configuration M2 kini diimplementasikan,
+komponen berikutnya tetap rancangan. Dasar: [spesifikasi](../PROJECT_SPEC.md) bagian 7–8,
 24–33, 36, dan [keputusan](decisions.md).
 
 ## Foundation M1 yang sudah diimplementasikan
@@ -24,6 +24,20 @@ Commands dan batas platform: [operations](operations.md). Verification dan
 cleanup proses test sudah lulus; detail [testing](testing.md).
 
 ## Komponen dan ownership
+
+M2 menambah `packages/contracts` sebagai sumber Zod schema/semantic validation,
+canonical decimal/hash, catalog feature declarations, presets dan configuration
+comparison. Published JSON Schema dipakai structural tests Python; semantic rules
+tidak diklaim seluruhnya direpresentasikan JSON Schema. Artifact export dicek
+terhadap source pada build agar drift tidak tersembunyi.
+
+API ResearchConfigurationsModule menggunakan DatabaseModule yang mengekspor satu
+DatabaseService/Prisma pool. Draft update CAS melalui expectedRevision; snapshot
+creation memakai row lock dan unique source/revision constraint untuk idempotency.
+DB triggers menolak snapshot UPDATE/DELETE/TRUNCATE; hash/schema diverifikasi saat
+read. Tabel `research_configurations` dan `configuration_snapshots` ditambahkan
+via migration kedua. Readiness kini memeriksa kedua marker foundation/configuration.
+Snapshot adalah konfigurasi frozen, belum Experiment/Model atau izin trading.
 
 | Komponen | Tanggung jawab | Batas |
 | --- | --- | --- |
@@ -102,10 +116,12 @@ distributed training tidak menjadi dependency MVP.
 
 ## Shared contracts
 
-Schema lintas bahasa direncanakan di `packages/contracts/`, dengan fixture JSON
-yang sama untuk validator TypeScript/Python. Detail ada di [planning](planning.md).
-Schema JSON menjadi acuan wire format, bukan dua definisi yang dikelola terpisah.
-Generator/validator dipilih setelah compatibility check pada M1/M2.
+Config schema M2 tersedia di `packages/contracts/`, dengan generated JSON Schema
+dan fixtures yang sama untuk structural validation TypeScript/Python. Zod adalah
+source schema, generated artifact menjadi published wire contract; tidak ada dua
+structural schema yang dikelola manual. Semantic checks authoritative ada pada
+TypeScript M2; Python business conformance diperkenalkan sebelum quant M4/M5.
+Kontrak candle/observation/order lainnya tetap rancangan [planning](planning.md).
 
 Harga, quantity dan uang dikirim sebagai string desimal; timestamp UTC epoch
 milliseconds; interval `[start, end)`. Perhitungan accounting menggunakan decimal
@@ -162,8 +178,9 @@ docs/
 ```
 
 M0 hanya membuat dokumentasi. M1 telah membuat `apps/api`, `services/quant`,
-`scripts` dan local runtime yang ignored; `apps/web`, `packages/contracts`,
-features/simulator dan trading tetap rencana. Runtime secret, model dan log
+`scripts` dan local runtime yang ignored; M2 menambahkan `packages/contracts` dan
+research configuration API. `apps/web`, features/simulator dan trading tetap rencana.
+Runtime secret, model dan log
 dikecualikan dari Git.
 
 ## Deployment dan security

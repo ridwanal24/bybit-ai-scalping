@@ -1,0 +1,28 @@
+{
+  "decimal_fields": [
+    "initial_capital",
+    "risk_per_trade",
+    "max_position_notional",
+    "max_margin_fraction",
+    "daily_loss_limit",
+    "max_drawdown",
+    "min_available_margin",
+    "atr_multiplier",
+    "min_stop_fraction",
+    "max_stop_fraction",
+    "fee_allowance_rate",
+    "slippage_allowance_bps",
+    "rr",
+    "maker_fee_rate",
+    "taker_fee_rate",
+    "spread_bps",
+    "slippage_bps",
+    "rate",
+    "learning_rate",
+    "gamma",
+    "gae_lambda",
+    "entropy_coefficient",
+    "clip_range"
+  ],
+  "version": "1"
+}

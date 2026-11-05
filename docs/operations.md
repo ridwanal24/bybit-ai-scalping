@@ -1,7 +1,8 @@
-# Operasi foundation lokal
+# Operasi foundation dan configuration lokal
 
 Target implementasi M1: Windows x64/PowerShell, satu mesin CPU. Belum ada UI,
 market data, simulator, training, order atau deployment model.
+M2 menambahkan research configuration API; tidak membutuhkan server baru.
 
 ## Setup
 
@@ -85,3 +86,49 @@ belum diklaim teruji pada foundation.
 Jika bootstrap/server/bind port dibatasi sandbox, gunakan mekanisme approval
 environment untuk command yang diperlukan. Jangan mengganti hasil integration
 dengan mock atau menandai milestone Completed sebelum verification wajib lulus.
+
+## Menggunakan configuration API
+
+Setelah update source M2, jalankan build dan `npm run db:migrate` pada DB proyek,
+lalu `npm run dev:api`. Jangan menghapus/mereset data M1: migration baru additive.
+Readiness M2 memerlukan foundation_schema_version=1 dan configuration_schema_version=1.
+
+Contoh PowerShell berikut membuat draft dan snapshot pada DB development ketika
+dijalankan pengguna; ini bukan command aktivasi trading:
+
+```powershell
+$apiBase = 'http://127.0.0.1:3000'
+$preset = (Invoke-RestMethod "$apiBase/configuration-presets").items[0]
+$payload = $preset.configuration
+Invoke-RestMethod "$apiBase/configurations/validate" -Method Post -ContentType 'application/json' -Body ($payload | ConvertTo-Json -Depth 30)
+$draftBody = @{ name = 'Penelitian pertama'; configuration = $payload } | ConvertTo-Json -Depth 30
+$draft = Invoke-RestMethod "$apiBase/configurations" -Method Post -ContentType 'application/json' -Body $draftBody
+$snapshotBody = @{ expectedRevision = $draft.revision } | ConvertTo-Json
+$snapshot = Invoke-RestMethod "$apiBase/configurations/$($draft.id)/snapshots" -Method Post -ContentType 'application/json' -Body $snapshotBody
+Invoke-RestMethod "$apiBase/configuration-snapshots/$($snapshot.id)"
+```
+
+Untuk PUT draft, kirim {name,configuration,expectedRevision} lengkap; ambil revision
+terbaru setelah 409 lalu review perubahan sebelum retry. Jangan silent overwrite.
+Daftar: GET /configurations?limit=20&offset=0 (limit1–100, offset0–1000000).
+Compare: POST /configurations/compatibility dengan {referenceSnapshotId,candidate}.
+Invalid input 400, missing record404, stale/integrity409, storage unavailable503.
+
+## Contract maintenance dan verification M2
+
+```powershell
+.\.tools\node\npm.cmd run contracts:export
+.\.tools\node\npm.cmd run verify:configuration
+```
+
+`contracts:export` diperlukan hanya setelah sengaja mengubah contract source;
+commit schema/preset/fixtures hasil export bersama source-nya. Build biasa
+mengecek drift dan tidak meregenerasi artifact diam-diam. `npm test` mencakup
+contracts/backend/Python; Python fixture test membutuhkan schema export tracked.
+
+Configuration verification mencakup foundation regressions, contract export drift,
+structural/canonical Python tests, additive upgrade dari M1 dengan sentinel data
+yang dipertahankan, Prisma schema diff, API workflow, snapshot DML guards dan
+concurrency. Cluster test tetap terpisah dari dev; report lokal berada di
+`.runtime/configuration-report.json`. Command verify:foundation juga menjalankan
+seluruh regression yang tersedia saat ini, bukan hanya daftar test historis M1.

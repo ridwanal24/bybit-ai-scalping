@@ -1,0 +1,722 @@
+[
+  {
+    "name": "research-preset",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": null
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "canonical_json": "{\"action_schema_version\":\"1\",\"contract_version\":\"1\",\"execution\":{\"assumptions_label\":\"synthetic_research_assumptions\",\"funding\":{\"mode\":\"historical\",\"rate\":null},\"maker_fee_rate\":\"0.001\",\"order_type\":\"market\",\"slippage_bps\":\"5\",\"spread_bps\":\"5\",\"stop_trigger_reference\":\"last\",\"taker_fee_rate\":\"0.001\",\"timeout_ms\":5000},\"exit\":{\"ai_close_enabled\":true,\"fixed_tp_enabled\":true,\"mode\":\"HYBRID\",\"rr\":\"2\"},\"features\":{\"catalog_version\":\"1\",\"enabled\":[{\"id\":\"log_return\",\"timeframe\":\"1m\"},{\"id\":\"body_ratio\",\"timeframe\":\"1m\"},{\"id\":\"ema_fast_distance\",\"timeframe\":\"1m\"},{\"id\":\"ema_slow_distance\",\"timeframe\":\"1m\"},{\"id\":\"rsi\",\"timeframe\":\"1m\"},{\"id\":\"atr_fraction\",\"timeframe\":\"1m\"},{\"id\":\"relative_volume\",\"timeframe\":\"1m\"},{\"id\":\"ema_spread\",\"timeframe\":\"5m\"},{\"id\":\"rsi\",\"timeframe\":\"15m\"}],\"normalization\":{\"artifact_id\":null,\"fit_scope\":\"train_only\",\"method\":\"zscore\"},\"observation_window\":32,\"periods\":{\"atr\":14,\"ema_fast\":9,\"ema_long\":55,\"ema_slow\":21,\"macd_fast\":12,\"macd_signal\":9,\"macd_slow\":26,\"rolling_return\":5,\"rsi\":14,\"volatility\":20,\"volume\":20},\"position_inputs\":[\"side\",\"unrealized_pnl\",\"duration\",\"distance_to_sl\",\"distance_to_tp\",\"exposure\",\"available_margin\"],\"risk_inputs\":[\"drawdown\",\"remaining_daily_budget\",\"trading_allowed\",\"risk_fraction\"]},\"market\":{\"category\":\"linear\",\"exchange\":\"bybit\",\"historical_end_ms\":1767225600000,\"historical_start_ms\":1735689600000,\"mode\":\"backtest\",\"secondary_timeframes\":[\"5m\",\"15m\"],\"settlement\":\"USDT\",\"symbol\":\"BTCUSDT\",\"timeframe\":\"1m\"},\"network\":{\"activation\":\"Tanh\",\"input_dimension\":null,\"policy_layers\":[64,64],\"preset\":\"Small\",\"value_layers\":[64,64]},\"risk\":{\"breach_action\":\"block_entries_and_controlled_close_owned_positions\",\"cooldown_bars\":5,\"daily_basis\":\"equity_including_unrealized\",\"daily_loss_limit\":\"0.02\",\"daily_reset_timezone\":\"UTC\",\"drawdown_reference\":\"run_deployment_high_water_equity\",\"external_cashflow_policy\":\"block_and_review_anchor\",\"initial_capital\":\"1000\",\"max_concurrent_positions\":1,\"max_drawdown\":\"0.1\",\"max_holding_bars\":240,\"max_leverage\":1,\"max_margin_fraction\":\"0.5\",\"max_position_notional\":\"1000\",\"min_available_margin\":\"50\",\"risk_per_trade\":\"0.005\",\"semantics_version\":\"equity-utc-latched-v1\"},\"schema_version\":\"1\",\"stop_loss\":{\"atr_multiplier\":\"1.5\",\"atr_period\":14,\"fee_allowance_rate\":\"0.002\",\"hard_stop_required\":true,\"max_stop_fraction\":\"0.05\",\"method\":\"atr\",\"min_stop_fraction\":\"0.001\",\"slippage_allowance_bps\":\"10\",\"trigger_reference\":\"last\"},\"training\":{\"algorithm\":\"MaskablePPO\",\"batch_size\":64,\"clip_range\":\"0.2\",\"device\":\"cpu\",\"entropy_coefficient\":\"0\",\"episode_length_bars\":1440,\"gae_lambda\":\"0.95\",\"gamma\":\"0.99\",\"learning_rate\":\"0.0003\",\"n_envs\":1,\"n_steps\":128,\"observation_window\":32,\"policy\":\"MlpPolicy\",\"reward_version\":\"net-equity-delta/initial-capital-v1\",\"seed\":42,\"total_timesteps\":1024}}",
+    "sha256": "bc0f750cda858a980a65f46f3db8174caca7de79fc8920f78367053ae4ec9fda"
+  },
+  {
+    "name": "decimal-equivalence",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000.00",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2.000"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": null
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "canonical_json": "{\"action_schema_version\":\"1\",\"contract_version\":\"1\",\"execution\":{\"assumptions_label\":\"synthetic_research_assumptions\",\"funding\":{\"mode\":\"historical\",\"rate\":null},\"maker_fee_rate\":\"0.001\",\"order_type\":\"market\",\"slippage_bps\":\"5\",\"spread_bps\":\"5\",\"stop_trigger_reference\":\"last\",\"taker_fee_rate\":\"0.001\",\"timeout_ms\":5000},\"exit\":{\"ai_close_enabled\":true,\"fixed_tp_enabled\":true,\"mode\":\"HYBRID\",\"rr\":\"2\"},\"features\":{\"catalog_version\":\"1\",\"enabled\":[{\"id\":\"log_return\",\"timeframe\":\"1m\"},{\"id\":\"body_ratio\",\"timeframe\":\"1m\"},{\"id\":\"ema_fast_distance\",\"timeframe\":\"1m\"},{\"id\":\"ema_slow_distance\",\"timeframe\":\"1m\"},{\"id\":\"rsi\",\"timeframe\":\"1m\"},{\"id\":\"atr_fraction\",\"timeframe\":\"1m\"},{\"id\":\"relative_volume\",\"timeframe\":\"1m\"},{\"id\":\"ema_spread\",\"timeframe\":\"5m\"},{\"id\":\"rsi\",\"timeframe\":\"15m\"}],\"normalization\":{\"artifact_id\":null,\"fit_scope\":\"train_only\",\"method\":\"zscore\"},\"observation_window\":32,\"periods\":{\"atr\":14,\"ema_fast\":9,\"ema_long\":55,\"ema_slow\":21,\"macd_fast\":12,\"macd_signal\":9,\"macd_slow\":26,\"rolling_return\":5,\"rsi\":14,\"volatility\":20,\"volume\":20},\"position_inputs\":[\"side\",\"unrealized_pnl\",\"duration\",\"distance_to_sl\",\"distance_to_tp\",\"exposure\",\"available_margin\"],\"risk_inputs\":[\"drawdown\",\"remaining_daily_budget\",\"trading_allowed\",\"risk_fraction\"]},\"market\":{\"category\":\"linear\",\"exchange\":\"bybit\",\"historical_end_ms\":1767225600000,\"historical_start_ms\":1735689600000,\"mode\":\"backtest\",\"secondary_timeframes\":[\"5m\",\"15m\"],\"settlement\":\"USDT\",\"symbol\":\"BTCUSDT\",\"timeframe\":\"1m\"},\"network\":{\"activation\":\"Tanh\",\"input_dimension\":null,\"policy_layers\":[64,64],\"preset\":\"Small\",\"value_layers\":[64,64]},\"risk\":{\"breach_action\":\"block_entries_and_controlled_close_owned_positions\",\"cooldown_bars\":5,\"daily_basis\":\"equity_including_unrealized\",\"daily_loss_limit\":\"0.02\",\"daily_reset_timezone\":\"UTC\",\"drawdown_reference\":\"run_deployment_high_water_equity\",\"external_cashflow_policy\":\"block_and_review_anchor\",\"initial_capital\":\"1000\",\"max_concurrent_positions\":1,\"max_drawdown\":\"0.1\",\"max_holding_bars\":240,\"max_leverage\":1,\"max_margin_fraction\":\"0.5\",\"max_position_notional\":\"1000\",\"min_available_margin\":\"50\",\"risk_per_trade\":\"0.005\",\"semantics_version\":\"equity-utc-latched-v1\"},\"schema_version\":\"1\",\"stop_loss\":{\"atr_multiplier\":\"1.5\",\"atr_period\":14,\"fee_allowance_rate\":\"0.002\",\"hard_stop_required\":true,\"max_stop_fraction\":\"0.05\",\"method\":\"atr\",\"min_stop_fraction\":\"0.001\",\"slippage_allowance_bps\":\"10\",\"trigger_reference\":\"last\"},\"training\":{\"algorithm\":\"MaskablePPO\",\"batch_size\":64,\"clip_range\":\"0.2\",\"device\":\"cpu\",\"entropy_coefficient\":\"0\",\"episode_length_bars\":1440,\"gae_lambda\":\"0.95\",\"gamma\":\"0.99\",\"learning_rate\":\"0.0003\",\"n_envs\":1,\"n_steps\":128,\"observation_window\":32,\"policy\":\"MlpPolicy\",\"reward_version\":\"net-equity-delta/initial-capital-v1\",\"seed\":42,\"total_timesteps\":1024}}",
+    "sha256": "bc0f750cda858a980a65f46f3db8174caca7de79fc8920f78367053ae4ec9fda"
+  },
+  {
+    "name": "artifact-identity-1.00",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": "1.00"
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "canonical_json": "{\"action_schema_version\":\"1\",\"contract_version\":\"1\",\"execution\":{\"assumptions_label\":\"synthetic_research_assumptions\",\"funding\":{\"mode\":\"historical\",\"rate\":null},\"maker_fee_rate\":\"0.001\",\"order_type\":\"market\",\"slippage_bps\":\"5\",\"spread_bps\":\"5\",\"stop_trigger_reference\":\"last\",\"taker_fee_rate\":\"0.001\",\"timeout_ms\":5000},\"exit\":{\"ai_close_enabled\":true,\"fixed_tp_enabled\":true,\"mode\":\"HYBRID\",\"rr\":\"2\"},\"features\":{\"catalog_version\":\"1\",\"enabled\":[{\"id\":\"log_return\",\"timeframe\":\"1m\"},{\"id\":\"body_ratio\",\"timeframe\":\"1m\"},{\"id\":\"ema_fast_distance\",\"timeframe\":\"1m\"},{\"id\":\"ema_slow_distance\",\"timeframe\":\"1m\"},{\"id\":\"rsi\",\"timeframe\":\"1m\"},{\"id\":\"atr_fraction\",\"timeframe\":\"1m\"},{\"id\":\"relative_volume\",\"timeframe\":\"1m\"},{\"id\":\"ema_spread\",\"timeframe\":\"5m\"},{\"id\":\"rsi\",\"timeframe\":\"15m\"}],\"normalization\":{\"artifact_id\":\"1.00\",\"fit_scope\":\"train_only\",\"method\":\"zscore\"},\"observation_window\":32,\"periods\":{\"atr\":14,\"ema_fast\":9,\"ema_long\":55,\"ema_slow\":21,\"macd_fast\":12,\"macd_signal\":9,\"macd_slow\":26,\"rolling_return\":5,\"rsi\":14,\"volatility\":20,\"volume\":20},\"position_inputs\":[\"side\",\"unrealized_pnl\",\"duration\",\"distance_to_sl\",\"distance_to_tp\",\"exposure\",\"available_margin\"],\"risk_inputs\":[\"drawdown\",\"remaining_daily_budget\",\"trading_allowed\",\"risk_fraction\"]},\"market\":{\"category\":\"linear\",\"exchange\":\"bybit\",\"historical_end_ms\":1767225600000,\"historical_start_ms\":1735689600000,\"mode\":\"backtest\",\"secondary_timeframes\":[\"5m\",\"15m\"],\"settlement\":\"USDT\",\"symbol\":\"BTCUSDT\",\"timeframe\":\"1m\"},\"network\":{\"activation\":\"Tanh\",\"input_dimension\":null,\"policy_layers\":[64,64],\"preset\":\"Small\",\"value_layers\":[64,64]},\"risk\":{\"breach_action\":\"block_entries_and_controlled_close_owned_positions\",\"cooldown_bars\":5,\"daily_basis\":\"equity_including_unrealized\",\"daily_loss_limit\":\"0.02\",\"daily_reset_timezone\":\"UTC\",\"drawdown_reference\":\"run_deployment_high_water_equity\",\"external_cashflow_policy\":\"block_and_review_anchor\",\"initial_capital\":\"1000\",\"max_concurrent_positions\":1,\"max_drawdown\":\"0.1\",\"max_holding_bars\":240,\"max_leverage\":1,\"max_margin_fraction\":\"0.5\",\"max_position_notional\":\"1000\",\"min_available_margin\":\"50\",\"risk_per_trade\":\"0.005\",\"semantics_version\":\"equity-utc-latched-v1\"},\"schema_version\":\"1\",\"stop_loss\":{\"atr_multiplier\":\"1.5\",\"atr_period\":14,\"fee_allowance_rate\":\"0.002\",\"hard_stop_required\":true,\"max_stop_fraction\":\"0.05\",\"method\":\"atr\",\"min_stop_fraction\":\"0.001\",\"slippage_allowance_bps\":\"10\",\"trigger_reference\":\"last\"},\"training\":{\"algorithm\":\"MaskablePPO\",\"batch_size\":64,\"clip_range\":\"0.2\",\"device\":\"cpu\",\"entropy_coefficient\":\"0\",\"episode_length_bars\":1440,\"gae_lambda\":\"0.95\",\"gamma\":\"0.99\",\"learning_rate\":\"0.0003\",\"n_envs\":1,\"n_steps\":128,\"observation_window\":32,\"policy\":\"MlpPolicy\",\"reward_version\":\"net-equity-delta/initial-capital-v1\",\"seed\":42,\"total_timesteps\":1024}}",
+    "sha256": "9ed80ac5950f438cbaee426bf5f7f9a9089a72e3faa3777bc314f163637249f6"
+  },
+  {
+    "name": "artifact-identity-1",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": "1"
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "canonical_json": "{\"action_schema_version\":\"1\",\"contract_version\":\"1\",\"execution\":{\"assumptions_label\":\"synthetic_research_assumptions\",\"funding\":{\"mode\":\"historical\",\"rate\":null},\"maker_fee_rate\":\"0.001\",\"order_type\":\"market\",\"slippage_bps\":\"5\",\"spread_bps\":\"5\",\"stop_trigger_reference\":\"last\",\"taker_fee_rate\":\"0.001\",\"timeout_ms\":5000},\"exit\":{\"ai_close_enabled\":true,\"fixed_tp_enabled\":true,\"mode\":\"HYBRID\",\"rr\":\"2\"},\"features\":{\"catalog_version\":\"1\",\"enabled\":[{\"id\":\"log_return\",\"timeframe\":\"1m\"},{\"id\":\"body_ratio\",\"timeframe\":\"1m\"},{\"id\":\"ema_fast_distance\",\"timeframe\":\"1m\"},{\"id\":\"ema_slow_distance\",\"timeframe\":\"1m\"},{\"id\":\"rsi\",\"timeframe\":\"1m\"},{\"id\":\"atr_fraction\",\"timeframe\":\"1m\"},{\"id\":\"relative_volume\",\"timeframe\":\"1m\"},{\"id\":\"ema_spread\",\"timeframe\":\"5m\"},{\"id\":\"rsi\",\"timeframe\":\"15m\"}],\"normalization\":{\"artifact_id\":\"1\",\"fit_scope\":\"train_only\",\"method\":\"zscore\"},\"observation_window\":32,\"periods\":{\"atr\":14,\"ema_fast\":9,\"ema_long\":55,\"ema_slow\":21,\"macd_fast\":12,\"macd_signal\":9,\"macd_slow\":26,\"rolling_return\":5,\"rsi\":14,\"volatility\":20,\"volume\":20},\"position_inputs\":[\"side\",\"unrealized_pnl\",\"duration\",\"distance_to_sl\",\"distance_to_tp\",\"exposure\",\"available_margin\"],\"risk_inputs\":[\"drawdown\",\"remaining_daily_budget\",\"trading_allowed\",\"risk_fraction\"]},\"market\":{\"category\":\"linear\",\"exchange\":\"bybit\",\"historical_end_ms\":1767225600000,\"historical_start_ms\":1735689600000,\"mode\":\"backtest\",\"secondary_timeframes\":[\"5m\",\"15m\"],\"settlement\":\"USDT\",\"symbol\":\"BTCUSDT\",\"timeframe\":\"1m\"},\"network\":{\"activation\":\"Tanh\",\"input_dimension\":null,\"policy_layers\":[64,64],\"preset\":\"Small\",\"value_layers\":[64,64]},\"risk\":{\"breach_action\":\"block_entries_and_controlled_close_owned_positions\",\"cooldown_bars\":5,\"daily_basis\":\"equity_including_unrealized\",\"daily_loss_limit\":\"0.02\",\"daily_reset_timezone\":\"UTC\",\"drawdown_reference\":\"run_deployment_high_water_equity\",\"external_cashflow_policy\":\"block_and_review_anchor\",\"initial_capital\":\"1000\",\"max_concurrent_positions\":1,\"max_drawdown\":\"0.1\",\"max_holding_bars\":240,\"max_leverage\":1,\"max_margin_fraction\":\"0.5\",\"max_position_notional\":\"1000\",\"min_available_margin\":\"50\",\"risk_per_trade\":\"0.005\",\"semantics_version\":\"equity-utc-latched-v1\"},\"schema_version\":\"1\",\"stop_loss\":{\"atr_multiplier\":\"1.5\",\"atr_period\":14,\"fee_allowance_rate\":\"0.002\",\"hard_stop_required\":true,\"max_stop_fraction\":\"0.05\",\"method\":\"atr\",\"min_stop_fraction\":\"0.001\",\"slippage_allowance_bps\":\"10\",\"trigger_reference\":\"last\"},\"training\":{\"algorithm\":\"MaskablePPO\",\"batch_size\":64,\"clip_range\":\"0.2\",\"device\":\"cpu\",\"entropy_coefficient\":\"0\",\"episode_length_bars\":1440,\"gae_lambda\":\"0.95\",\"gamma\":\"0.99\",\"learning_rate\":\"0.0003\",\"n_envs\":1,\"n_steps\":128,\"observation_window\":32,\"policy\":\"MlpPolicy\",\"reward_version\":\"net-equity-delta/initial-capital-v1\",\"seed\":42,\"total_timesteps\":1024}}",
+    "sha256": "794bffdadaf1884c4989f47060a715c1a6fead633b79d94743663f27f0213f6a"
+  }
+]

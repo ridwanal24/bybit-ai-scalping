@@ -1,0 +1,2684 @@
+[
+  {
+    "name": "research-preset",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": null
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "structurally_valid": true,
+    "semantically_valid": true
+  },
+  {
+    "name": "decimal-equivalence",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000.00",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2.000"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": null
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "structurally_valid": true,
+    "semantically_valid": true
+  },
+  {
+    "name": "artifact-identity-1.00",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": "1.00"
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "structurally_valid": true,
+    "semantically_valid": true
+  },
+  {
+    "name": "artifact-identity-1",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": "1"
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "structurally_valid": true,
+    "semantically_valid": true
+  },
+  {
+    "name": "unknown-field",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": null
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      },
+      "unknown": true
+    },
+    "structurally_valid": false,
+    "semantically_valid": false
+  },
+  {
+    "name": "wrong-integer-type",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": null
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": "64",
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "structurally_valid": false,
+    "semantically_valid": false
+  },
+  {
+    "name": "unsupported-version",
+    "configuration": {
+      "schema_version": "2",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": null
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "structurally_valid": false,
+    "semantically_valid": false
+  },
+  {
+    "name": "missing-field",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": null
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "structurally_valid": false,
+    "semantically_valid": false
+  },
+  {
+    "name": "decimal-exponent",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1e3",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": null
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "structurally_valid": false,
+    "semantically_valid": false
+  },
+  {
+    "name": "negative-zero",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "-0.00",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": null
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "structurally_valid": false,
+    "semantically_valid": false
+  },
+  {
+    "name": "feature-id",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "future_unknown_feature",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": null
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "structurally_valid": false,
+    "semantically_valid": false
+  },
+  {
+    "name": "hard-stop-disabled",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": false,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": null
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "structurally_valid": false,
+    "semantically_valid": false
+  },
+  {
+    "name": "exit-mode-conflict",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": false,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": null
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "structurally_valid": true,
+    "semantically_valid": false
+  },
+  {
+    "name": "risk-budget-order",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000",
+        "risk_per_trade": "0.03",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "1m"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": null
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "structurally_valid": true,
+    "semantically_valid": false
+  },
+  {
+    "name": "higher-timeframe",
+    "configuration": {
+      "schema_version": "1",
+      "contract_version": "1",
+      "action_schema_version": "1",
+      "market": {
+        "exchange": "bybit",
+        "category": "linear",
+        "settlement": "USDT",
+        "symbol": "BTCUSDT",
+        "timeframe": "1m",
+        "secondary_timeframes": [
+          "5m",
+          "15m"
+        ],
+        "historical_start_ms": 1735689600000,
+        "historical_end_ms": 1767225600000,
+        "mode": "backtest"
+      },
+      "risk": {
+        "initial_capital": "1000",
+        "risk_per_trade": "0.005",
+        "max_leverage": 1,
+        "max_position_notional": "1000",
+        "max_margin_fraction": "0.5",
+        "max_concurrent_positions": 1,
+        "daily_loss_limit": "0.02",
+        "max_drawdown": "0.1",
+        "cooldown_bars": 5,
+        "max_holding_bars": 240,
+        "min_available_margin": "50",
+        "semantics_version": "equity-utc-latched-v1",
+        "daily_basis": "equity_including_unrealized",
+        "daily_reset_timezone": "UTC",
+        "drawdown_reference": "run_deployment_high_water_equity",
+        "breach_action": "block_entries_and_controlled_close_owned_positions",
+        "external_cashflow_policy": "block_and_review_anchor"
+      },
+      "stop_loss": {
+        "hard_stop_required": true,
+        "method": "atr",
+        "atr_period": 14,
+        "atr_multiplier": "1.5",
+        "min_stop_fraction": "0.001",
+        "max_stop_fraction": "0.05",
+        "trigger_reference": "last",
+        "fee_allowance_rate": "0.002",
+        "slippage_allowance_bps": "10"
+      },
+      "exit": {
+        "mode": "HYBRID",
+        "fixed_tp_enabled": true,
+        "ai_close_enabled": true,
+        "rr": "2"
+      },
+      "execution": {
+        "assumptions_label": "synthetic_research_assumptions",
+        "maker_fee_rate": "0.001",
+        "taker_fee_rate": "0.001",
+        "spread_bps": "5",
+        "slippage_bps": "5",
+        "funding": {
+          "mode": "historical",
+          "rate": null
+        },
+        "order_type": "market",
+        "timeout_ms": 5000,
+        "stop_trigger_reference": "last"
+      },
+      "features": {
+        "catalog_version": "1",
+        "enabled": [
+          {
+            "id": "log_return",
+            "timeframe": "4h"
+          },
+          {
+            "id": "body_ratio",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_fast_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_slow_distance",
+            "timeframe": "1m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "1m"
+          },
+          {
+            "id": "atr_fraction",
+            "timeframe": "1m"
+          },
+          {
+            "id": "relative_volume",
+            "timeframe": "1m"
+          },
+          {
+            "id": "ema_spread",
+            "timeframe": "5m"
+          },
+          {
+            "id": "rsi",
+            "timeframe": "15m"
+          }
+        ],
+        "periods": {
+          "ema_fast": 9,
+          "ema_slow": 21,
+          "ema_long": 55,
+          "rsi": 14,
+          "macd_fast": 12,
+          "macd_slow": 26,
+          "macd_signal": 9,
+          "atr": 14,
+          "rolling_return": 5,
+          "volatility": 20,
+          "volume": 20
+        },
+        "position_inputs": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ],
+        "risk_inputs": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ],
+        "observation_window": 32,
+        "normalization": {
+          "method": "zscore",
+          "fit_scope": "train_only",
+          "artifact_id": null
+        }
+      },
+      "network": {
+        "preset": "Small",
+        "policy_layers": [
+          64,
+          64
+        ],
+        "value_layers": [
+          64,
+          64
+        ],
+        "activation": "Tanh",
+        "input_dimension": null
+      },
+      "training": {
+        "algorithm": "MaskablePPO",
+        "policy": "MlpPolicy",
+        "device": "cpu",
+        "n_envs": 1,
+        "learning_rate": "0.0003",
+        "total_timesteps": 1024,
+        "batch_size": 64,
+        "n_steps": 128,
+        "gamma": "0.99",
+        "gae_lambda": "0.95",
+        "entropy_coefficient": "0",
+        "clip_range": "0.2",
+        "observation_window": 32,
+        "episode_length_bars": 1440,
+        "seed": 42,
+        "reward_version": "net-equity-delta/initial-capital-v1"
+      }
+    },
+    "structurally_valid": true,
+    "semantically_valid": false
+  }
+]

@@ -21,10 +21,16 @@ export class DatabaseService implements OnModuleDestroy {
   }
 
   async ready(): Promise<boolean> {
-    const marker = await this.client.appMetadata.findUnique({
-      where: { key: 'foundation_schema_version' },
+    const markers = await this.client.appMetadata.findMany({
+      where: {
+        key: {
+          in: ['foundation_schema_version', 'configuration_schema_version'],
+        },
+      },
     });
-    return marker?.value === '1';
+    return (
+      markers.length === 2 && markers.every((marker) => marker.value === '1')
+    );
   }
 
   async onModuleDestroy(): Promise<void> {

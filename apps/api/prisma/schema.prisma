@@ -14,3 +14,34 @@ model AppMetadata {
 
   @@map("app_metadata")
 }
+
+model ResearchConfiguration {
+  id            String   @id @default(uuid()) @db.Uuid
+  name          String
+  payload       Json     @db.JsonB
+  schemaVersion String   @map("schema_version")
+  revision      Int      @default(1)
+  configHash    String   @map("config_hash") @db.Char(64)
+  provenance    Json     @db.JsonB
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  snapshots     ConfigurationSnapshot[]
+
+  @@index([createdAt, id])
+  @@map("research_configurations")
+}
+
+model ConfigurationSnapshot {
+  id                    String @id @default(uuid()) @db.Uuid
+  sourceConfigurationId String @map("source_configuration_id") @db.Uuid
+  sourceRevision        Int    @map("source_revision")
+  payload               Json   @db.JsonB
+  schemaVersion         String @map("schema_version")
+  configHash            String @map("config_hash") @db.Char(64)
+  provenance            Json   @db.JsonB
+  createdAt             DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  source                ResearchConfiguration @relation(fields: [sourceConfigurationId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "configuration_snapshots_source_fkey")
+
+  @@unique([sourceConfigurationId, sourceRevision], map: "configuration_snapshot_source_revision_key")
+  @@map("configuration_snapshots")
+}

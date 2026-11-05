@@ -7,7 +7,8 @@
     "node": ">=24.15 <25"
   },
   "workspaces": [
-    "apps/api"
+    "apps/api",
+    "packages/contracts"
   ],
   "scripts": {
     "setup": "node scripts/tasks.mjs setup",
@@ -19,11 +20,13 @@
     "build": "node scripts/tasks.mjs build",
     "typecheck": "node scripts/tasks.mjs typecheck",
     "lint": "node scripts/tasks.mjs lint",
-    "format": "prettier --write \"apps/api/**/*.{ts,json}\" \"scripts/**/*.mjs\" \"*.{json,mjs}\"",
-    "format:check": "prettier --check \"apps/api/**/*.{ts,json}\" \"scripts/**/*.mjs\" \"*.{json,mjs}\"",
+    "format": "prettier --write \"apps/api/**/*.{ts,json}\" \"packages/contracts/**/*.{ts,mjs}\" \"packages/contracts/{package,tsconfig}.json\" \"scripts/**/*.mjs\" \"*.{json,mjs}\"",
+    "format:check": "prettier --check \"apps/api/**/*.{ts,json}\" \"packages/contracts/**/*.{ts,mjs}\" \"packages/contracts/{package,tsconfig}.json\" \"scripts/**/*.mjs\" \"*.{json,mjs}\"",
     "test": "node scripts/tasks.mjs test",
     "test:integration": "node scripts/tasks.mjs integration",
-    "verify:foundation": "node scripts/tasks.mjs verify"
+    "verify:foundation": "node scripts/tasks.mjs verify",
+    "verify:configuration": "node scripts/tasks.mjs verify:configuration",
+    "contracts:export": "node scripts/tasks.mjs contracts:export"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "bybit-mainnet",
+        "fixture"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "const": "linear"
+    },
+    "symbol": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 30,
+      "pattern": "^[A-Z0-9]+USDT$"
+    },
+    "contract_type": {
+      "type": "string",
+      "const": "LinearPerpetual"
+    },
+    "settlement": {
+      "type": "string",
+      "const": "USDT"
+    },
+    "status": {
+      "type": "string",
+      "const": "Trading"
+    },
+    "launch_time_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "delivery_time_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "tick_size": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+    },
+    "quantity_step": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+    },
+    "min_quantity": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+    },
+    "min_notional": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+    },
+    "max_limit_quantity": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+    },
+    "max_market_quantity": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+    },
+    "min_leverage": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+    },
+    "max_leverage": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+    },
+    "leverage_step": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+    },
+    "funding_interval_minutes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10080
+    },
+    "historical_validity": {
+      "type": "string",
+      "const": "current_observation_reference_only"
+    }
+  },
+  "required": [
+    "schema_version",
+    "source",
+    "category",
+    "symbol",
+    "contract_type",
+    "settlement",
+    "status",
+    "launch_time_ms",
+    "delivery_time_ms",
+    "tick_size",
+    "quantity_step",
+    "min_quantity",
+    "min_notional",
+    "max_limit_quantity",
+    "max_market_quantity",
+    "min_leverage",
+    "max_leverage",
+    "leverage_step",
+    "funding_interval_minutes",
+    "historical_validity"
+  ],
+  "additionalProperties": false
+}

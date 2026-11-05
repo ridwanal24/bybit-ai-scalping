@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "final": {
+      "type": "boolean",
+      "const": true
+    },
+    "candles_usable": {
+      "type": "boolean"
+    },
+    "execution_ready": {
+      "type": "boolean",
+      "const": false
+    },
+    "streams": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "start_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "end_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "expected": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "missing": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "gaps": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "start_ms": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "end_ms": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "start_ms",
+                "end_ms",
+                "count"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "gaps_truncated": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "start_ms",
+          "end_ms",
+          "count",
+          "expected",
+          "missing",
+          "gaps",
+          "gaps_truncated"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "counters": {
+      "type": "object",
+      "properties": {
+        "pages": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "invalid": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "duplicates": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "conflicts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "out_of_order": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "outside_range": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "incomplete": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "retries": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "resumes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "pages",
+        "invalid",
+        "duplicates",
+        "conflicts",
+        "out_of_order",
+        "outside_range",
+        "incomplete",
+        "retries",
+        "resumes"
+      ],
+      "additionalProperties": false
+    },
+    "funding": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "queried_start_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "queried_end_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "cadence_anomalies_vs_current_interval": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "coverage": {
+          "type": "string",
+          "const": "historical_cadence_unverified_no_zero_fill"
+        }
+      },
+      "required": [
+        "count",
+        "queried_start_ms",
+        "queried_end_ms",
+        "cadence_anomalies_vs_current_interval",
+        "coverage"
+      ],
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "historical_validity": {
+          "type": "string",
+          "const": "current_observation_reference_only"
+        },
+        "instrument_observed_at": {
+          "type": "string"
+        },
+        "pre_launch_requested": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "historical_validity",
+        "instrument_observed_at",
+        "pre_launch_requested"
+      ],
+      "additionalProperties": false
+    },
+    "cutoff_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "safety_delay_ms": {
+      "type": "number",
+      "const": 2000
+    },
+    "requested_range_clipped": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "final",
+    "candles_usable",
+    "execution_ready",
+    "streams",
+    "counters",
+    "funding",
+    "metadata",
+    "cutoff_ms",
+    "safety_delay_ms",
+    "requested_range_clipped"
+  ],
+  "additionalProperties": false
+}

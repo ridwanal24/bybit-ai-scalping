@@ -26,6 +26,10 @@
     "test:integration": "node scripts/tasks.mjs integration",
     "verify:foundation": "node scripts/tasks.mjs verify",
     "verify:configuration": "node scripts/tasks.mjs verify:configuration",
+    "verify:market-data": "node scripts/tasks.mjs verify:market-data",
+    "data:download": "node scripts/tasks.mjs data:download",
+    "data:export": "node scripts/tasks.mjs data:export",
+    "smoke:bybit-data": "node scripts/tasks.mjs smoke:bybit-data",
     "contracts:export": "node scripts/tasks.mjs contracts:export"
   },
   "devDependencies": {

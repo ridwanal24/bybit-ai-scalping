@@ -1,5 +1,56 @@
 # Testing dan verifikasi
 
+## Hasil M3 — Bybit Market Data
+
+Tanggal:5 November2026, Asia/Jakarta. Final offline command
+`.tools/node/npm.cmd run verify:market-data`: exit0 PASSED. Report lokal
+`.runtime/market-data-report.json`: UTC14:58:26.357–15:00:10.168
+(WIB21:58:26–22:00:10). Tidak ada dependency/runtime version upgrade dari M2.
+
+| Pemeriksaan | Hasil aktual |
+| --- | --- |
+| Build/typecheck API/contracts/tests, export drift, ESLint/Ruff/Prettier | Lulus |
+| Contract tests | 70 passed (52 config +18 market normalization/coverage) |
+| Backend unit | 30 passed (16 foundation +14 public transport) |
+| Python tests | 5 passed; structural schema/canonical vectors + CLI regressions |
+| PostgreSQL/HTTP integration | 30 passed (14 M1/M2 +16 market ingestion scenarios) |
+| Fresh/reapply M1–M3 migrations | Lulus; reapply no pending migration |
+| M1/M2 additive upgrades | Legacy metadata/config sentinels dipertahankan; schema diff no difference |
+| Resume/atomicity | Page budget/network failure resume, frozen cutoff, injected DB insert rollback dengan cursor/revisions tidak melompat |
+| Worker/terminal protection | Global busy/stale owner reject, expired lease takeover, sealed finalization restart tanpa refetch, revision/dataset/member DML guards |
+| Quality/fingerprint | Duplicates/order deterministic, gap/invalid/conflicts fail gate, correction leaves old dataset unchanged, incomplete excluded |
+| Funding/reference variants | Signed/empty/irregular cadence dilabeli, no zero fill; mark/index volume null |
+| Export/Python fixture E2E | Schema/quality/file digests/counts/ascending chronology lulus |
+| Actual development migration | M3 applied ke bybit_dev127.0.0.1:55432; migrate status up to date |
+| Public smoke | exit0, actual Bybit mainnet GET, completed24h BTCUSDT2025-01-01 UTC |
+| Actual public export | 1440x1m +288x5m +96x15m +3 funding +instrument; zero missing/invalid/conflict,5 pages/0 retries |
+| Actual Python export checker | exit0, passed files5 |
+| Actual CLI download/export | completed run read idempotent, re-export digest sama; kedua commands exit0 |
+| Final documentation/source checks | 17 dokumen,82 tautan lokal valid,0 trailing whitespace; git diff --check exit0; password lokal tidak ditemukan pada103 source files;0 cluster test aktif; runtime/export ignored |
+
+Total135 automated cases ditambah orchestration/live assertions. Offline tests
+tetap fixture-based untuk external HTTP, PostgreSQL nyata untuk integration.
+Public smoke terpisah dan tidak disamakan dengan fixture data. Tidak ada mandatory
+skip, private API, credential exchange, order, feature computation atau training.
+Native cache/socket environment memerlukan approved escalated owner context
+seperti milestone sebelumnya.
+
+Actual smoke evidence `.runtime/bybit-smoke.json`: selesai UTC15:01:28.216Z
+(WIB22:01:28), source bybit-mainnet. Dataset
+3717d128-5be2-433f-90dc-ac21d3c35b54, download e4abb443-bc88-42cb-bdea-30b2d9139d65.
+Fingerprint229a793c410fde2a0eb118cc9fdfc8ee2e773ef225097037f47579e9999e26fa.
+Range `[1735689600000,1735776000000)`; actual metadata observation saat download,
+historical funding cadence tetap unverified meskipun3 events berhasil diambil.
+Execution-ready false. Artifacts/runtime di-ignore; ringkasan evidence disimpan
+di source docs dan [handoff M3](handoffs/milestone-03.md).
+
+Kegagalan awal integration disebabkan query advisory lock mengembalikan void
+unsupported oleh Prisma. Setelah query mengembalikan integer, suite lulus.
+Shutdown checkpoint Windows sempat melewati timeout30 detik tetapi server benar
+berhenti; helper wait menjadi60 detik dan final cleanup lulus. Tidak memperbaiki
+test dengan mengendurkan invariant worker/data. Diagnostic invalid-page counters
+tetap dipersist tanpa memajukan cursor; cadence case memakai batch720 candles.
+
 ## Hasil M2 — Configuration System
 
 Tanggal: 5 November 2026, Asia/Jakarta. Final command

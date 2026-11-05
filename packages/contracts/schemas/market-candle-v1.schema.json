@@ -1,0 +1,298 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "1"
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "bybit-mainnet",
+            "fixture"
+          ]
+        },
+        "category": {
+          "type": "string",
+          "const": "linear"
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 30,
+          "pattern": "^[A-Z0-9]+USDT$"
+        },
+        "price_type": {
+          "type": "string",
+          "const": "last"
+        },
+        "timeframe": {
+          "type": "string",
+          "enum": [
+            "1m",
+            "3m",
+            "5m",
+            "15m",
+            "30m",
+            "1h",
+            "4h",
+            "1D"
+          ]
+        },
+        "open_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "close_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "open": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+        },
+        "high": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+        },
+        "low": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+        },
+        "close": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+        },
+        "volume": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+        },
+        "turnover": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+        },
+        "availability_policy": {
+          "type": "string",
+          "const": "closed_candle_assumption_v1"
+        }
+      },
+      "required": [
+        "schema_version",
+        "source",
+        "category",
+        "symbol",
+        "price_type",
+        "timeframe",
+        "open_time_ms",
+        "close_time_ms",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "turnover",
+        "availability_policy"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "1"
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "bybit-mainnet",
+            "fixture"
+          ]
+        },
+        "category": {
+          "type": "string",
+          "const": "linear"
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 30,
+          "pattern": "^[A-Z0-9]+USDT$"
+        },
+        "price_type": {
+          "type": "string",
+          "const": "mark"
+        },
+        "timeframe": {
+          "type": "string",
+          "enum": [
+            "1m",
+            "3m",
+            "5m",
+            "15m",
+            "30m",
+            "1h",
+            "4h",
+            "1D"
+          ]
+        },
+        "open_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "close_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "open": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+        },
+        "high": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+        },
+        "low": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+        },
+        "close": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+        },
+        "volume": {
+          "type": "null"
+        },
+        "turnover": {
+          "type": "null"
+        },
+        "availability_policy": {
+          "type": "string",
+          "const": "closed_candle_assumption_v1"
+        }
+      },
+      "required": [
+        "schema_version",
+        "source",
+        "category",
+        "symbol",
+        "price_type",
+        "timeframe",
+        "open_time_ms",
+        "close_time_ms",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "turnover",
+        "availability_policy"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "1"
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "bybit-mainnet",
+            "fixture"
+          ]
+        },
+        "category": {
+          "type": "string",
+          "const": "linear"
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 30,
+          "pattern": "^[A-Z0-9]+USDT$"
+        },
+        "price_type": {
+          "type": "string",
+          "const": "index"
+        },
+        "timeframe": {
+          "type": "string",
+          "enum": [
+            "1m",
+            "3m",
+            "5m",
+            "15m",
+            "30m",
+            "1h",
+            "4h",
+            "1D"
+          ]
+        },
+        "open_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "close_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "open": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+        },
+        "high": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+        },
+        "low": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+        },
+        "close": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,19})(\\.[0-9]{1,18})?$"
+        },
+        "volume": {
+          "type": "null"
+        },
+        "turnover": {
+          "type": "null"
+        },
+        "availability_policy": {
+          "type": "string",
+          "const": "closed_candle_assumption_v1"
+        }
+      },
+      "required": [
+        "schema_version",
+        "source",
+        "category",
+        "symbol",
+        "price_type",
+        "timeframe",
+        "open_time_ms",
+        "close_time_ms",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "turnover",
+        "availability_policy"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

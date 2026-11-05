@@ -30,7 +30,7 @@ yang konkret sebelum persetujuan milestone tersebut.
 | 0 | Completed; pelaksanaan dan hasil planning Approved | Spesifikasi | 18 task terdokumentasi, ambiguities tercatat, batas MVP/ownership/dependency jelas, dokumen konsisten; hasil diterima melalui `oke ku approve`, 5 November 2026 |
 | 1 | Completed; [plan Approved](plans/milestone-01.md), [handoff](handoffs/milestone-01.md) | M0 diterima | Backend/Python berjalan, DB connected, migration/health/tests/verification lulus; setup terdokumentasi |
 | 2 | Completed; [plan Approved](plans/milestone-02.md), [handoff](handoffs/milestone-02.md) | M1 | Config persistence/validation, immutable snapshot, presets/compatibility dan integration/regression lulus |
-| 3 | Planned; belum Approved | M1–M2 | Download kronologis/resumable, duplicate/gap terdeteksi, dataset fingerprint dan quality report, instrument/funding tersedia atau keterbatasan eksplisit |
+| 3 | Completed; [plan](plans/milestone-03.md), [handoff](handoffs/milestone-03.md) | M1–M2 | 135 tests dan public BTCUSDT24h collection/export lulus; revisions/quality/resume/fingerprint dan source caveats tersedia |
 | 4 | Planned; belum Approved | M2–M3 | Indikator benar, HTF no leakage, ordering/shape stabil, normalizer train-only, shared observation contract |
 | 5 | Planned; belum Approved | M2–M4 | Long/short, costs, funding, sizing, risk, SL/TP event ordering benar; deterministic equity/trades; margin/liquidation model atau restriction disetujui dan terdokumentasi |
 | 6 | Planned; belum Approved | M3–M5 | Historical → features → baseline → simulator → metrics berjalan; HOLD/random/EMA/Buy & Hold dibanding konsisten |
@@ -109,6 +109,9 @@ Selesaikan R06/R07 sebelum konfigurasi dipakai run. M2 menyediakan contract dan
 validation network; training dan architecture research tetap M8/M9.
 
 ### M3 — Bybit Market Data
+
+Completed: task3.1–3.17 selesai; evidence actual data, migrations/schema diff,
+offline135 tests dan batas kemampuan tercatat pada [handoff M3](handoffs/milestone-03.md).
 
 - 3.1 REST client; 3.2 OHLCV fetch; 3.3 Pagination.
 - 3.4 Timestamp normalization; 3.5 Candle validation; 3.6 Persistence.

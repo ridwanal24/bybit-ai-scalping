@@ -99,6 +99,7 @@ async function integration() {
     await prisma(['migrate', 'deploy'], env);
     await prisma(['migrate', 'deploy'], env);
     await upgradeFromM1(directory, suffix);
+    await upgradeFromM2(directory, suffix);
     await npm(['run', 'test:integration', '-w', '@bybit/api'], { env });
     await apiSmoke(db.url);
     const invalid = await run(node, [path.join(api, 'dist', 'main.js')], {
@@ -201,6 +202,81 @@ async function upgradeFromM1(directory, suffix) {
   );
 }
 
+async function upgradeFromM2(directory, suffix) {
+  const upgrade = await startDatabase({
+    directory,
+    port: 55433,
+    database: `bybit_test_${suffix}_m2upgrade`,
+  });
+  const migrations = path.join(directory, 'm2-migrations');
+  for (const name of [
+    '202611050001_foundation',
+    '202611050002_configuration',
+  ]) {
+    fs.mkdirSync(path.join(migrations, name), { recursive: true });
+    fs.copyFileSync(
+      path.join(api, 'prisma', 'migrations', name, 'migration.sql'),
+      path.join(migrations, name, 'migration.sql'),
+    );
+  }
+  fs.copyFileSync(
+    path.join(api, 'prisma', 'migrations', 'migration_lock.toml'),
+    path.join(migrations, 'migration_lock.toml'),
+  );
+  const config = path.join(directory, 'm2.config.mjs');
+  const configImport = pathToFileURL(
+    path.join(root, 'node_modules', 'prisma', 'config.js'),
+  ).href;
+  fs.writeFileSync(
+    config,
+    `import { defineConfig } from ${JSON.stringify(configImport)};\nexport default defineConfig({ schema: ${JSON.stringify(path.join(api, 'prisma', 'schema.prisma'))}, migrations: { path: ${JSON.stringify(migrations)} }, datasource: { url: process.env.DATABASE_URL } });\n`,
+  );
+  await prisma(['migrate', 'deploy', '--config', config], {
+    DATABASE_URL: upgrade.url,
+  });
+  const { Client } = await import('pg');
+  const client = new Client({
+    connectionString: upgrade.url,
+    connectionTimeoutMillis: 2000,
+  });
+  await client.connect();
+  try {
+    const draftId = '00000000-0000-4000-8000-000000000003';
+    await client.query(
+      "INSERT INTO research_configurations(id,name,payload,schema_version,revision,config_hash,provenance) VALUES ($1,'upgrade sentinel','{}','sentinel',1,$2,'{}')",
+      [draftId, 'a'.repeat(64)],
+    );
+    await apiSmoke(upgrade.url, 503);
+    await prisma(['migrate', 'deploy'], { DATABASE_URL: upgrade.url });
+    const result = await client.query(
+      'SELECT name,revision FROM research_configurations WHERE id=$1',
+      [draftId],
+    );
+    if (
+      result.rows[0]?.name !== 'upgrade sentinel' ||
+      result.rows[0]?.revision !== 1
+    )
+      throw new Error('M2 upgrade lost existing configuration');
+    await apiSmoke(upgrade.url);
+    await prisma(
+      [
+        'migrate',
+        'diff',
+        '--from-config-datasource',
+        '--to-schema',
+        'prisma/schema.prisma',
+        '--exit-code',
+      ],
+      { DATABASE_URL: upgrade.url },
+    );
+  } finally {
+    await client.end();
+  }
+  console.log(
+    'M2 -> M3 additive upgrade preserved configuration data without schema drift.',
+  );
+}
+
 async function apiSmoke(url, expectedStatus = 200) {
   const port = 53001;
   await requireFreePort(port);
@@ -274,7 +350,11 @@ async function main() {
     path.resolve(process.execPath).toLowerCase() !==
     path.resolve(node).toLowerCase()
   ) {
-    await run(node, [path.join(root, 'scripts', 'tasks.mjs'), task]);
+    await run(node, [
+      path.join(root, 'scripts', 'tasks.mjs'),
+      task,
+      ...process.argv.slice(3),
+    ]);
     return;
   }
   switch (task) {
@@ -318,6 +398,7 @@ async function main() {
       await npm(['run', 'export', '-w', '@bybit/contracts']);
       return;
     case 'verify:configuration':
+    case 'verify:market-data':
     case 'verify': {
       const startedAt = new Date().toISOString();
       const report = {
@@ -340,9 +421,11 @@ async function main() {
         fs.writeFileSync(
           path.join(
             runtime,
-            task === 'verify:configuration'
-              ? 'configuration-report.json'
-              : 'foundation-report.json',
+            task === 'verify:market-data'
+              ? 'market-data-report.json'
+              : task === 'verify:configuration'
+                ? 'configuration-report.json'
+                : 'foundation-report.json',
           ),
           JSON.stringify(report, null, 2) + '\n',
         );
@@ -350,6 +433,20 @@ async function main() {
       console.log('Foundation/configuration verification PASSED');
       return;
     }
+    case 'data:download':
+    case 'data:export':
+    case 'smoke:bybit-data':
+      await build();
+      await run(node, [
+        path.join(api, 'dist', 'market-data', 'cli.js'),
+        task === 'data:download'
+          ? 'download'
+          : task === 'data:export'
+            ? 'export'
+            : 'smoke',
+        ...process.argv.slice(3),
+      ]);
+      return;
     default:
       throw new Error('Unknown task');
   }

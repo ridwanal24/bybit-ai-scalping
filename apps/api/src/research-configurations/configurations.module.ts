@@ -7,5 +7,6 @@ import { ResearchConfigurationsService } from './configurations.service.js';
   imports: [DatabaseModule],
   controllers: [ResearchConfigurationsController],
   providers: [ResearchConfigurationsService],
+  exports: [ResearchConfigurationsService],
 })
 export class ResearchConfigurationsModule {}

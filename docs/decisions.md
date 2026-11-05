@@ -172,6 +172,36 @@ planning bukan izin eksekusi live. **Deferred** memiliki deadline dalam
 - Evidence: 52 contract + 16 unit backend + 4 Python + 14 integration tests, plus
   built process/migration E2E. Source/artifact drift dan static checks lulus.
 
+## ADR-11 — Resumable public ingestion dan pinned dataset M3
+
+- Status: implemented dalam [plan M3](plans/milestone-03.md), Approved melalui
+  `lanjutkan`; offline verification dan bounded public smoke lulus.
+- Konteks: Bybit pages descending, rows bisa overlap/revised, download panjang
+  bisa crash dan current instrument rules belum membuktikan historical validity.
+- Keputusan: built-in fetch public GET fixed-host/no redirects/credential, bounded
+  retries/rate/cooldown. Server cutoff dipin, UTC intervals dan last/mark/index
+  variant dipisahkan. Candle/funding/instrument schemas dan Python vectors tracked.
+- Alternatif: SDK/dependency baru, overwrite candle upsert, state memory-only,
+  mengisi gap/funding kosong dengan0, atau menunggu download panjang dalam HTTP.
+- Alasan/tradeoff: minimal external dependency dan reproducible data, dengan
+  storage revision/membership lebih besar serta CLI/checkpoint/lease lifecycle.
+- Persistence: append-only revisions, membership pinned, global single-worker
+  lease/advisory lock, page records+cursor transaction. Stale token tidak commit;
+  sealed membership sebelum hash; dataset/run completion atomic. Export streaming
+  temp/checksum/rename, DB immutable tetap source jika file export gagal.
+- Quality: strict invalid/gap/conflict/empty gate, duplicate/out-of-order counters,
+  source fixture vs public eksplisit. Metadata current-only dan funding cadence
+  unknown tidak dihilangkan dari report. READY bukan simulation/live readiness.
+- Hash: canonical normalized content + ordered stream/funding digests + metadata
+  hash dan format/policy; tidak memasukkan UUID/download time/retry count/config
+  non-market. Snapshot provenance tetap tersimpan pada dataset/export envelope.
+- Evidence:135 cases (70 contract,30 backend,5 Python,30 integration), fresh/
+  reapply/M1+M2 upgrade tanpa schema drift, actual BTCUSDT2025-01-01 public dataset
+  1824 candles+3 funding, export/Python validation dan idempotent CLI.
+- Perbaikan kompatibilitas: query advisory lock mengembalikan integer, bukan void
+  yang tidak dapat dideserialisasi Prisma; shutdown wait60 detik untuk Windows disk
+  checkpoint, tanpa force-kill. Tidak mengubah runtime major/credential/old migrations.
+
 ## Keputusan yang belum ditutup
 
 R01–R16 pada [planning](planning.md) mencatat owner, milestone deadline dan dampak.

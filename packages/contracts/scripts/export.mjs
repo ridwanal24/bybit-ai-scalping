@@ -9,6 +9,13 @@ import {
   configurationHash,
   canonicalJson,
   DECIMAL_FIELD_NAMES,
+  marketCandleSchema,
+  fundingRecordSchema,
+  instrumentObservationSchema,
+  marketManifestSchema,
+  marketQualitySchema,
+  marketDownloadRequestSchema,
+  marketContentHash,
 } from '../dist/index.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -142,6 +149,75 @@ const vectors = cases
     };
   });
 const outputs = {
+  'schemas/market-quality-v1.schema.json': z.toJSONSchema(marketQualitySchema),
+  'fixtures/market-vectors.json': [
+    {
+      schema: 'market-candle-v1.schema.json',
+      payload: {
+        schema_version: '1',
+        source: 'fixture',
+        category: 'linear',
+        symbol: 'BTCUSDT',
+        price_type: 'last',
+        timeframe: '1m',
+        open_time_ms: 1735689600000,
+        close_time_ms: 1735689660000,
+        open: '100',
+        high: '102',
+        low: '99',
+        close: '101',
+        volume: '2',
+        turnover: '201',
+        availability_policy: 'closed_candle_assumption_v1',
+      },
+    },
+    {
+      schema: 'market-candle-v1.schema.json',
+      payload: {
+        schema_version: '1',
+        source: 'fixture',
+        category: 'linear',
+        symbol: 'BTCUSDT',
+        price_type: 'mark',
+        timeframe: '1m',
+        open_time_ms: 1735689600000,
+        close_time_ms: 1735689660000,
+        open: '100',
+        high: '102',
+        low: '99',
+        close: '101',
+        volume: null,
+        turnover: null,
+        availability_policy: 'closed_candle_assumption_v1',
+      },
+    },
+    {
+      schema: 'funding-v1.schema.json',
+      payload: {
+        schema_version: '1',
+        source: 'fixture',
+        category: 'linear',
+        symbol: 'BTCUSDT',
+        timestamp_ms: 1735689600000,
+        rate: '-0.0001',
+      },
+    },
+  ].map(({ schema, payload }) => ({
+    schema,
+    payload,
+    canonical_json: canonicalJson(payload),
+    sha256: marketContentHash(payload),
+  })),
+  'schemas/market-candle-v1.schema.json': z.toJSONSchema(marketCandleSchema),
+  'schemas/funding-v1.schema.json': z.toJSONSchema(fundingRecordSchema),
+  'schemas/instrument-v1.schema.json': z.toJSONSchema(
+    instrumentObservationSchema,
+  ),
+  'schemas/dataset-manifest-v1.schema.json':
+    z.toJSONSchema(marketManifestSchema),
+  'schemas/market-download-request-v1.schema.json': z.toJSONSchema(
+    marketDownloadRequestSchema,
+  ),
   'schemas/configuration-v1.schema.json': {
     ...z.toJSONSchema(configurationSchema, { target: 'draft-2020-12' }),
     $id: 'urn:bybit:configuration:1',

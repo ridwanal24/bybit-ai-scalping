@@ -201,7 +201,7 @@ export async function stopDatabase(directory = path.join(runtime, 'postgres')) {
         'fast',
         '-w',
         '-t',
-        '30',
+        '60',
       ],
       { capture: true },
     );

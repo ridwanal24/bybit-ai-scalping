@@ -1,0 +1,59 @@
+[
+  {
+    "schema": "market-candle-v1.schema.json",
+    "payload": {
+      "schema_version": "1",
+      "source": "fixture",
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "price_type": "last",
+      "timeframe": "1m",
+      "open_time_ms": 1735689600000,
+      "close_time_ms": 1735689660000,
+      "open": "100",
+      "high": "102",
+      "low": "99",
+      "close": "101",
+      "volume": "2",
+      "turnover": "201",
+      "availability_policy": "closed_candle_assumption_v1"
+    },
+    "canonical_json": "{\"availability_policy\":\"closed_candle_assumption_v1\",\"category\":\"linear\",\"close\":\"101\",\"close_time_ms\":1735689660000,\"high\":\"102\",\"low\":\"99\",\"open\":\"100\",\"open_time_ms\":1735689600000,\"price_type\":\"last\",\"schema_version\":\"1\",\"source\":\"fixture\",\"symbol\":\"BTCUSDT\",\"timeframe\":\"1m\",\"turnover\":\"201\",\"volume\":\"2\"}",
+    "sha256": "f2d1af3c4044c3126b2c3110366723d085d6e1348ae6f59426a267f298ed7cc0"
+  },
+  {
+    "schema": "market-candle-v1.schema.json",
+    "payload": {
+      "schema_version": "1",
+      "source": "fixture",
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "price_type": "mark",
+      "timeframe": "1m",
+      "open_time_ms": 1735689600000,
+      "close_time_ms": 1735689660000,
+      "open": "100",
+      "high": "102",
+      "low": "99",
+      "close": "101",
+      "volume": null,
+      "turnover": null,
+      "availability_policy": "closed_candle_assumption_v1"
+    },
+    "canonical_json": "{\"availability_policy\":\"closed_candle_assumption_v1\",\"category\":\"linear\",\"close\":\"101\",\"close_time_ms\":1735689660000,\"high\":\"102\",\"low\":\"99\",\"open\":\"100\",\"open_time_ms\":1735689600000,\"price_type\":\"mark\",\"schema_version\":\"1\",\"source\":\"fixture\",\"symbol\":\"BTCUSDT\",\"timeframe\":\"1m\",\"turnover\":null,\"volume\":null}",
+    "sha256": "8902877f9ec674aee1edbcb7a647ca0b8aa6dcdcde45638653551175d32ef6f7"
+  },
+  {
+    "schema": "funding-v1.schema.json",
+    "payload": {
+      "schema_version": "1",
+      "source": "fixture",
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "timestamp_ms": 1735689600000,
+      "rate": "-0.0001"
+    },
+    "canonical_json": "{\"category\":\"linear\",\"rate\":\"-0.0001\",\"schema_version\":\"1\",\"source\":\"fixture\",\"symbol\":\"BTCUSDT\",\"timestamp_ms\":1735689600000}",
+    "sha256": "2534c9dc46a9d2c1a20b2c40c4498cc12c57f1bfa84268f5da34c7fb40480a73"
+  }
+]

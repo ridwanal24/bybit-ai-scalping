@@ -1,8 +1,8 @@
 # Arsitektur sistem
 
 Tanggal: 5 November 2026, Asia/Jakarta. Status: rancangan M0 diterima melalui
-`oke ku approve`; foundation M1 dan configuration M2 kini diimplementasikan,
-komponen berikutnya tetap rancangan. Dasar: [spesifikasi](../PROJECT_SPEC.md) bagian 7–8,
+`oke ku approve`; foundation M1, configuration M2 dan market data M3 kini
+diimplementasikan; komponen berikutnya tetap rancangan. Dasar: [spesifikasi](../PROJECT_SPEC.md) bagian 7–8,
 24–33, 36, dan [keputusan](decisions.md).
 
 ## Foundation M1 yang sudah diimplementasikan
@@ -24,6 +24,27 @@ Commands dan batas platform: [operations](operations.md). Verification dan
 cleanup proses test sudah lulus; detail [testing](testing.md).
 
 ## Komponen dan ownership
+
+M3 MarketDataModule menggunakan fixed-host public GET transport, backward pagination,
+exact data validation dan MarketDataService untuk revision/membership persistence,
+coordinator/quality/read/export. CLI memakai Nest application context tanpa server
+HTTP foreground. DatabaseModule dan service configuration M2 dipakai bersama.
+
+InstrumentObservation/CandleRevision/FundingRevision append-only; MarketDataset
+merujuk snapshot config dan pinned members, dengan MarketDataDownload checkpoint/
+lease. Partial unique index + transactional advisory lock mengizinkan satu RUNNING
+worker lintas proses. Page records/cursor atomic; token/expiry melindungi stale owner.
+Seal membekukan membership sebelum hashing, dan final dataset + run completion
+atomic. DB guards melindungi finalized rows; admin DDL tetap dapat bypass.
+
+Readonly API/JSONL export kronologis berasal dari pinned revisions. Content manifest
+dan fingerprint tidak memasukkan retrieval time/UUID/retry counts. Dataset quality
+menandai missing/conflict/invalid, current-only metadata, funding cadence unknown
+dan closed-candle availability assumption. Public source vs fixture terpisah.
+Readiness M3 memerlukan market_data_schema_version=1 selain dua marker lama.
+Contracts/schema/hash Python tests, CLI dan actual public export telah diverifikasi.
+Details: [market-data](market-data.md). Tidak ada WebSocket/feature computation/
+simulator yang diimplementasikan lebih awal.
 
 M2 menambah `packages/contracts` sebagai sumber Zod schema/semantic validation,
 canonical decimal/hash, catalog feature declarations, presets dan configuration
@@ -121,7 +142,8 @@ dan fixtures yang sama untuk structural validation TypeScript/Python. Zod adalah
 source schema, generated artifact menjadi published wire contract; tidak ada dua
 structural schema yang dikelola manual. Semantic checks authoritative ada pada
 TypeScript M2; Python business conformance diperkenalkan sebelum quant M4/M5.
-Kontrak candle/observation/order lainnya tetap rancangan [planning](planning.md).
+M3 menambahkan candle/funding/instrument/request/manifest/quality schemas dan shared
+market vectors; observation/order runtime tetap rancangan [planning](planning.md).
 
 Harga, quantity dan uang dikirim sebagai string desimal; timestamp UTC epoch
 milliseconds; interval `[start, end)`. Perhitungan accounting menggunakan decimal
@@ -179,7 +201,9 @@ docs/
 
 M0 hanya membuat dokumentasi. M1 telah membuat `apps/api`, `services/quant`,
 `scripts` dan local runtime yang ignored; M2 menambahkan `packages/contracts` dan
-research configuration API. `apps/web`, features/simulator dan trading tetap rencana.
+research configuration API. M3 menambahkan market-data modules/CLI, revisions,
+download/dataset persistence dan ignored exports. `apps/web`, features/simulator
+dan trading tetap rencana.
 Runtime secret, model dan log
 dikecualikan dari Git.
 

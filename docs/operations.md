@@ -3,6 +3,8 @@
 Target implementasi M1: Windows x64/PowerShell, satu mesin CPU. Belum ada UI,
 market data, simulator, training, order atau deployment model.
 M2 menambahkan research configuration API; tidak membutuhkan server baru.
+M3 menambahkan public historical ingestion dan CLI download/export; lihat
+[market-data](market-data.md) untuk request, resume, quality/source caveats dan limits.
 
 ## Setup
 
@@ -132,3 +134,29 @@ yang dipertahankan, Prisma schema diff, API workflow, snapshot DML guards dan
 concurrency. Cluster test tetap terpisah dari dev; report lokal berada di
 `.runtime/configuration-report.json`. Command verify:foundation juga menjalankan
 seluruh regression yang tersedia saat ini, bukan hanya daftar test historis M1.
+
+## Operasi market data M3
+
+```powershell
+.\.tools\node\npm.cmd run verify:market-data
+.\.tools\node\npm.cmd run data:download -- --id UUID_DOWNLOAD
+.\.tools\node\npm.cmd run data:export -- --dataset UUID_DATASET
+```
+
+Create request melalui POST /market-data/downloads, lalu jalankan CLI dengan ID
+yang diterima. PAUSED karena budget dapat dilanjutkan dengan ID sama; FAILED
+karena permanent invalid source memerlukan diagnosis/new request. Crash worker
+menunggu lease expiry120 detik sebelum takeover; worker stale tidak dapat commit.
+
+`smoke:bybit-data` adalah explicit network command terpisah; default24 jam
+BTCUSDT2025-01-01 UTC dalam preset snapshot, bukan latest rolling24h atau full-year.
+Command ini membuat research config/snapshot dan dataset pada dev DB proyek dan
+menyimpan export ignored. Tidak memakai credentials/API order. Hasil aktual dan
+dataset ID ada pada [handoff M3](handoffs/milestone-03.md).
+
+M3 readiness memerlukan ketiga schema markers. Migration baru additive; jangan
+mengedit migration lama atau reset DB untuk update. Development DB tetap running
+pada55432; test cluster55433 dihentikan verification. Shutdown timeout helper
+60 detik mengakomodasi disk checkpoint beberapa upgrade DB di Windows; tidak
+force-kill proses pengguna. Dataset exports/test clusters bukan source control;
+hapus hanya setelah review path/ownership dan kebutuhan reproducibility.

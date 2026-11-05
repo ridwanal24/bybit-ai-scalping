@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "format_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "quality_policy": {
+      "type": "string",
+      "const": "strict_closed_v1"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "bybit-mainnet",
+        "fixture"
+      ]
+    },
+    "symbol": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 30,
+      "pattern": "^[A-Z0-9]+USDT$"
+    },
+    "category": {
+      "type": "string",
+      "const": "linear"
+    },
+    "requested_start_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "requested_end_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "instrument_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "streams": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "start_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "end_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "required": [
+          "id",
+          "start_ms",
+          "end_ms",
+          "count",
+          "sha256"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "funding": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "coverage": {
+          "type": "string",
+          "const": "queried_range_historical_cadence_unverified"
+        }
+      },
+      "required": [
+        "count",
+        "sha256",
+        "coverage"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "format_version",
+    "quality_policy",
+    "source",
+    "symbol",
+    "category",
+    "requested_start_ms",
+    "requested_end_ms",
+    "instrument_hash",
+    "streams",
+    "funding"
+  ],
+  "additionalProperties": false
+}

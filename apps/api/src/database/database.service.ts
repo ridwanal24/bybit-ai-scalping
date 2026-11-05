@@ -24,12 +24,16 @@ export class DatabaseService implements OnModuleDestroy {
     const markers = await this.client.appMetadata.findMany({
       where: {
         key: {
-          in: ['foundation_schema_version', 'configuration_schema_version'],
+          in: [
+            'foundation_schema_version',
+            'configuration_schema_version',
+            'market_data_schema_version',
+          ],
         },
       },
     });
     return (
-      markers.length === 2 && markers.every((marker) => marker.value === '1')
+      markers.length === 3 && markers.every((marker) => marker.value === '1')
     );
   }
 

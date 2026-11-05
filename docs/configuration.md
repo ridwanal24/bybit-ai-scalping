@@ -2,7 +2,9 @@
 
 M1 menyediakan runtime environment untuk API dan koneksi database. Konfigurasi
 M2 menambahkan dokumen konfigurasi penelitian, draft berversi dan snapshot
-immutable. Environment server dan konfigurasi penelitian tetap terpisah.
+immutable. M3 memakai snapshot tersebut untuk dataset request yang terpisah;
+range subset/references download tidak memodifikasi config atau snapshot asal.
+Environment server dan konfigurasi penelitian tetap terpisah.
 
 Root `.env` lokal dibuat `npm run setup` hanya jika file belum ada. Password DB
 generated acak; tidak dicetak atau di-commit. `.env.example` hanya template.
@@ -149,3 +151,10 @@ validator kedua. Python semantic conformance wajib sebelum penggunaan quant M4/M
 Exchange capability/instrument metadata, dataset/funding, observation shape,
 normalization artifact, liquidation/margin, model evaluation dan operational
 readiness tetap gate milestone berikutnya.
+
+M3 telah menyediakan public instrument observations, dataset/funding records,
+quality dan reproducible export. Actual public data tersedia, tetapi current
+metadata observation belum menjadi historical instrument rules dan funding cadence
+tetap dilabeli unverified. Item checks pending pada config M2 tidak otomatis
+dianggap selesai/approved hanya karena satu dataset sudah READY. Penggunaan:
+[market-data](market-data.md).

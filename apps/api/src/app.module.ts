@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { parseEnvironment } from './config/environment.js';
 import { DatabaseModule } from './database/database.module.js';
 import { ResearchConfigurationsModule } from './research-configurations/configurations.module.js';
+import { MarketDataModule } from './market-data/market-data.module.js';
 import { HealthController } from './health/health.controller.js';
 import { HealthService } from './health/health.service.js';
 
@@ -10,6 +11,7 @@ import { HealthService } from './health/health.service.js';
   imports: [
     DatabaseModule,
     ResearchConfigurationsModule,
+    MarketDataModule,
     ConfigModule.forRoot({
       isGlobal: true,
       ignoreEnvFile: true,

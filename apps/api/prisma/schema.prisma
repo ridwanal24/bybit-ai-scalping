@@ -41,7 +41,112 @@ model ConfigurationSnapshot {
   provenance            Json   @db.JsonB
   createdAt             DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   source                ResearchConfiguration @relation(fields: [sourceConfigurationId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "configuration_snapshots_source_fkey")
+  datasets              MarketDataset[]
 
   @@unique([sourceConfigurationId, sourceRevision], map: "configuration_snapshot_source_revision_key")
   @@map("configuration_snapshots")
+}
+
+model InstrumentObservation {
+  id          String @id @default(uuid()) @db.Uuid
+  source      String
+  symbol      String
+  payload     Json @db.JsonB
+  contentHash String @map("content_hash") @db.Char(64)
+  observedAt  DateTime @default(now()) @map("observed_at") @db.Timestamptz(3)
+  datasets    MarketDataset[]
+  @@map("instrument_observations")
+}
+
+model CandleRevision {
+  id          String @id @default(uuid()) @db.Uuid
+  source      String
+  symbol      String
+  priceType   String @map("price_type")
+  timeframe   String
+  openTime    BigInt @map("open_time")
+  open        Decimal @db.Decimal(38,18)
+  high        Decimal @db.Decimal(38,18)
+  low         Decimal @db.Decimal(38,18)
+  close       Decimal @db.Decimal(38,18)
+  volume      Decimal? @db.Decimal(38,18)
+  turnover    Decimal? @db.Decimal(38,18)
+  payload     Json @db.JsonB
+  contentHash String @map("content_hash") @db.Char(64)
+  observedAt  DateTime @default(now()) @map("observed_at") @db.Timestamptz(3)
+  memberships MarketDatasetCandle[]
+  @@unique([source,symbol,priceType,timeframe,openTime,contentHash], name: "identity", map: "candle_revision_identity_key")
+  @@map("candle_revisions")
+}
+
+model FundingRevision {
+  id          String @id @default(uuid()) @db.Uuid
+  source      String
+  symbol      String
+  timestamp   BigInt
+  rate        Decimal @db.Decimal(38,18)
+  payload     Json @db.JsonB
+  contentHash String @map("content_hash") @db.Char(64)
+  observedAt  DateTime @default(now()) @map("observed_at") @db.Timestamptz(3)
+  memberships MarketDatasetFunding[]
+  @@unique([source,symbol,timestamp,contentHash], name: "identity", map: "funding_revision_identity_key")
+  @@map("funding_revisions")
+}
+
+model MarketDataset {
+  id           String @id @default(uuid()) @db.Uuid
+  snapshotId   String @map("snapshot_id") @db.Uuid
+  snapshot     ConfigurationSnapshot @relation(fields: [snapshotId],references: [id],onDelete: Restrict,onUpdate: Restrict,map: "market_dataset_snapshot_fkey")
+  request      Json @db.JsonB
+  status       String @default("BUILDING")
+  sealed       Boolean @default(false)
+  serverCutoff BigInt? @map("server_cutoff")
+  instrumentId String? @map("instrument_id") @db.Uuid
+  instrument   InstrumentObservation? @relation(fields: [instrumentId],references: [id],onDelete: Restrict,onUpdate: Restrict,map: "market_dataset_instrument_fkey")
+  quality      Json? @db.JsonB
+  manifest     Json? @db.JsonB
+  fingerprint  String? @db.Char(64)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  completedAt  DateTime? @map("completed_at") @db.Timestamptz(3)
+  candles      MarketDatasetCandle[]
+  funding      MarketDatasetFunding[]
+  download     MarketDataDownload?
+  @@index([createdAt,id],map: "market_dataset_created_id_idx")
+  @@map("market_datasets")
+}
+
+model MarketDatasetCandle {
+  datasetId String @map("dataset_id") @db.Uuid
+  stream    String
+  openTime  BigInt @map("open_time")
+  candleId  String @map("candle_id") @db.Uuid
+  dataset   MarketDataset @relation(fields: [datasetId],references: [id],onDelete: Restrict,onUpdate: Restrict,map: "dataset_candle_dataset_fkey")
+  candle    CandleRevision @relation(fields: [candleId],references: [id],onDelete: Restrict,onUpdate: Restrict,map: "dataset_candle_revision_fkey")
+  @@id([datasetId,stream,openTime],map: "dataset_candle_pkey")
+  @@map("dataset_candles")
+}
+
+model MarketDatasetFunding {
+  datasetId String @map("dataset_id") @db.Uuid
+  timestamp BigInt
+  fundingId String @map("funding_id") @db.Uuid
+  dataset   MarketDataset @relation(fields: [datasetId],references: [id],onDelete: Restrict,onUpdate: Restrict,map: "dataset_funding_dataset_fkey")
+  funding   FundingRevision @relation(fields: [fundingId],references: [id],onDelete: Restrict,onUpdate: Restrict,map: "dataset_funding_revision_fkey")
+  @@id([datasetId,timestamp],map: "dataset_funding_pkey")
+  @@map("dataset_funding")
+}
+
+model MarketDataDownload {
+  id           String @id @default(uuid()) @db.Uuid
+  datasetId    String @unique(map: "market_download_dataset_key") @map("dataset_id") @db.Uuid
+  dataset      MarketDataset @relation(fields: [datasetId],references: [id],onDelete: Restrict,onUpdate: Restrict,map: "market_download_dataset_fkey")
+  status       String @default("PENDING")
+  checkpoint   Json @db.JsonB
+  leaseToken   String? @map("lease_token") @db.Uuid
+  leaseExpires DateTime? @map("lease_expires") @db.Timestamptz(3)
+  blockedUntil DateTime? @map("blocked_until") @db.Timestamptz(3)
+  lastError    String? @map("last_error")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  @@map("market_data_downloads")
 }

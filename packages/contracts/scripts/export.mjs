@@ -16,6 +16,13 @@ import {
   marketQualitySchema,
   marketDownloadRequestSchema,
   marketContentHash,
+  FEATURE_FORMULAS,
+  featureSchema,
+  observationSchemaFor,
+  observationContextSchema,
+  normalizerSchema,
+  observationResultSchema,
+  featureArtifactSchema,
 } from '../dist/index.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -149,6 +156,19 @@ const vectors = cases
     };
   });
 const outputs = {
+  'schemas/feature-v1.schema.json': z.toJSONSchema(featureSchema),
+  'schemas/observation-context-v1.schema.json': z.toJSONSchema(
+    observationContextSchema,
+  ),
+  'schemas/normalizer-v1.schema.json': z.toJSONSchema(normalizerSchema),
+  'schemas/observation-result-v1.schema.json': z.toJSONSchema(
+    observationResultSchema,
+  ),
+  'schemas/feature-artifact-v1.schema.json': z.toJSONSchema(
+    featureArtifactSchema,
+  ),
+  'fixtures/feature-catalog.json': { version: '1', formulas: FEATURE_FORMULAS },
+  'fixtures/observation-vector.json': observationSchemaFor(valid),
   'schemas/market-quality-v1.schema.json': z.toJSONSchema(marketQualitySchema),
   'fixtures/market-vectors.json': [
     {
@@ -230,6 +250,81 @@ const outputs = {
   },
   'presets/research-small-hybrid-v1.json': valid,
 };
+const semanticCases = [...cases];
+for (const [field, value] of [
+  ['risk.initial_capital', '0'],
+  ['risk.max_position_notional', '0'],
+  ['risk.risk_per_trade', '0'],
+  ['risk.daily_loss_limit', '1'],
+  ['risk.max_drawdown', '0'],
+  ['risk.max_margin_fraction', '1.1'],
+  ['risk.daily_loss_limit', '0.2'],
+  ['risk.min_available_margin', '1000'],
+  ['market.historical_end_ms', 1735689600000],
+  ['market.historical_start_ms', 1735689600001],
+  ['market.secondary_timeframes', ['1m']],
+  ['market.secondary_timeframes', ['5m', '5m']],
+  ['stop_loss.atr_multiplier', '0'],
+  ['stop_loss.min_stop_fraction', '0'],
+  ['stop_loss.max_stop_fraction', '1'],
+  ['stop_loss.min_stop_fraction', '0.06'],
+  ['exit.rr', '0'],
+  ['exit.rr', null],
+  ['execution.taker_fee_rate', '1'],
+  ['execution.maker_fee_rate', '-1'],
+  ['execution.spread_bps', '10000'],
+  ['execution.slippage_bps', '10000'],
+  ['execution.funding.rate', '0.01'],
+  ['execution.funding.mode', 'fixed'],
+  ['execution.funding.rate', '1'],
+  ['stop_loss.fee_allowance_rate', '0'],
+  ['stop_loss.slippage_allowance_bps', '0'],
+  ['execution.stop_trigger_reference', 'mark'],
+  ['features.enabled', [valid.features.enabled[0], valid.features.enabled[0]]],
+  ['features.position_inputs', ['side', 'side']],
+  ['features.risk_inputs', ['drawdown', 'drawdown']],
+  ['features.periods.ema_fast', 21],
+  ['features.periods.ema_long', 21],
+  ['features.periods.macd_fast', 26],
+  ['features.periods.atr', 15],
+  ['network.policy_layers', [32]],
+  ['network.input_dimension', 1000000],
+  ['training.learning_rate', '0'],
+  ['training.gamma', '0'],
+  ['training.gae_lambda', '1.1'],
+  ['training.clip_range', '1'],
+  ['training.entropy_coefficient', '1'],
+  ['training.batch_size', 65],
+  ['training.batch_size', 256],
+  ['training.observation_window', 31],
+  ['training.episode_length_bars', 32],
+  ['training.n_steps', true],
+  ['market.historical_end_ms', 9007199254740992],
+]) {
+  const c = structuredClone(valid);
+  const keys = field.split('.');
+  let target = c;
+  for (const key of keys.slice(0, -1)) target = target[key];
+  target[keys.at(-1)] = value;
+  semanticCases.push({
+    name: `${field}=${JSON.stringify(value)}`,
+    configuration: c,
+  });
+}
+outputs['fixtures/semantic-conformance.json'] = semanticCases.map((item) => {
+  const structural = configurationSchema.safeParse(item.configuration).success;
+  const result = validateConfiguration(item.configuration);
+  return {
+    name: item.name,
+    configuration: item.configuration,
+    structurally_valid: structural,
+    semantically_valid: result.valid,
+    issues:
+      !result.valid && structural
+        ? result.issues.map(({ field, code }) => ({ field, code }))
+        : [],
+  };
+});
 for (const [relative, data] of Object.entries(outputs)) {
   const target = path.join(root, relative);
   const text = JSON.stringify(data, null, 2) + '\n';

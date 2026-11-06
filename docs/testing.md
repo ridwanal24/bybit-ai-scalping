@@ -1,5 +1,56 @@
 # Testing dan verifikasi
 
+## Hasil M4 — Feature Engineering
+
+Tanggal:6 November2026, Asia/Jakarta. Final command
+`.tools/node/npm.cmd run verify:features`: exit0 PASSED. Report lokal
+`.runtime/features-report.json`: UTC12:40:10.127–12:42:04.441
+(WIB19:40:10–19:42:04). **279 tests lulus tanpa skip**.
+
+| Pemeriksaan | Hasil aktual |
+| --- | --- |
+| Build/typecheck, ESLint/Ruff/Prettier, contracts export drift | Lulus |
+| TypeScript contracts | 77 passed (70 M2/M3 +7 feature contract cases) |
+| Backend unit | 30 passed |
+| Python | 142 passed; semantic conformance, exact hashes, all23 independent indicator vectors, seeds/edge values, train-only/prefix invariance, context/shape, artifact/provenance/corruption E2E |
+| PostgreSQL/HTTP integration | 30 passed; seluruh M1–M3 regression |
+| Fresh/reapply/M1+M2 upgrades | Lulus; legacy data preserved, zero schema diff |
+| Built process health/Python subprocess | Lulus; isolated cluster stopped |
+| jsonschema promotion | 4.26.0 dev→runtime, package versions/transitive lock tetap; offline lock/sync lulus |
+| Local public M3 export smoke | Lulus; fit/build CLI, replay dan artifact reload identik |
+
+Smoke terakhir UTC12:40:52.589707 (WIB19:40:52),8.075s, memakai dataset publik M3
+BTCUSDT2025-01-01 yang sudah ada; tidak ada download baru. Dataset
+`3717d128-5be2-433f-90dc-ac21d3c35b54`, fingerprint
+`229a793c410fde2a0eb118cc9fdfc8ee2e773ef225097037f47579e9999e26fa`.
+Train range00:00–12:00UTC half-open menghasilkan495 fit rows. Build menghasilkan
+1185 vectors x299 dan255 warm-up unavailable;720 heldout decisions pada
+`[12:00,24:00)`. Context `synthetic_flat_context_on_public_market_data`, bukan
+simulator/account state. Full build juga memuat close final pada Jan2 00:00UTC.
+
+Normalizer `e9313eebe60972c72d972987e279757bfd3016b8faca0c3652db06c7a39bcfd9`;
+artifact `7d34b20d9fb0f3ea010dcd618a93d705ccb8662a63fa5976a326d08f1bffb975`.
+Binary SHA `91f098e6c647ecf4cc53647c2275c356c54f43546775684fc19d87148184a844`;
+decision SHA `570a8878d39a816e8745495513976931cf9c318f7045309b3c4d8135a234751c`.
+Report `.runtime/features-smoke.json`; command
+`services/quant/.venv/Scripts/python.exe services/quant/tests/smoke_feature_export.py`.
+
+Run awal gagal pada Windows pytest temp ownership SID. Workspace basetemp unik
+dengan parent eksplisit memperbaikinya tanpa mengubah ACL global. Built API cold
+startup terukur6.4s melewati polling lama sekitar5s; test startup budget kini30s,
+health/database timeout aplikasi tetap. Test negatif snapshot kemudian diperbarui
+agar mengharapkan checksum failure pada validator yang lebih awal. Final suite
+di atas menguji source terakhir dan seluruh perbaikan, bukan hasil run gagal.
+
+Detail formula, context dan limitations: [features](features.md);
+[handoff M4](handoffs/milestone-04.md). Tidak ada simulator/training/trading claim.
+
+Audit dokumentasi akhir:20 Markdown docs/README (PROJECT_SPEC tidak diubah),109
+local links valid,0 trailing whitespace; `git diff --check` lulus. `.env`, runtime
+reports dan feature artifacts tetap ignored. Timestamp `.env` tetap5 November2026
+20:05:44 WIB;0 retained test clusters running. Dev DB55432 teramati stopped dan
+tidak dinyalakan M4. Setelah final suite, perubahan hanya dokumentasi.
+
 ## Hasil M3 — Bybit Market Data
 
 Tanggal:5 November2026, Asia/Jakarta. Final offline command

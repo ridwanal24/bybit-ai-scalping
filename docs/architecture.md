@@ -1,7 +1,7 @@
 # Arsitektur sistem
 
-Tanggal: 5 November 2026, Asia/Jakarta. Status: rancangan M0 diterima melalui
-`oke ku approve`; foundation M1, configuration M2 dan market data M3 kini
+Tanggal: 6 November 2026, Asia/Jakarta. Status: rancangan M0 diterima melalui
+`oke ku approve`; foundation M1, configuration M2, market data M3 dan features M4 kini
 diimplementasikan; komponen berikutnya tetap rancangan. Dasar: [spesifikasi](../PROJECT_SPEC.md) bagian 7–8,
 24–33, 36, dan [keputusan](decisions.md).
 
@@ -13,7 +13,8 @@ dan bootstrap loopback. Liveness terpisah dari readiness metadata schema versi 1
 DB failure tidak membuat liveness mengaku dependency sehat.
 
 `services/quant` berisi package src layout dan CLI health JSON dengan Python
-3.12 terisolasi. Belum ada worker protocol, features, simulator atau inference.
+3.12 terisolasi. M4 menambahkan features/observation offline; worker protocol,
+simulator dan inference tetap milestone berikutnya.
 `scripts/` mengelola portable runtime, setup, cluster lokal dan foundation E2E.
 `app_metadata` adalah satu-satunya tabel aplikasi M1; `_prisma_migrations` dikelola
 ORM. Tidak ada tabel domain trading/configuration M2 yang dibuat lebih awal.
@@ -24,6 +25,20 @@ Commands dan batas platform: [operations](operations.md). Verification dan
 cleanup proses test sudah lulus; detail [testing](testing.md).
 
 ## Komponen dan ownership
+
+M4 Python memakai verified streaming dataset loader, semantic configuration
+validator yang conformant dengan TypeScript, seeded/rolling indicator state,
+closed-HTF as-of alignment, frozen train-only Welford normalizer dan satu
+ObservationBuilder. State position/risk berasal dari explicit current caller
+context, bukan future portfolio history. Layout `W*F+P+R`, float32 little-endian,
+ordered schema hash dan actual network shape/parameter guard teruji.
+
+Contracts TypeScript mengekspor catalog/formula version, feature/context/normalizer/
+observation/artifact schemas dan generated conformance cases. Python memvalidasi
+seluruh semantic M2 sebelum computation, bukan hanya JSON Schema. `jsonschema`
+4.26.0 kini runtime dependency; tidak ada library ML/TA baru. Local content-addressed
+artifacts menyimpan checksums/config/dataset/snapshot/context provenance; M4 tidak
+menambah tabel atau process/socket. Detail interfaces/CLI: [features](features.md).
 
 M3 MarketDataModule menggunakan fixed-host public GET transport, backward pagination,
 exact data validation dan MarketDataService untuk revision/membership persistence,
@@ -43,8 +58,8 @@ menandai missing/conflict/invalid, current-only metadata, funding cadence unknow
 dan closed-candle availability assumption. Public source vs fixture terpisah.
 Readiness M3 memerlukan market_data_schema_version=1 selain dua marker lama.
 Contracts/schema/hash Python tests, CLI dan actual public export telah diverifikasi.
-Details: [market-data](market-data.md). Tidak ada WebSocket/feature computation/
-simulator yang diimplementasikan lebih awal.
+Details: [market-data](market-data.md). WebSocket dan simulator tetap direncanakan;
+feature computation tersedia melalui Python M4.
 
 M2 menambah `packages/contracts` sebagai sumber Zod schema/semantic validation,
 canonical decimal/hash, catalog feature declarations, presets dan configuration

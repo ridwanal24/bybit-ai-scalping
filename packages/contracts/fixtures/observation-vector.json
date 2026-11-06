@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1",
+    "formula_version": "1",
+    "market": [
+      {
+        "id": "log_return",
+        "timeframe": "1m"
+      },
+      {
+        "id": "body_ratio",
+        "timeframe": "1m"
+      },
+      {
+        "id": "ema_fast_distance",
+        "timeframe": "1m"
+      },
+      {
+        "id": "ema_slow_distance",
+        "timeframe": "1m"
+      },
+      {
+        "id": "rsi",
+        "timeframe": "1m"
+      },
+      {
+        "id": "atr_fraction",
+        "timeframe": "1m"
+      },
+      {
+        "id": "relative_volume",
+        "timeframe": "1m"
+      },
+      {
+        "id": "ema_spread",
+        "timeframe": "5m"
+      },
+      {
+        "id": "rsi",
+        "timeframe": "15m"
+      }
+    ],
+    "periods": {
+      "atr": 14,
+      "ema_fast": 9,
+      "ema_long": 55,
+      "ema_slow": 21,
+      "macd_fast": 12,
+      "macd_signal": 9,
+      "macd_slow": 26,
+      "rolling_return": 5,
+      "rsi": 14,
+      "volatility": 20,
+      "volume": 20
+    },
+    "position": [
+      "side",
+      "unrealized_pnl",
+      "duration",
+      "distance_to_sl",
+      "distance_to_tp",
+      "exposure",
+      "available_margin"
+    ],
+    "risk": [
+      "drawdown",
+      "remaining_daily_budget",
+      "trading_allowed",
+      "risk_fraction"
+    ],
+    "window": 32,
+    "dimension": 299,
+    "main_timeframe": "1m",
+    "layout": "market_row_major_then_current_position_then_current_risk",
+    "dtype": "float32-le",
+    "normalization": "market_zscore_context_scaled_v1",
+    "availability": "closed_asof_no_gap_fill_v1",
+    "context_scale": {
+      "initial_capital": "1000",
+      "max_holding_bars": 240,
+      "risk_per_trade": "0.005",
+      "exit_mode": "HYBRID"
+    }
+  },
+  "sha256": "c261aea5d6b507681f762787ded09249567358be43890c4ebfb62a408a81f814"
+}

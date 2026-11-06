@@ -202,6 +202,34 @@ planning bukan izin eksekusi live. **Deferred** memiliki deadline dalam
   yang tidak dapat dideserialisasi Prisma; shutdown wait60 detik untuk Windows disk
   checkpoint, tanpa force-kill. Tidak mengubah runtime major/credential/old migrations.
 
+## ADR-12 — Causal features, explicit context dan frozen normalizer M4
+
+- Status: implemented sesuai [plan M4](plans/milestone-04.md), Approved melalui
+  `lanjut` pada 6 November 2026. Evidence aktual pada [testing](testing.md).
+- Keputusan: standard-library Python indicator/rolling state, SMA-seeded EMA,
+  Wilder RSI/ATR, documented 23-ID catalog, closed-HTF backward as-of join dan
+  gap/warm-up unavailable. Shared schemas/generated vectors membuktikan semantic
+  configuration parity sebelum quant computation.
+- Alternatif: TA library defaults, pandas joins tanpa availability contract,
+  implicit zero fill, fitting semua histori atau memasukkan current context ke
+  setiap historical window row. Ditolak karena seed/leakage/shape ambiguity.
+- Layout: ordered market matrix row-major, lalu current position/risk sekali,
+  dimension W*F+P+R (default299), finite float32 little-endian. Context memakai
+  explicit caller as-of dan deterministic scaling; risk enforcement tetap M5/M11.
+- Normalizer: Welford population statistics pada explicit train role/range, frozen
+  artifact dengan schema/source/symbol binding. Context bukan invented fit sample.
+  Canonical decimal-string statistics menghindari cross-language JSON float hash.
+- Persistence: local content-addressed manifests/checksums, exclusive atomic
+  publish/verify dan snapshot provenance, tanpa migration/registry baru. Config
+  variant memerlukan verified source snapshot; API payload/camelCase dan portable
+  envelope diterima. Source snapshot/dataset lama tidak dimutasi.
+- Dependency: jsonschema4.26.0 dipromosikan dev→runtime tanpa upgrade version;
+  tidak menambah NumPy/pandas/TA-Lib/ML. Tradeoff throughput pure Python belum
+  dibenchmark setahun; prefix replay correctness mendahului optimasi live M11.
+- Batas: historical availability/current instrument/funding caveats M3 tetap
+  berlaku, hash bukan signature, default smoke context diberi label synthetic FLAT.
+  Tidak membuat simulasi, model, order atau klaim predictive performance.
+
 ## Keputusan yang belum ditutup
 
 R01–R16 pada [planning](planning.md) mencatat owner, milestone deadline dan dampak.

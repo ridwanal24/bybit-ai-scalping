@@ -56,9 +56,20 @@ async function build() {
 }
 
 async function tests() {
+  fs.mkdirSync(path.join(runtime, 'pytest'), { recursive: true });
   await npm(['run', 'test', '-w', '@bybit/contracts']);
   await npm(['run', 'test', '-w', '@bybit/api']);
-  await run(python, ['-m', 'pytest', '-q'], { cwd: quant });
+  await run(
+    python,
+    [
+      '-m',
+      'pytest',
+      '-q',
+      '--basetemp',
+      path.join(runtime, 'pytest', `${Date.now()}_${process.pid}`),
+    ],
+    { cwd: quant },
+  );
 }
 
 async function lint() {
@@ -302,7 +313,8 @@ async function apiSmoke(url, expectedStatus = 200) {
   });
   try {
     let ready = false;
-    for (let attempt = 0; attempt < 50; attempt++) {
+    const startupDeadline = Date.now() + 30000;
+    while (Date.now() < startupDeadline) {
       if (child.exitCode !== null)
         throw new Error('Built API exited before health check');
       try {
@@ -398,6 +410,7 @@ async function main() {
       await npm(['run', 'export', '-w', '@bybit/contracts']);
       return;
     case 'verify:configuration':
+    case 'verify:features':
     case 'verify:market-data':
     case 'verify': {
       const startedAt = new Date().toISOString();
@@ -421,11 +434,13 @@ async function main() {
         fs.writeFileSync(
           path.join(
             runtime,
-            task === 'verify:market-data'
-              ? 'market-data-report.json'
-              : task === 'verify:configuration'
-                ? 'configuration-report.json'
-                : 'foundation-report.json',
+            task === 'verify:features'
+              ? 'features-report.json'
+              : task === 'verify:market-data'
+                ? 'market-data-report.json'
+                : task === 'verify:configuration'
+                  ? 'configuration-report.json'
+                  : 'foundation-report.json',
           ),
           JSON.stringify(report, null, 2) + '\n',
         );
@@ -444,6 +459,16 @@ async function main() {
           : task === 'data:export'
             ? 'export'
             : 'smoke',
+        ...process.argv.slice(3),
+      ]);
+      return;
+    case 'features:fit':
+    case 'features:build':
+      await buildContracts();
+      await run(python, [
+        '-m',
+        'bybit_quant',
+        task.replace(':', '-'),
         ...process.argv.slice(3),
       ]);
       return;

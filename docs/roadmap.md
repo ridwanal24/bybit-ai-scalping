@@ -1,6 +1,6 @@
 # Roadmap
 
-Tanggal: 5 November 2026, Asia/Jakarta. Sumber requirement tetap
+Tanggal: 6 November 2026, Asia/Jakarta. Sumber requirement tetap
 [PROJECT_SPEC.md](../PROJECT_SPEC.md) bagian 39–40. Task asli dipertahankan di bawah;
 roadmap ini menambahkan dependency dan checkpoint, tidak memberi approval baru.
 
@@ -31,7 +31,7 @@ yang konkret sebelum persetujuan milestone tersebut.
 | 1 | Completed; [plan Approved](plans/milestone-01.md), [handoff](handoffs/milestone-01.md) | M0 diterima | Backend/Python berjalan, DB connected, migration/health/tests/verification lulus; setup terdokumentasi |
 | 2 | Completed; [plan Approved](plans/milestone-02.md), [handoff](handoffs/milestone-02.md) | M1 | Config persistence/validation, immutable snapshot, presets/compatibility dan integration/regression lulus |
 | 3 | Completed; [plan](plans/milestone-03.md), [handoff](handoffs/milestone-03.md) | M1–M2 | 135 tests dan public BTCUSDT24h collection/export lulus; revisions/quality/resume/fingerprint dan source caveats tersedia |
-| 4 | Planned; belum Approved | M2–M3 | Indikator benar, HTF no leakage, ordering/shape stabil, normalizer train-only, shared observation contract |
+| 4 | Completed; [plan Approved](plans/milestone-04.md), [handoff](handoffs/milestone-04.md) | M2–M3 | 279 tests + local public-export smoke/replay lulus; 23 fitur, HTF no leakage, ordering/shape, train-only normalizer dan semantic parity |
 | 5 | Planned; belum Approved | M2–M4 | Long/short, costs, funding, sizing, risk, SL/TP event ordering benar; deterministic equity/trades; margin/liquidation model atau restriction disetujui dan terdokumentasi |
 | 6 | Planned; belum Approved | M3–M5 | Historical → features → baseline → simulator → metrics berjalan; HOLD/random/EMA/Buy & Hold dibanding konsisten |
 | 7 | Planned; belum Approved | M4–M6 | Gymnasium API valid, masking benar, simulator tunggal, reward/accounting konsisten, deterministic/reward integrity tests lulus |
@@ -124,6 +124,10 @@ Gunakan fixtures untuk failure/pagination dan public API smoke hanya bila tersed
 hasil aktual harus dibedakan. Dataset berubah memerlukan versi baru.
 
 ### M4 — Feature Engineering
+
+Implementation plan: [milestone-04.md](plans/milestone-04.md), 6 November 2026.
+Approved melalui `lanjut`; seluruh task4.1–4.17 dan Python semantic configuration
+parity selesai. Evidence/gates pada [handoff M4](handoffs/milestone-04.md).
 
 - 4.1 Price returns; 4.2 Candle features; 4.3 EMA; 4.4 RSI; 4.5 MACD.
 - 4.6 ATR; 4.7 Volatility; 4.8 Volume; 4.9 Multi-timeframe alignment.

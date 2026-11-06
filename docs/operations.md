@@ -1,10 +1,18 @@
 # Operasi foundation dan configuration lokal
 
-Target implementasi M1: Windows x64/PowerShell, satu mesin CPU. Belum ada UI,
-market data, simulator, training, order atau deployment model.
+Target implementasi: Windows x64/PowerShell, satu mesin CPU. Belum ada UI,
+simulator, training, order atau deployment model.
 M2 menambahkan research configuration API; tidak membutuhkan server baru.
 M3 menambahkan public historical ingestion dan CLI download/export; lihat
 [market-data](market-data.md) untuk request, resume, quality/source caveats dan limits.
+M4 menambahkan offline Python features/normalizer/observation CLI dan verified
+artifacts. [Features](features.md) memuat commands fit/build, context JSONL dan
+optional source snapshot untuk config variant; command tidak memakai network/DB.
+
+`npm run verify:features` menjalankan verification stack M1–M4. Python fixture
+temporary directory unik berada di `.runtime/pytest/<timestamp>_<pid>` agar tidak
+bergantung pada ownership folder temp Windows antar SID. Cluster PostgreSQL
+regression tetap terisolasi di55433 dan dihentikan setelah run; tidak ada migration M4.
 
 ## Setup
 

@@ -5,16 +5,18 @@ PostgreSQL, dan MaskablePPO. Sumber requirement: [PROJECT_SPEC.md](PROJECT_SPEC.
 
 ## Status aktual
 
-Per 5 November 2026 (Asia/Jakarta), **M3 — Bybit Market Data Completed**.
-Foundation dan configuration M1/M2 tetap tersedia. Public REST ingestion kini
+Per 6 November 2026 (Asia/Jakarta), **M4 — Feature Engineering Completed**.
+Foundation/configuration/market data M1–M3 tetap tersedia. Public REST ingestion
 memvalidasi/menyimpan historical candles, instrument dan funding, mendukung resume,
 quality report, pinned revisions, fingerprint dan JSONL export.
-Implementasi M3 disetujui melalui `lanjutkan` setelah plan disajikan.
+M4 disetujui melalui `lanjut` setelah plan disajikan; Python sekarang menyediakan
+23 fitur, closed-HTF alignment, train-only normalizer dan ObservationBuilder.
 
 Data publik BTCUSDT 1 Januari 2025 UTC sudah terkumpul: 1.440 candle1m,
 288 candle5m, 96 candle15m dan3 funding records, tanpa candle gap/invalid/conflict.
-Belum ada frontend, feature engine, simulator, training/model atau trading execution.
-M4 — Feature Engineering belum disetujui dan tidak dimulai otomatis.
+Local smoke menghasilkan1185 observations x299 dari export publik tersebut,
+dengan frozen normalizer dan synthetic FLAT context berlabel. Belum ada frontend,
+simulator, training/model atau trading execution. M5 belum disetujui.
 
 ## Setup Windows x64
 
@@ -36,13 +38,17 @@ dev command memantau output dist. Secret/runtime tidak di-commit.
 .\.tools\node\npm.cmd run verify:foundation
 .\.tools\node\npm.cmd run verify:configuration
 .\.tools\node\npm.cmd run verify:market-data
+.\.tools\node\npm.cmd run verify:features
 .\.tools\node\npm.cmd run db:status
 .\.tools\node\npm.cmd run db:stop
 ```
 
-Verification M3 lulus: 70 contract tests, 30 unit backend, 5 Python, 30 integration
-(135 total), migration upgrade/schema diff, export/Python checks dan seluruh M1/M2
-regressions. Public smoke dan export aktual juga lulus. Evidence: [testing](docs/testing.md).
+Verification M4 lulus: 77 contract tests,30 unit backend,142 Python,30 integration
+(279 total), migration upgrade/schema diff dan seluruh M1–M3 regressions.
+Frozen artifacts, golden indicators, semantic parity, leakage checks dan local
+public-export smoke/replay lulus. Evidence: [testing](docs/testing.md).
+
+Feature CLI, context JSONL, source snapshot dan artifact layout: [features](docs/features.md).
 
 Download/export API dan CLI: [market-data](docs/market-data.md).
 Public smoke adalah command terpisah `npm run smoke:bybit-data`; bukan bagian
@@ -72,6 +78,9 @@ Configuration valid belum berarti siap trading; execution checks tetap pending.
 | [Market data](docs/market-data.md) | Download/resume, quality, source limitations, API/CLI dan export |
 | [Plan M3](docs/plans/milestone-03.md) | Scope ingestion yang disetujui |
 | [Handoff M3](docs/handoffs/milestone-03.md) | Hasil aktual, dataset publik dan konteks M4 |
+| [Features](docs/features.md) | Formula, alignment, normalizer, observation/context dan offline CLI |
+| [Plan M4](docs/plans/milestone-04.md) | Scope feature engineering yang disetujui |
+| [Handoff M4](docs/handoffs/milestone-04.md) | Hasil aktual dan konteks M5 |
 | [Handoff M0](docs/handoffs/milestone-00.md) | Hasil, keterbatasan dan instruksi sesi berikutnya |
 
 ## Alur pengembangan

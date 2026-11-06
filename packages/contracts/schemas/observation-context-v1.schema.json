@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "as_of_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "side": {
+      "type": "string",
+      "enum": [
+        "FLAT",
+        "LONG",
+        "SHORT"
+      ]
+    },
+    "mark": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "entry": {
+      "type": "number",
+      "minimum": 0
+    },
+    "quantity": {
+      "type": "number",
+      "minimum": 0
+    },
+    "stop": {
+      "type": "number",
+      "minimum": 0
+    },
+    "take_profit": {
+      "anyOf": [
+        {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "duration_bars": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "equity": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "high_water_equity": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "daily_start_equity": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "available_margin": {
+      "type": "number",
+      "minimum": 0
+    },
+    "remaining_daily_budget": {
+      "type": "number",
+      "minimum": 0
+    },
+    "trading_allowed": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "as_of_ms",
+    "side",
+    "mark",
+    "entry",
+    "quantity",
+    "stop",
+    "take_profit",
+    "duration_bars",
+    "equity",
+    "high_water_equity",
+    "daily_start_equity",
+    "available_margin",
+    "remaining_daily_budget",
+    "trading_allowed"
+  ],
+  "additionalProperties": false
+}

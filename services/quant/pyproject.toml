@@ -1,9 +1,9 @@
 [project]
 name = "bybit-quant"
 version = "0.1.0"
-description = "Quant engine foundation; no trading or training implementation yet"
+description = "Verified market features and observations; no trading or training yet"
 requires-python = ">=3.12,<3.13"
-dependencies = []
+dependencies = ["jsonschema==4.26.0"]
 
 [project.scripts]
 bybit-quant = "bybit_quant.__main__:main"
@@ -14,7 +14,6 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
-    "jsonschema>=4,<5",
     "pytest>=8.3,<10",
     "ruff>=0.14,<1",
 ]

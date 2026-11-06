@@ -145,9 +145,11 @@ risk/cost/mode berubah → reevaluation_required dengan behavioral review.
 Respons selalu menyatakan model_approval dan execution_readiness not_assessed.
 Configuration valid atau target mode real tidak mengaktifkan akun/trading.
 
-JSON Schema artifact menjamin struktur, bukan seluruh aturan lintas field. Python
-jsonschema saat ini hanya dev/contract test consumer, bukan runtime business
-validator kedua. Python semantic conformance wajib sebelum penggunaan quant M4/M5.
+JSON Schema artifact menjamin struktur, bukan seluruh aturan lintas field. M4
+memenuhi gate Python semantic conformance: runtime validator menegakkan rules M2
+dengan exact decimal comparisons dan generated TS/Python issue vectors. jsonschema
+4.26.0 kini runtime dependency. Observation schema/shape/normalizer compatibility
+memiliki validasi runtime terpisah sebelum vector diterbitkan.
 Exchange capability/instrument metadata, dataset/funding, observation shape,
 normalization artifact, liquidation/margin, model evaluation dan operational
 readiness tetap gate milestone berikutnya.
@@ -158,3 +160,12 @@ metadata observation belum menjadi historical instrument rules dan funding caden
 tetap dilabeli unverified. Item checks pending pada config M2 tidak otomatis
 dianggap selesai/approved hanya karena satu dataset sudah READY. Penggunaan:
 [market-data](market-data.md).
+
+M4 tidak mengubah configuration v1 atau snapshot lama. Default actual observation
+dimension299 diturunkan dari ordered enabled fields/window; declared dimension
+harus cocok. Fit memakai explicit train range dan frozen artifact ID, disimpan
+terpisah ketika snapshot masih artifact_id=null. Config varian dapat memakai data
+yang sama dengan verified source snapshot dan stream/range compatibility.
+Context current position/risk dan schema/artifact CLI: [features](features.md).
+Config-level pending execution checks M2 tetap konservatif; observation artifact
+yang valid belum menjadi model approval, risk enforcement atau izin trading.

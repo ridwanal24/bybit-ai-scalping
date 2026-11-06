@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "valid": {
+          "type": "boolean",
+          "const": true
+        },
+        "decision_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "schema_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "normalizer_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "values": {
+          "minItems": 1,
+          "maxItems": 1000000,
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "required": [
+        "valid",
+        "decision_ms",
+        "schema_hash",
+        "normalizer_id",
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "valid": {
+          "type": "boolean",
+          "const": false
+        },
+        "decision_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "warm_up",
+            "gap",
+            "stale",
+            "missing_context",
+            "missing_artifact",
+            "incompatible",
+            "invalid_value"
+          ]
+        }
+      },
+      "required": [
+        "valid",
+        "decision_ms",
+        "reason"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

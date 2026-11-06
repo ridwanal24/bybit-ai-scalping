@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1"
+    },
+    "formula_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "market": {
+      "minItems": 1,
+      "maxItems": 184,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "log_return",
+              "percentage_return",
+              "body_ratio",
+              "upper_wick_ratio",
+              "lower_wick_ratio",
+              "range_fraction",
+              "close_location",
+              "rolling_return",
+              "ema_fast_distance",
+              "ema_slow_distance",
+              "ema_long_distance",
+              "ema_spread",
+              "ema_slope",
+              "rsi",
+              "macd_line",
+              "macd_signal",
+              "macd_histogram",
+              "atr",
+              "atr_fraction",
+              "volatility",
+              "volume_change",
+              "relative_volume",
+              "volume_ma_ratio"
+            ]
+          },
+          "timeframe": {
+            "type": "string",
+            "enum": [
+              "1m",
+              "3m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "4h",
+              "1D"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "timeframe"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "periods": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "integer",
+        "exclusiveMinimum": 0,
+        "maximum": 9007199254740991
+      }
+    },
+    "position": {
+      "minItems": 1,
+      "maxItems": 7,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "side",
+          "unrealized_pnl",
+          "duration",
+          "distance_to_sl",
+          "distance_to_tp",
+          "exposure",
+          "available_margin"
+        ]
+      }
+    },
+    "risk": {
+      "minItems": 1,
+      "maxItems": 4,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "drawdown",
+          "remaining_daily_budget",
+          "trading_allowed",
+          "risk_fraction"
+        ]
+      }
+    },
+    "window": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4096
+    },
+    "dimension": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 1000000
+    },
+    "main_timeframe": {
+      "type": "string",
+      "enum": [
+        "1m",
+        "3m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "4h",
+        "1D"
+      ]
+    },
+    "layout": {
+      "type": "string",
+      "const": "market_row_major_then_current_position_then_current_risk"
+    },
+    "dtype": {
+      "type": "string",
+      "const": "float32-le"
+    },
+    "normalization": {
+      "type": "string",
+      "const": "market_zscore_context_scaled_v1"
+    },
+    "availability": {
+      "type": "string",
+      "const": "closed_asof_no_gap_fill_v1"
+    },
+    "context_scale": {
+      "type": "object",
+      "properties": {
+        "initial_capital": {
+          "type": "string"
+        },
+        "max_holding_bars": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "risk_per_trade": {
+          "type": "string"
+        },
+        "exit_mode": {
+          "type": "string",
+          "enum": [
+            "FIXED_RR",
+            "AI_EXIT",
+            "HYBRID"
+          ]
+        }
+      },
+      "required": [
+        "initial_capital",
+        "max_holding_bars",
+        "risk_per_trade",
+        "exit_mode"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "version",
+    "formula_version",
+    "market",
+    "periods",
+    "position",
+    "risk",
+    "window",
+    "dimension",
+    "main_timeframe",
+    "layout",
+    "dtype",
+    "normalization",
+    "availability",
+    "context_scale"
+  ],
+  "additionalProperties": false
+}

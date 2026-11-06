@@ -1,0 +1,28 @@
+{
+  "version": "1",
+  "formulas": {
+    "log_return": "ln(C/Cprev)",
+    "percentage_return": "C/Cprev-1",
+    "body_ratio": "(C-O)/(H-L);zero_range=0",
+    "upper_wick_ratio": "(H-max(O,C))/(H-L);zero_range=0",
+    "lower_wick_ratio": "(min(O,C)-L)/(H-L);zero_range=0",
+    "range_fraction": "(H-L)/C",
+    "close_location": "(C-L)/(H-L);zero_range=0.5",
+    "rolling_return": "C/C_lag_period-1",
+    "ema_fast_distance": "C/EMAfast-1",
+    "ema_slow_distance": "C/EMAslow-1",
+    "ema_long_distance": "C/EMAlong-1",
+    "ema_spread": "(EMAfast-EMAslow)/C",
+    "ema_slope": "EMAfast/EMAfast_prev-1",
+    "rsi": "Wilder_gain_loss;flat=50;gain_only=100;loss_only=0",
+    "macd_line": "EMAfast-EMAslow",
+    "macd_signal": "EMA(raw_macd_line)",
+    "macd_histogram": "raw_macd_line-raw_signal",
+    "atr": "Wilder_true_range;previous_close_required",
+    "atr_fraction": "ATR/C",
+    "volatility": "population_std(log_returns);not_annualized",
+    "volume_change": "V/Vprev-1",
+    "relative_volume": "V/mean(previous_period_volumes)",
+    "volume_ma_ratio": "V/mean(current_inclusive_period_volumes)"
+  }
+}

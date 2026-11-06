@@ -28,6 +28,8 @@
     "verify:configuration": "node scripts/tasks.mjs verify:configuration",
     "verify:market-data": "node scripts/tasks.mjs verify:market-data",
     "verify:features": "node scripts/tasks.mjs verify:features",
+    "verify:simulation": "node scripts/tasks.mjs verify:simulation",
+    "simulation:run": "node scripts/tasks.mjs simulation:run",
     "features:fit": "node scripts/tasks.mjs features:fit",
     "features:build": "node scripts/tasks.mjs features:build",
     "data:download": "node scripts/tasks.mjs data:download",

@@ -1,5 +1,58 @@
 # Testing dan verifikasi
 
+## Hasil M5 — Trading Simulator
+
+Tanggal:6 November2026, Asia/Jakarta. Final
+`.tools/node/npm.cmd run verify:simulation` exit0 PASSED. Report
+`.runtime/simulation-report.json`: UTC13:53:03.020–13:55:05.696
+(WIB20:53:03–20:55:05). **384 tests lulus tanpa skip**.
+
+| Pemeriksaan | Hasil aktual |
+| --- | --- |
+| TypeScript contracts | 84 passed (77 M2–M4 +7 simulation contract cases) |
+| Backend unit | 33 passed, termasuk final-attempt cooldown audit |
+| Python | 236 passed (149 sebelumnya +87 simulator cases) |
+| PostgreSQL/HTTP integration | 31 passed, seluruh M1–M4 regressions |
+| Build/typecheck/lint/Ruff/Prettier/export drift | Lulus |
+| Fresh/reapply/M1+M2 upgrades, data preservation/zero schema diff | Lulus |
+| Scripted fixture M3→M4→simulator→artifact→reload | LONG+SHORT virtual trades, deterministic replay dan reconciliation lulus |
+| Callback context / no future / delays | Ledger-generated current state, frozen ATR, prefix/delayed main gating dan next-open latency tests lulus |
+| Risk/funding/exits | UTC/day/DD latches, all exit modes, gap/double touch, declared schedules/intrabar rejection, terminal/envelope/bankruptcy tests lulus |
+| Large policy JSON document | 1000 declared segments, report>64KiB, reload lulus dengan document bound2MiB |
+| CLI | Valid exit0/replay, diagnostic invalid exit2, malformed request exit1 tersanitasi |
+
+Run verification sebelumnya exit0 dengan383 cases; sesudah menemukan/fix parser
+report document besar, final suite384 di atas mencakup regression baru dan source
+terakhir. Tidak ada final DB timeout M5 dan tidak ada production timeout change.
+Temporary/cluster test memakai pola M1–M4. Tidak ada migration/dependency baru.
+
+Explicit local-only smoke `services/quant/tests/smoke_simulation.py` selesai
+WIB20:56:34,14.285s; memakai existing public M3 BTCUSDT24h export dan frozen M4
+normalizer, tanpa download/fit baru. Episode04:00–24:00 UTC1 Januari2025,
+declared8h funding/current metadata/last-open proxy acknowledgements.
+CLI dua kali+reload dan root `npm run simulation:run -- --request ...` exit0
+menghasilkan artifact identik:
+`4e2ac0e1d0dd2e7bff0f63b6b2ecc6454bf1ef20e0cb2b3d10abac6e2b3f3fa8`.
+
+Hasil:1 SHORT qty0.005,hard_sl; gross−0.9205,fees0.9460445,funding0,
+net−1.8665445,final wallet/equity998.1334555 USDT,FLAT.1184 valid observations,
+16 warm-up unavailable,2430 events/2401 equity rows.7 entries rejected karena stop
+distance dan8 closes mismatch. Script times/sides predetermined, tidak di-tune
+untuk profit. LONG+SHORT dibuktikan fixture, bukan public smoke single-trade ini.
+Public funding records tervalidasi terhadap declared schedule tetapi tidak ada
+posisi terekspos settlement; signed cashflows dibuktikan deterministic fixtures.
+
+Evidence: `.runtime/verify-simulation-final.log`, `simulation-report.json`,
+`simulation-smoke.json`, `simulation-root-cli.log` dan ignored
+`artifacts/simulations/<id>/`. File hashes/code fingerprint dan hasil per task:
+[handoff M5](handoffs/milestone-05.md); formula/limitations: [simulation](simulation.md).
+
+Audit akhir:23 Markdown docs/README (PROJECT_SPEC tidak diubah),136 local links
+valid,0 trailing whitespace, `git diff --check` lulus.0 retained test clusters
+running; `.env` tetap5 November2026 20:05:44 WIB dan ignored bersama runtime/
+simulation artifacts. Tidak ada perubahan Prisma migrations. Setelah final suite
+dan root CLI smoke, perubahan hanya dokumentasi.
+
 ## Perbaikan audit M1–M4 — 6 November 2026
 
 Dua temuan audit diperbaiki atas instruksi pengguna:

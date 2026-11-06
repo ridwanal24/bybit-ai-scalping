@@ -230,7 +230,40 @@ planning bukan izin eksekusi live. **Deferred** memiliki deadline dalam
   berlaku, hash bukan signature, default smoke context diberi label synthetic FLAT.
   Tidak membuat simulasi, model, order atau klaim predictive performance.
 
+## ADR-13 — Exact ledger dan restricted deterministic simulator M5
+
+- Status: implemented sesuai [plan M5](plans/milestone-05.md), Approved melalui
+  `kerjakan`. Satu historical Python engine dipakai kembali oleh M6/M7, tanpa
+  trading/backend accounting kedua atau dependency baru.
+- Financials: Decimal precision128, currency quantum1e-18/adverse rounding,
+  margin collateral bukan expense, one-time fees/realization dan signed funding.
+  Config/data/schedule/normalizer/source versions masuk immutable artifact.
+- Event contract: closed decision, earliest eligible next open, funding old
+  position sebelum gap protections/close/new entry; gap SL lalu capped gap TP
+  mendahului discretionary exit. Intrabar ambiguous SL-first, book pada close
+  dengan phase eksplisit, tanpa guessed exact tick time atau retroactive fills.
+- Alternative: optimistic OHLC fills, floating financial ledger, full Bybit
+  liquidation tiers/limit order model saat data mark/tier/history belum tersedia.
+  Dipilih research envelope yang bisa diuji dengan honest unsupported gates.
+- Restriction: market/last/1x, one position, entry notional/margin<=50% equity,
+  declared aligned funding schedule, last-open funding proxy, current metadata
+  acknowledgement. Adverse collateral/bankruptcy invalid tanpa fake exit.
+- Risk: UTC anchor sebelum boundary funding, daily latch tidak cleared oleh
+  recovery, sampled high-water DD latch lintas hari, forced next-open/holding/
+  cooldown dan terminal settlement. External cashflow/foreign state ditolak.
+- Shared fixtures/schema: independent LONG/SHORT profit/loss dan UTC risk latch
+  vectors; NestJS live risk equivalence tetap gate M11, bukan klaim lulus M5.
+- Publication: streaming JSONL + report/descriptor documents, checksum and ledger
+  verification sebelum rename, existing content ID hanya verify. Actual runtime
+  version/architecture/code/contract/lock fingerprints disimpan. Report documents
+  memiliki limit2MiB terpisah dari per-record JSONL64KiB.
+- Consequence: no production readiness/profit claim, unsupported configs ditolak,
+  full-year throughput/backup/registry/resume/jobs masih milestone terkait.
+
 ## Keputusan yang belum ditutup
+
+M5 menutup pilihan R05 untuk restricted research saja: lihat ADR-13;
+full exchange liquidation realism tetap di luar kemampuan simulator ini.
 
 R01–R16 pada [planning](planning.md) mencatat owner, milestone deadline dan dampak.
 Sebelum milestone terkait diimplementasikan, plan harus menyelesaikan pilihan yang

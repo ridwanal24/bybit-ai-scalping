@@ -32,7 +32,7 @@ yang konkret sebelum persetujuan milestone tersebut.
 | 2 | Completed; [plan Approved](plans/milestone-02.md), [handoff](handoffs/milestone-02.md) | M1 | Config persistence/validation, immutable snapshot, presets/compatibility dan integration/regression lulus |
 | 3 | Completed; [plan](plans/milestone-03.md), [handoff](handoffs/milestone-03.md) | M1–M2 | 135 tests dan public BTCUSDT24h collection/export lulus; revisions/quality/resume/fingerprint dan source caveats tersedia |
 | 4 | Completed; [plan Approved](plans/milestone-04.md), [handoff](handoffs/milestone-04.md) | M2–M3 | 290 tests setelah perbaikan audit + local public-export smoke/replay lulus; 23 fitur, main/HTF availability, ordering/shape, train-only normalizer dan semantic parity |
-| 5 | Planned; belum Approved | M2–M4 | Long/short, costs, funding, sizing, risk, SL/TP event ordering benar; deterministic equity/trades; margin/liquidation model atau restriction disetujui dan terdokumentasi |
+| 5 | Completed; [plan Approved](plans/milestone-05.md), [handoff](handoffs/milestone-05.md) | M2–M4 | 384 tests + local public-export simulation/replay lulus; exact LONG/SHORT ledger, costs/risk/exits/funding dan restricted1x/50% envelope |
 | 6 | Planned; belum Approved | M3–M5 | Historical → features → baseline → simulator → metrics berjalan; HOLD/random/EMA/Buy & Hold dibanding konsisten |
 | 7 | Planned; belum Approved | M4–M6 | Gymnasium API valid, masking benar, simulator tunggal, reward/accounting konsisten, deterministic/reward integrity tests lulus |
 | 8 | Planned; belum Approved | M7 | CPU smoke training, save/load, valid masked actions/evaluation, metadata/checkpoint, progress/cancel/resource limits teruji |
@@ -136,6 +136,11 @@ parity selesai. Evidence/gates pada [handoff M4](handoffs/milestone-04.md).
 - 4.17 Feature/observation tests.
 
 ### M5 — Trading Simulator
+
+Implementation plan: [milestone-05.md](plans/milestone-05.md),6 November2026.
+Approved melalui `kerjakan`; task5.1–5.27 selesai dan diverifikasi.
+Plan menetapkan market-only/last-price/1x, declared funding schedule dengan
+boundary settlements, conservative envelope dan artifact/ledger contracts.
 
 - 5.1 Market state; 5.2 Portfolio state; 5.3 Position state.
 - 5.4 Long PnL; 5.5 Short PnL; 5.6 Entry accounting; 5.7 Exit accounting.

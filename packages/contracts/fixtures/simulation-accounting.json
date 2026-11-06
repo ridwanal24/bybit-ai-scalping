@@ -1,0 +1,50 @@
+[
+  {
+    "name": "long_profit",
+    "side": 1,
+    "quantity": "1",
+    "entry": "100",
+    "exit": "105",
+    "fee_rate": "0.001",
+    "entry_fee": "0.1",
+    "exit_fee": "0.105",
+    "gross_pnl": "5",
+    "final_wallet": "1004.795"
+  },
+  {
+    "name": "short_profit",
+    "side": -1,
+    "quantity": "1",
+    "entry": "100",
+    "exit": "95",
+    "fee_rate": "0.001",
+    "entry_fee": "0.1",
+    "exit_fee": "0.095",
+    "gross_pnl": "5",
+    "final_wallet": "1004.805"
+  },
+  {
+    "name": "long_loss",
+    "side": 1,
+    "quantity": "1",
+    "entry": "100",
+    "exit": "95",
+    "fee_rate": "0.001",
+    "entry_fee": "0.1",
+    "exit_fee": "0.095",
+    "gross_pnl": "-5",
+    "final_wallet": "994.805"
+  },
+  {
+    "name": "short_loss",
+    "side": -1,
+    "quantity": "1",
+    "entry": "100",
+    "exit": "105",
+    "fee_rate": "0.001",
+    "entry_fee": "0.1",
+    "exit_fee": "0.105",
+    "gross_pnl": "-5",
+    "final_wallet": "994.795"
+  }
+]

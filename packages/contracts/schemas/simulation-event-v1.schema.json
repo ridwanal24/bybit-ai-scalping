@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "seq": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "time_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "decision",
+        "open",
+        "intrabar",
+        "close",
+        "terminal"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "intent",
+        "rejected",
+        "cancelled",
+        "entry",
+        "fee",
+        "realized",
+        "funding",
+        "exit",
+        "risk",
+        "mark",
+        "terminal"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "position_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "intent_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "side": {
+      "type": "string",
+      "enum": [
+        "FLAT",
+        "LONG",
+        "SHORT"
+      ]
+    },
+    "quantity": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    },
+    "price": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 300,
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "amount": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    },
+    "wallet": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    }
+  },
+  "required": [
+    "seq",
+    "time_ms",
+    "phase",
+    "kind",
+    "reason",
+    "position_id",
+    "intent_id",
+    "side",
+    "quantity",
+    "price",
+    "amount",
+    "wallet"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "name": "utc_daily_and_drawdown_latches",
+    "initial_capital": "1000",
+    "daily_loss_limit": "0.02",
+    "max_drawdown": "0.1",
+    "steps": [
+      {
+        "time_ms": 1735689600000,
+        "equity": "1000",
+        "day_start_equity": "1000",
+        "daily_latched": false,
+        "drawdown_latched": false,
+        "remaining": "20"
+      },
+      {
+        "time_ms": 1735689660000,
+        "equity": "970",
+        "day_start_equity": "1000",
+        "daily_latched": true,
+        "drawdown_latched": false,
+        "remaining": "0"
+      },
+      {
+        "time_ms": 1735689720000,
+        "equity": "1000",
+        "day_start_equity": "1000",
+        "daily_latched": true,
+        "drawdown_latched": false,
+        "remaining": "20"
+      },
+      {
+        "time_ms": 1735776000000,
+        "equity": "1000",
+        "day_start_equity": "1000",
+        "daily_latched": false,
+        "drawdown_latched": false,
+        "remaining": "20"
+      },
+      {
+        "time_ms": 1735776060000,
+        "equity": "890",
+        "day_start_equity": "1000",
+        "daily_latched": true,
+        "drawdown_latched": true,
+        "remaining": "0"
+      },
+      {
+        "time_ms": 1735862400000,
+        "equity": "890",
+        "day_start_equity": "890",
+        "daily_latched": false,
+        "drawdown_latched": true,
+        "remaining": "17.8"
+      }
+    ]
+  }
+]

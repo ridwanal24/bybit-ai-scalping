@@ -48,7 +48,14 @@ multi-pair model, online retraining dan distributed training di luar MVP.
 
 ## Timeline simulator yang diusulkan
 
-Rancangan ini akan dibekukan dan diuji pada M5 sebelum RL. Timestamp candle adalah
+M5 kini merealisasikan rancangan ini dalam approved `restricted_bar_v1`;
+detail yang dibekukan pada [plan M5](plans/milestone-05.md) dan
+[simulation](simulation.md). Market-only/last/1x, exposure50%, declared funding
+boundary schedule dan collateral envelope adalah batas eksplisit; intrabar
+settlement dan exchange liquidation realism ditolak. Funding/metadata historical
+validity belum terbukti. Tidak ada approval baseline/RL atau order dari M5.
+
+Rancangan ini dibekukan dan diuji pada M5 untuk supported restricted policy sebelum RL. Timestamp candle adalah
 open time; candle meliputi `[t, t + interval)`. `available_at` sekurang-kurangnya
 close time; simulasi harus memakai metadata latency bila dikonfigurasi. Higher
 timeframe hanya boleh dipakai sesudah candle tersebut tersedia.
@@ -139,12 +146,13 @@ risiko dan dihitung ulang, bukan diasumsikan netral. Margin leverage tidak
 mengurangi PnL loss per unit. Fee/funding aktual dapat membuat loss melewati
 estimasi; stop tidak menjamin kerugian maksimal saat gap.
 
-Full liquidation model belum diputuskan. Usulan M5: reject run yang memerlukan
-realism liquidation sebelum tersedia mark series, maintenance tiers dan biaya
-yang tervalidasi. Restricted simulator boleh digunakan untuk baseline dalam
-operating envelope yang dinyatakan, dengan margin rejection, konservatif leverage,
-stress test dan label keterbatasan. Hasil restricted tidak cukup untuk promosi
-Real. Batas leverage dan envelope harus ditetapkan sebelum acceptance M5.
+Full liquidation model belum tersedia. Keputusan approved M5: reject run yang
+memerlukan exchange liquidation realism, leverage selain1, order selain market
+atau reference selain last. Entry exposure/margin dibatasi50% equity, biaya/risk
+tetap divalidasi. Adverse collateral breach menghasilkan diagnostic invalid run,
+bukan invented liquidation fill. Stress tests dan restrictions dibawa ke artifact;
+hasil restricted tidak cukup untuk promosi Real. Funding memakai declared boundary
+schedule + last-open proxy; intrabar settlements ditolak.
 
 ## Strategy risk dan exit
 

@@ -1,7 +1,7 @@
 # Arsitektur sistem
 
 Tanggal: 6 November 2026, Asia/Jakarta. Status: rancangan M0 diterima melalui
-`oke ku approve`; foundation M1, configuration M2, market data M3 dan features M4 kini
+`oke ku approve`; foundation M1, configuration M2, market data M3, features M4 dan simulator M5 kini
 diimplementasikan; komponen berikutnya tetap rancangan. Dasar: [spesifikasi](../PROJECT_SPEC.md) bagian 7–8,
 24–33, 36, dan [keputusan](decisions.md).
 
@@ -13,8 +13,8 @@ dan bootstrap loopback. Liveness terpisah dari readiness metadata schema versi 1
 DB failure tidak membuat liveness mengaku dependency sehat.
 
 `services/quant` berisi package src layout dan CLI health JSON dengan Python
-3.12 terisolasi. M4 menambahkan features/observation offline; worker protocol,
-simulator dan inference tetap milestone berikutnya.
+3.12 terisolasi. M4 menambahkan features/observation offline dan M5 restricted
+historical simulator. Worker protocol, inference dan training tetap milestone berikutnya.
 `scripts/` mengelola portable runtime, setup, cluster lokal dan foundation E2E.
 `app_metadata` adalah satu-satunya tabel aplikasi M1; `_prisma_migrations` dikelola
 ORM. Tidak ada tabel domain trading/configuration M2 yang dibuat lebih awal.
@@ -25,6 +25,20 @@ Commands dan batas platform: [operations](operations.md). Verification dan
 cleanup proses test sudah lulus; detail [testing](testing.md).
 
 ## Komponen dan ownership
+
+M5 `bybit_quant.simulation` memegang state market/position/intent/risk, Decimal128
+ledger, exact sizing/fills dan deterministic event loop. Runner menggunakan M3
+verified dataset + M4 frozen normalizer/ObservationBuilder; context dihasilkan
+ledger pada close, bukan synthetic state file. ATR entry dibekukan di decision,
+fills pada next available open, protections/funding/risk memiliki precedence tetap.
+
+Execution policy `restricted_bar_v1`: market/last-price/1x, entry exposure<=50%
+equity, funding boundary schedule yang declared dan proxy last-open. Unsupported
+request/envelope breach tidak menjadi success atau invented liquidation. Journal/
+trade/equity/report disimpan streaming pada content-addressed local artifact;
+reload merekonsiliasi wallet/events/trades/equity. Code/schema/fixture/lock hashes
+dan runtime version disimpan, tanpa migration/backend simulator kedua. CLI dan
+batas validitas: [simulation](simulation.md). Baseline/RL tetap M6/M7/M8.
 
 M4 Python memakai verified streaming dataset loader, semantic configuration
 validator yang conformant dengan TypeScript, seeded/rolling indicator state,
@@ -58,8 +72,8 @@ menandai missing/conflict/invalid, current-only metadata, funding cadence unknow
 dan closed-candle availability assumption. Public source vs fixture terpisah.
 Readiness M3 memerlukan market_data_schema_version=1 selain dua marker lama.
 Contracts/schema/hash Python tests, CLI dan actual public export telah diverifikasi.
-Details: [market-data](market-data.md). WebSocket dan simulator tetap direncanakan;
-feature computation tersedia melalui Python M4.
+Details: [market-data](market-data.md). WebSocket tetap direncanakan;
+feature computation dan restricted simulator tersedia melalui Python M4/M5.
 
 M2 menambah `packages/contracts` sebagai sumber Zod schema/semantic validation,
 canonical decimal/hash, catalog feature declarations, presets dan configuration

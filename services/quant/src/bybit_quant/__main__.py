@@ -23,14 +23,27 @@ def main() -> None:
     fit.add_argument("--train-end-ms", required=True, type=int)
     build.add_argument("--normalizer", required=True)
     build.add_argument("--context", required=True)
+    simulation = commands.add_parser("simulation-run")
+    simulation.add_argument("--request", required=True)
     args = parser.parse_args()
     if args.command != "health":
-        from bybit_quant.feature_cli import execute
+        if args.command == "simulation-run":
+            from bybit_quant.simulation.cli import execute
+        else:
+            from bybit_quant.feature_cli import execute
 
         try:
             execute(args)
-        except (ValueError, KeyError, TypeError, OSError, ValidationError, StopIteration):
-            parser.exit(1, "Feature command failed: invalid or incompatible input/artifact.\n")
+        except (
+            ValueError,
+            KeyError,
+            TypeError,
+            OSError,
+            ValidationError,
+            StopIteration,
+            ArithmeticError,
+        ):
+            parser.exit(1, "Quant command failed: invalid or incompatible input/artifact.\n")
         return
     print(
         json.dumps(

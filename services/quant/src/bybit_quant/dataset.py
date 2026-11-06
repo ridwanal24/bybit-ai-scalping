@@ -179,3 +179,28 @@ class Dataset:
         yield from records(path)
         if file_hash(path) != descriptor["sha256"]:
             raise ValueError("dataset_changed_during_read")
+
+    def instrument(self):
+        path = self.directory / "instrument.json"
+        entry = next(item for item in self.export["files"] if item["file"] == path.name)
+        if file_hash(path) != entry["sha256"]:
+            raise ValueError("dataset_changed")
+        (row,) = records(path)
+        if digest(row) != self.manifest["instrument_hash"]:
+            raise ValueError("instrument_hash")
+        return row
+
+    def funding(self):
+        path = self.directory / "funding.jsonl"
+        checksum = self.manifest["funding"]["sha256"]
+        if file_hash(path) != checksum:
+            raise ValueError("dataset_changed")
+        yield from records(path)
+        if file_hash(path) != checksum:
+            raise ValueError("dataset_changed_during_read")
+
+    def verify_files(self):
+        for entry in self.export["files"]:
+            path = (self.directory / entry["file"]).resolve(strict=True)
+            if path.parent != self.directory or file_hash(path) != entry["sha256"]:
+                raise ValueError("dataset_changed")

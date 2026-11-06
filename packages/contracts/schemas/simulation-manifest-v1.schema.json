@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1"
+    },
+    "configuration_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "dataset_fingerprint": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "configuration_snapshot_id": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "source_configuration_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "normalizer_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "feature_schema_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "code_fingerprint": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "actions_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "episode_start_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "episode_end_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "policy": {
+      "type": "object",
+      "properties": {
+        "simulation_policy_version": {
+          "type": "string",
+          "const": "restricted_bar_v1"
+        },
+        "acknowledge_research_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "acknowledge_current_metadata": {
+          "type": "boolean",
+          "const": true
+        },
+        "acknowledge_declared_funding_schedule": {
+          "type": "boolean",
+          "const": true
+        },
+        "require_exchange_liquidation": {
+          "type": "boolean",
+          "const": false
+        },
+        "funding_price_proxy": {
+          "type": "string",
+          "const": "boundary_last_open"
+        },
+        "execution_latency_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 600000
+        },
+        "safety_reserve": {
+          "type": "string",
+          "maxLength": 300,
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        "funding_schedule": {
+          "minItems": 1,
+          "maxItems": 1000,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "start_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "end_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "interval_ms": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "anchor_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "start_ms",
+              "end_ms",
+              "interval_ms",
+              "anchor_ms"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "simulation_policy_version",
+        "acknowledge_research_only",
+        "acknowledge_current_metadata",
+        "acknowledge_declared_funding_schedule",
+        "require_exchange_liquidation",
+        "funding_price_proxy",
+        "execution_latency_ms",
+        "safety_reserve",
+        "funding_schedule"
+      ],
+      "additionalProperties": false
+    },
+    "files": {
+      "minItems": 5,
+      "maxItems": 5,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "enum": [
+              "events.jsonl",
+              "trades.jsonl",
+              "equity.jsonl",
+              "report.json",
+              "descriptor.json"
+            ]
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "file",
+          "sha256",
+          "count"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "version",
+    "configuration_hash",
+    "dataset_fingerprint",
+    "configuration_snapshot_id",
+    "source_configuration_hash",
+    "normalizer_id",
+    "feature_schema_hash",
+    "code_fingerprint",
+    "actions_sha256",
+    "episode_start_ms",
+    "episode_end_ms",
+    "policy",
+    "files"
+  ],
+  "additionalProperties": false
+}

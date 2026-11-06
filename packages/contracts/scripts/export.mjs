@@ -23,6 +23,16 @@ import {
   normalizerSchema,
   observationResultSchema,
   featureArtifactSchema,
+  simulationPolicySchema,
+  simulationRequestSchema,
+  simulationActionSchema,
+  simulationEventSchema,
+  simulationTradeSchema,
+  simulationEquitySchema,
+  simulationReportSchema,
+  simulationManifestSchema,
+  SIMULATION_ACCOUNTING_VECTORS,
+  SIMULATION_RISK_VECTORS,
 } from '../dist/index.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -156,6 +166,32 @@ const vectors = cases
     };
   });
 const outputs = {
+  'schemas/simulation-policy-v1.schema.json': z.toJSONSchema(
+    simulationPolicySchema,
+  ),
+  'schemas/simulation-request-v1.schema.json': z.toJSONSchema(
+    simulationRequestSchema,
+  ),
+  'schemas/simulation-action-v1.schema.json': z.toJSONSchema(
+    simulationActionSchema,
+  ),
+  'schemas/simulation-event-v1.schema.json': z.toJSONSchema(
+    simulationEventSchema,
+  ),
+  'schemas/simulation-trade-v1.schema.json': z.toJSONSchema(
+    simulationTradeSchema,
+  ),
+  'schemas/simulation-equity-v1.schema.json': z.toJSONSchema(
+    simulationEquitySchema,
+  ),
+  'schemas/simulation-report-v1.schema.json': z.toJSONSchema(
+    simulationReportSchema,
+  ),
+  'schemas/simulation-manifest-v1.schema.json': z.toJSONSchema(
+    simulationManifestSchema,
+  ),
+  'fixtures/simulation-accounting.json': SIMULATION_ACCOUNTING_VECTORS,
+  'fixtures/simulation-risk.json': SIMULATION_RISK_VECTORS,
   'schemas/feature-v1.schema.json': z.toJSONSchema(featureSchema),
   'schemas/observation-context-v1.schema.json': z.toJSONSchema(
     observationContextSchema,

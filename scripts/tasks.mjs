@@ -410,6 +410,7 @@ async function main() {
       await npm(['run', 'export', '-w', '@bybit/contracts']);
       return;
     case 'verify:configuration':
+    case 'verify:simulation':
     case 'verify:features':
     case 'verify:market-data':
     case 'verify': {
@@ -434,13 +435,15 @@ async function main() {
         fs.writeFileSync(
           path.join(
             runtime,
-            task === 'verify:features'
-              ? 'features-report.json'
-              : task === 'verify:market-data'
-                ? 'market-data-report.json'
-                : task === 'verify:configuration'
-                  ? 'configuration-report.json'
-                  : 'foundation-report.json',
+            task === 'verify:simulation'
+              ? 'simulation-report.json'
+              : task === 'verify:features'
+                ? 'features-report.json'
+                : task === 'verify:market-data'
+                  ? 'market-data-report.json'
+                  : task === 'verify:configuration'
+                    ? 'configuration-report.json'
+                    : 'foundation-report.json',
           ),
           JSON.stringify(report, null, 2) + '\n',
         );
@@ -464,6 +467,7 @@ async function main() {
       return;
     case 'features:fit':
     case 'features:build':
+    case 'simulation:run':
       await buildContracts();
       await run(python, [
         '-m',

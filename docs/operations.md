@@ -1,13 +1,17 @@
-# Operasi foundation dan configuration lokal
+# Operasi lokal
 
 Target implementasi: Windows x64/PowerShell, satu mesin CPU. Belum ada UI,
-simulator, training, order atau deployment model.
+training, order exchange atau deployment model.
 M2 menambahkan research configuration API; tidak membutuhkan server baru.
 M3 menambahkan public historical ingestion dan CLI download/export; lihat
 [market-data](market-data.md) untuk request, resume, quality/source caveats dan limits.
 M4 menambahkan offline Python features/normalizer/observation CLI dan verified
 artifacts. [Features](features.md) memuat commands fit/build, context JSONL dan
 optional source snapshot untuk config variant; command tidak memakai network/DB.
+M5 menambahkan `simulation:run -- --request FILE` dan `verify:simulation`.
+[Simulation](simulation.md) menjelaskan request-relative paths, scripted actions,
+restricted envelope, artifacts/status/exit codes dan local-only smoke helper.
+Tidak ada server/database/migration/dependency baru untuk simulation CLI.
 
 `npm run verify:features` menjalankan verification stack M1–M4. Python fixture
 temporary directory unik berada di `.runtime/pytest/<timestamp>_<pid>` agar tidak

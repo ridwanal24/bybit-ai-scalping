@@ -169,3 +169,10 @@ yang sama dengan verified source snapshot dan stream/range compatibility.
 Context current position/risk dan schema/artifact CLI: [features](features.md).
 Config-level pending execution checks M2 tetap konservatif; observation artifact
 yang valid belum menjadi model approval, risk enforcement atau izin trading.
+
+M5 menegakkan strategy risk pada historical research engine, bukan live account.
+Simulator capability gate menolak config limit/mark/index/leverage selain1 dan
+mode selain backtest; M2 configuration valid tetap tidak menjamin capability itu.
+Run policy terpisah dari snapshot berisi research acknowledgements, safety reserve,
+latency, declared funding schedule dan episode range. Effective exposure/margin
+envelope50% tidak mengubah config/hard trading limits. Detail: [simulation](simulation.md).

@@ -5,13 +5,13 @@ Terakhir diperbarui: 6 November 2026, Asia/Jakarta.
 | Aspek | Kondisi aktual |
 | --- | --- |
 | Current phase | Phase 2 — Simulation MVP |
-| Current milestone | M4 — Feature Engineering |
-| Milestone approval | Approved melalui `lanjut` setelah implementation plan M4 disajikan |
-| Implementation status | Seluruh task 4.1–4.17 selesai dan diverifikasi |
-| Milestone status | Completed; M0–M3 tetap Completed |
-| Next milestone | M5 — Trading Simulator; belum Approved |
-| Aplikasi/database/model | Market/config API, Python features/observation dan artifacts; model belum dibuat |
-| Trading | Tidak ada credentials Bybit, order atau aktivasi |
+| Current milestone | M5 — Trading Simulator |
+| Milestone approval | Approved melalui `kerjakan` setelah implementation plan M5 disajikan |
+| Implementation status | Seluruh task5.1–5.27 selesai dan diverifikasi |
+| Milestone status | Completed; M0–M4 tetap Completed |
+| Next milestone | M6 — Baseline & Simulation MVP; belum Approved |
+| Aplikasi/database/model | Market/config API, Python features dan restricted simulator; model belum dibuat |
+| Trading | Tidak ada credentials Bybit, order atau aktivasi exchange |
 
 ## Approval dan scope
 
@@ -30,6 +30,11 @@ configuration parity, 23 fitur, closed-HTF alignment, train-only normalizer dan
 ObservationBuilder. Instruksi `lanjut` berikutnya menyetujui seluruh scope M4.
 Implementasi memakai jsonschema runtime versi yang sudah terkunci, tanpa
 migration, download baru atau perubahan snapshot/data asal.
+
+Instruksi `lanjut ke M5` memulai penyusunan [plan M5](plans/milestone-05.md),
+seluruh task5.1–5.27. Instruksi `kerjakan` menyetujui exact ledger, deterministic
+bar execution, exit/risk/funding dan explicit restricted liquidation envelope.
+Implementasi M5 berada dalam scope plan; tidak memberi approval M6/training/orders.
 
 ## Selesai
 
@@ -59,7 +64,22 @@ actual dimension/parameter guards, finite float32 binary export dan content-addr
 artifact reload tersedia. Source snapshot verification mendukung API/portable
 envelope dan feature variants; tidak ada migration atau DB write M4.
 
+M5: restricted historical Python simulator dengan exact financial ledger,
+intent/execution/risk/funding states, sizing/protections/terminal settlement dan
+streaming reconciled artifacts. M4 pipeline dipakai langsung dengan ledger context.
+Shared accounting/risk vectors, CLI/runner dan capability/envelope gates tersedia.
+Tidak ada schema DB/dependency baru, baseline, RL atau exchange order.
+
 ## Test summary
+
+M5 final `verify:simulation` exit0,6 November2026 20:53:03–20:55:05 WIB:
+84 contracts +33 backend +236 Python +31 integration =384 tests tanpa skip.
+Static/export/migration/schema checks dan seluruh M1–M4 regressions lulus.
+Local public-export scripted simulation/replay/reload lulus:1 SHORT trade,
+gross−0.9205,fees0.9460445,funding0,final equity998.1334555 USDT,FLAT.
+Fixture E2E membuktikan LONG+SHORT; public smoke tidak diklaim mencakup keduanya.
+Runtime context kini dari ledger, normalizer frozen; tidak ada download/migration.
+Evidence: [testing](testing.md), [handoff M5](handoffs/milestone-05.md).
 
 Perbaikan audit M1–M4 atas instruksi pengguna selesai: final-attempt cooldown tetap
 disimpan/dihormati saat worker restart; delayed main candle dan dependent rows
@@ -93,7 +113,7 @@ Evidence dan command tambahan: [testing](testing.md).
 
 ## Remaining tasks dan known issues
 
-Tidak ada task wajib M4 tersisa. M5 memerlukan plan dan approval baru; training
+Tidak ada task wajib M5 tersisa. M6 memerlukan plan/approval baru; training
 belum dimulai. Python semantic cross-field parity tersedia dan actual observation
 shape/artifact divalidasi. Actual model/tensor library tetap scope M7/M8.
 Configuration valid tidak membuktikan exchange support atau trading readiness.
@@ -111,15 +131,16 @@ masih milestone terkait, bukan klaim kelayakan produksi.
 
 R03 ditangani dengan revisions/quality/closure/retry/resume dan evidence publik,
 tetapi historical metadata validity serta funding cadence completeness tetap
-dibawa sebagai restriction ke M5. Public smoke24 jam bukan benchmark full-year.
+dibawa sebagai restriction di M5. Public smoke24 jam bukan benchmark full-year.
 R06/R07 telah direkam sebagai config dan semantic rules sesuai plan M2; execution
-semantics tetap diuji M5/M11. R03–R16 lainnya mengikuti deadline pada
+semantics historical kini diuji M5; live conformance tetap M11. R05 ditutup untuk
+restricted market/last/1x/50% envelope, bukan full exchange liquidation. R03–R16 lainnya mengikuti deadline pada
 [planning](planning.md).
 
 M4 source layout membutuhkan repo contract artifacts; standalone worker packaging
 tetap M8/M11. Pure Python throughput full-year/live latency belum dibenchmark.
 Source hash membuktikan integritas, bukan signature. Caller context/risk budget
-divalidasi tetapi simulator/risk enforcement belum diimplementasikan.
+divalidasi dan restricted historical risk enforcement M5 tersedia; live risk belum.
 
-Handoff terbaru: [milestone-04.md](handoffs/milestone-04.md).
+Handoff terbaru: [milestone-05.md](handoffs/milestone-05.md).
 **Waiting for Next Milestone Instruction.**

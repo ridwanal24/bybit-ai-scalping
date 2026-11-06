@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "position_id": {
+      "type": "string"
+    },
+    "side": {
+      "type": "string",
+      "enum": [
+        "LONG",
+        "SHORT"
+      ]
+    },
+    "quantity": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    },
+    "entry": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    },
+    "exit": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    },
+    "stop": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    },
+    "take_profit": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 300,
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "opened_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "closed_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "reason": {
+      "type": "string"
+    },
+    "gross_pnl": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    },
+    "entry_fee": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    },
+    "exit_fee": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    },
+    "funding": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    },
+    "net_pnl": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    },
+    "target_rr": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 300,
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "gross_realized_rr": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    },
+    "net_realized_rr": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    },
+    "initial_risk_estimate": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    }
+  },
+  "required": [
+    "position_id",
+    "side",
+    "quantity",
+    "entry",
+    "exit",
+    "stop",
+    "take_profit",
+    "opened_ms",
+    "closed_ms",
+    "reason",
+    "gross_pnl",
+    "entry_fee",
+    "exit_fee",
+    "funding",
+    "net_pnl",
+    "target_rr",
+    "gross_realized_rr",
+    "net_realized_rr",
+    "initial_risk_estimate"
+  ],
+  "additionalProperties": false
+}

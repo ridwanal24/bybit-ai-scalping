@@ -5,18 +5,23 @@ PostgreSQL, dan MaskablePPO. Sumber requirement: [PROJECT_SPEC.md](PROJECT_SPEC.
 
 ## Status aktual
 
-Per 6 November 2026 (Asia/Jakarta), **M4 — Feature Engineering Completed**.
-Foundation/configuration/market data M1–M3 tetap tersedia. Public REST ingestion
+Per 6 November 2026 (Asia/Jakarta), **M5 — Trading Simulator Completed**.
+Foundation/configuration/market data/features M1–M4 tetap tersedia. Public REST ingestion
 memvalidasi/menyimpan historical candles, instrument dan funding, mendukung resume,
 quality report, pinned revisions, fingerprint dan JSONL export.
 M4 disetujui melalui `lanjut` setelah plan disajikan; Python sekarang menyediakan
 23 fitur, closed-HTF alignment, train-only normalizer dan ObservationBuilder.
+M5 disetujui melalui `kerjakan`: exact ledger LONG/SHORT, fees/funding, sizing,
+SL/TP/AI/forced exits, UTC risk latches dan deterministic research simulator.
+Scope market/last/1x, entry exposure50%; full exchange liquidation tidak dimodelkan.
 
 Data publik BTCUSDT 1 Januari 2025 UTC sudah terkumpul: 1.440 candle1m,
 288 candle5m, 96 candle15m dan3 funding records, tanpa candle gap/invalid/conflict.
-Local smoke menghasilkan1185 observations x299 dari export publik tersebut,
-dengan frozen normalizer dan synthetic FLAT context berlabel. Belum ada frontend,
-simulator, training/model atau trading execution. M5 belum disetujui.
+M4 standalone smoke menghasilkan1185 observations x299 dengan synthetic FLAT
+context. M5 memakai ledger-generated context; scripted public-export smoke
+menghasilkan1 SHORT trade, net−1.8665445 dan final equity998.1334555 USDT.
+Fixture E2E mencakup LONG+SHORT; hasil bukan baseline/model evaluation.
+Belum ada frontend, training/model atau exchange execution. M6 belum disetujui.
 
 ## Setup Windows x64
 
@@ -39,16 +44,18 @@ dev command memantau output dist. Secret/runtime tidak di-commit.
 .\.tools\node\npm.cmd run verify:configuration
 .\.tools\node\npm.cmd run verify:market-data
 .\.tools\node\npm.cmd run verify:features
+.\.tools\node\npm.cmd run verify:simulation
 .\.tools\node\npm.cmd run db:status
 .\.tools\node\npm.cmd run db:stop
 ```
 
-Verification M4 terbaru setelah perbaikan audit lulus:77 contract tests,33 unit
-backend,149 Python,31 integration (290 total), migration upgrade/schema diff dan
-seluruh M1–M3 regressions. Final-attempt cooldown dan delayed-main availability
-kini memiliki regression tests.
-Frozen artifacts, golden indicators, semantic parity, leakage checks dan local
-public-export smoke/replay lulus. Evidence: [testing](docs/testing.md).
+Verification M5 lulus:84 contract tests,33 backend unit,236 Python,31 integration
+(384 total), static/export checks, migration upgrade/schema diff dan seluruh
+M1–M4/audit regressions. Exact accounting, event ordering, unavailable gates,
+artifact reconciliation, fixture E2E dan public-export replay lulus.
+Evidence: [testing](docs/testing.md).
+
+Simulation CLI, approved restrictions, policies dan output: [simulation](docs/simulation.md).
 
 Feature CLI, context JSONL, source snapshot dan artifact layout: [features](docs/features.md).
 
@@ -83,6 +90,9 @@ Configuration valid belum berarti siap trading; execution checks tetap pending.
 | [Features](docs/features.md) | Formula, alignment, normalizer, observation/context dan offline CLI |
 | [Plan M4](docs/plans/milestone-04.md) | Scope feature engineering yang disetujui |
 | [Handoff M4](docs/handoffs/milestone-04.md) | Hasil aktual dan konteks M5 |
+| [Simulation](docs/simulation.md) | Ledger, event/risk/funding policies, restrictions dan CLI |
+| [Plan M5](docs/plans/milestone-05.md) | Scope simulator yang disetujui |
+| [Handoff M5](docs/handoffs/milestone-05.md) | Hasil aktual dan konteks M6 |
 | [Handoff M0](docs/handoffs/milestone-00.md) | Hasil, keterbatasan dan instruksi sesi berikutnya |
 
 ## Alur pengembangan

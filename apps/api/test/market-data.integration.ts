@@ -364,6 +364,40 @@ describe('market data PostgreSQL/HTTP/resume/export integration', () => {
     expect((await service.getDataset(created.dataset_id)).status).toBe('READY');
   });
 
+  it('persists final-attempt rate cooldown and blocks a new worker before another request', async () => {
+    let calls = 0;
+    const client = new BybitPublicClient({
+      source: 'fixture',
+      minIntervalMs: 0,
+      sleep: async () => {},
+      random: () => 0,
+      fetcher: async () => {
+        calls++;
+        return new Response('', {
+          status: 429,
+          headers: calls === 4 ? { 'retry-after': '600' } : {},
+        });
+      },
+    });
+    const worker = new MarketDataService(db, configurations, client);
+    const created = await create();
+    const before = Date.now();
+    await expect(worker.run(created.download_id)).rejects.toMatchObject({
+      resumable: true,
+    });
+    const paused = await service.download(created.download_id);
+    expect(paused.status).toBe('PAUSED');
+    expect(paused.blocked_until?.getTime()).toBeGreaterThanOrEqual(
+      before + 600000,
+    );
+    expect(checkpointSchema.parse(paused.checkpoint).metrics.pages).toBe(0);
+    const restarted = new MarketDataService(db, configurations, client);
+    await expect(restarted.run(created.download_id)).rejects.toMatchObject({
+      response: { code: 'download_cooldown' },
+    });
+    expect(calls).toBe(4);
+  });
+
   it('records access cooldown and non-progress errors without silently ending history', async () => {
     fixture.controls.forbidden = true;
     const forbidden = await create();

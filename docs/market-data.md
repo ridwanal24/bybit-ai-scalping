@@ -163,6 +163,13 @@ lalu verification; build biasa melakukan drift check. Metadata restore/productio
 privileges masih future milestone. DB owner/superuser dapat bypass guards lewat DDL;
 tidak ada klaim perlindungan anti-tamper terhadap admin database.
 
+Perbaikan audit M1–M4,6 November2026: pada attempt terakhir pun header
+Retry-After (detik/HTTP-date) dan rate-reset timestamp tetap menjadi blocked-until.
+Attempt budget habis tidak membatalkan cooldown, termasuk delay pendek yang
+sebelumnya masih dapat ditunggu dalam invocation. Worker menyimpan cooldown pada
+PAUSED run; worker baru menolak resume dini sebelum mengirim request tambahan.
+Regression mencakup HTTP429/503, retCode10006 dan persistence/restart PostgreSQL.
+
 ## Referensi
 
 [Kline](https://bybit-exchange.github.io/docs/v5/market/kline),

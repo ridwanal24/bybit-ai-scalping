@@ -94,6 +94,60 @@ describe('public Bybit transport', () => {
       expect(client.metrics.requests).toBe(1);
     }
   });
+  it.each([429, 503, '10006'] as const)(
+    'preserves cooldown headers on the final %s attempt',
+    async (failure) => {
+      for (const header of ['short', 'long', 'date', 'reset'] as const) {
+        let now = 1000000,
+          calls = 0;
+        const waits: number[] = [];
+        const delay = header === 'short' ? 5000 : 600000;
+        const client = new BybitPublicClient({
+          minIntervalMs: 0,
+          now: () => now,
+          random: () => 0,
+          sleep: async (ms) => {
+            waits.push(ms);
+            now += ms;
+          },
+          fetcher: async () => {
+            calls++;
+            const headers = new Headers();
+            if (calls === 4) {
+              if (header === 'reset')
+                headers.set(
+                  'x-bapi-limit-reset-timestamp',
+                  String(now + delay),
+                );
+              else
+                headers.set(
+                  'retry-after',
+                  header === 'date'
+                    ? new Date(now + delay).toUTCString()
+                    : String(delay / 1000),
+                );
+            }
+            return failure === '10006'
+              ? new Response(JSON.stringify({ retCode: 10006, result: {} }), {
+                  headers,
+                })
+              : new Response('', { status: failure, headers });
+          },
+        });
+        await expect(client.serverTime()).rejects.toMatchObject({
+          code:
+            failure === '10006'
+              ? 'upstream_rate_limit'
+              : 'upstream_rate_or_server_error',
+          resumable: true,
+          blockedUntil: 1007000 + delay,
+        });
+        expect(calls).toBe(4);
+        expect(waits).toEqual([1000, 2000, 4000]);
+        expect(client.metrics.retries).toBe(3);
+      }
+    },
+  );
   it.each([
     new Response('not json'),
     response({}, 10001),

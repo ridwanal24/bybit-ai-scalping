@@ -58,6 +58,14 @@ class Indicators:
             )
         except ValidationError:
             raise ValueError("invalid_candle_schema") from None
+        close_time = candle["close_time_ms"]
+        available = (
+            candle.get("available_at_ms", close_time)
+            if available_at_ms is None
+            else available_at_ms
+        )
+        if type(available) is not int or not close_time <= available <= 9007199254740991:
+            raise ValueError("invalid_availability")
         t = candle["open_time_ms"]
         if candle["timeframe"] != self.timeframe or candle["price_type"] != "last":
             raise ValueError("invalid_feature_stream")
@@ -138,10 +146,6 @@ class Indicators:
         if not all(math.isfinite(value) for value in values.values()):
             raise ValueError("invalid_feature_value")
         self.previous, self.previous_ema, self.previous_time = (close, volume), fast, t
-        close_time = candle["close_time_ms"]
-        available = close_time if available_at_ms is None else available_at_ms
-        if type(available) is not int or available < close_time:
-            raise ValueError("invalid_availability")
         return {
             "decision_ms": close_time,
             "available_at_ms": available,

@@ -62,7 +62,16 @@ berjalan tidak masuk. Missing expected HTF berarti stale; gap mereset indikator
 dan observation window. Tidak ada backfill/interpolasi melewati gap.
 
 Historical availability tetap asumsi closed-candle M3. `Indicators.push` menerima
-availability aktual untuk consumer berikutnya; prefix replay/delayed HTF diuji.
+availability aktual dari field candle atau argument eksplisit. Main dan HTF
+memakai metadata tersebut; tanpa metadata, default tetap close candle.
+Jika main candle tersedia sesudah close, fitur pada decision close berstatus
+`stale` dengan values unavailable. Baris berikutnya yang masih bergantung pada
+candle terlambat itu juga unavailable sampai seluruh dependensi telah tersedia.
+Normalizer melewati baris tersebut dan ObservationBuilder mereset window;
+window harus kembali lengkap sebelum observation valid. Timestamp keputusan
+tetap close main candle dan baris lama tidak di-backfill. Metadata availability
+invalid ditolak sebelum indicator state diperbarui. Prefix replay, delayed main/
+HTF, train-fit exclusion dan recovery observation diuji.
 Feed transport, incremental optimization dan latency live adalah scope M11.
 
 ## Layout dan context

@@ -11,11 +11,16 @@ def feature_rows(streams, c):
     iterators = {tf: iter(streams.get(tf, ())) for tf in required if tf != main}
     lookahead = {tf: next(it, None) for tf, it in iterators.items()}
     latest = {}
+    main_available_until = 0
     for candle in streams.get(main, ()):
         row = engines[main].push(candle)
         t = row["decision_ms"]
+        if row["gap"]:
+            main_available_until = 0  # The indicator state no longer depends on the old segment.
+        main_available_until = max(main_available_until, row["available_at_ms"])
+        main_pending = main_available_until > t
         latest[main] = row
-        reason = "gap" if row["gap"] else None
+        reason = "stale" if main_pending else ("gap" if row["gap"] else None)
         for tf, iterator in iterators.items():
             candidate = lookahead[tf]
             while (
@@ -34,7 +39,12 @@ def feature_rows(streams, c):
                 reason = reason or "gap"
         values = []
         for item in c["features"]["enabled"]:
-            value = latest.get(item["timeframe"], {}).get("values", {}).get(item["id"])
+            # A delayed previous candle can affect later EMA/return state as well.
+            value = (
+                None
+                if main_pending
+                else latest.get(item["timeframe"], {}).get("values", {}).get(item["id"])
+            )
             if value is None:
                 reason = reason or "warm_up"
             values.append(value)

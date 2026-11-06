@@ -43,8 +43,10 @@ dev command memantau output dist. Secret/runtime tidak di-commit.
 .\.tools\node\npm.cmd run db:stop
 ```
 
-Verification M4 lulus: 77 contract tests,30 unit backend,142 Python,30 integration
-(279 total), migration upgrade/schema diff dan seluruh M1–M3 regressions.
+Verification M4 terbaru setelah perbaikan audit lulus:77 contract tests,33 unit
+backend,149 Python,31 integration (290 total), migration upgrade/schema diff dan
+seluruh M1–M3 regressions. Final-attempt cooldown dan delayed-main availability
+kini memiliki regression tests.
 Frozen artifacts, golden indicators, semantic parity, leakage checks dan local
 public-export smoke/replay lulus. Evidence: [testing](docs/testing.md).
 

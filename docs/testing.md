@@ -1,5 +1,42 @@
 # Testing dan verifikasi
 
+## Perbaikan audit M1–M4 — 6 November 2026
+
+Dua temuan audit diperbaiki atas instruksi pengguna:
+
+- Final retry kini mempertahankan blocked-until dari Retry-After detik/HTTP-date
+  atau reset timestamp. Tiga parameterized backend tests menjalankan12 kombinasi
+  HTTP429/503/retCode10006 dan header pendek/panjang/date/reset. Test PostgreSQL
+  tambahan memeriksa status PAUSED, cooldown tersimpan dan worker baru menolak
+  resume tanpa request kelima.
+- Main candle memakai embedded availability. Seluruh baris yang masih bergantung
+  pada delayed candle berstatus stale dengan values unavailable sampai dependency
+  tersedia; normalizer tidak fit baris itu, observation harus membangun ulang
+  window valid. Tujuh Python cases tambahan menguji delay/dependent EMA rows,
+  fit count, prefix/recovery, equality close dan invalid availability.
+
+Sebelum source diperbaiki, targeted tests mereproduksi3 backend failures dan
+4 Python failures. Setelah diperbaiki,149 Python dan33 backend unit tests lulus.
+Reproduksi audit langsung kini menghasilkan blockedUntil707000 (sesuai expected)
+dan delayed-main values[null]/reason stale, bukan fitur valid pada timestamp awal.
+
+Local public-export smoke pada19:59:52 WIB lulus:495 fit rows,1185 vectors x299,
+255 warm-up unavailable,720 heldout decisions. Normalizer/artifact/file SHA tetap
+identik dengan hasil M4 awal. Tidak ada download baru, migration atau perubahan
+config schema/artifact format. Context tetap synthetic FLAT.
+
+Full-suite run awal setelah fix: dua legacy DB tests terkena query timeout500ms
+(configuration create503 dan foundation metadata read). Test cooldown baru lulus.
+Verification diulang pada cluster fresh dengan timeout aplikasi tetap sama.
+**Final `npm run verify:features` exit0 PASSED**,20:01:21–20:03:10 WIB
+(UTC13:01:21.993–13:03:10.374):77 contracts +33 backend unit +149 Python +31
+PostgreSQL/HTTP integration = **290 tests tanpa skip**. Build/typecheck/lint/format,
+contract export drift, fresh/reapply/M1+M2 upgrades, data preservation dan zero
+schema diff lulus; cluster test dihentikan. Logs: `.runtime/fix-audit-m1-m4.log` dan
+`.runtime/fix-audit-m1-m4-final.log`; report `.runtime/features-report.json`.
+Audit dokumentasi:20 dokumen,110 local links valid,0 trailing whitespace dan
+`git diff --check` lulus. Setelah final suite, perubahan hanya dokumentasi.
+
 ## Hasil M4 — Feature Engineering
 
 Tanggal:6 November2026, Asia/Jakarta. Final command

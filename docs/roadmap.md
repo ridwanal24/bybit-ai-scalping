@@ -31,7 +31,7 @@ yang konkret sebelum persetujuan milestone tersebut.
 | 1 | Completed; [plan Approved](plans/milestone-01.md), [handoff](handoffs/milestone-01.md) | M0 diterima | Backend/Python berjalan, DB connected, migration/health/tests/verification lulus; setup terdokumentasi |
 | 2 | Completed; [plan Approved](plans/milestone-02.md), [handoff](handoffs/milestone-02.md) | M1 | Config persistence/validation, immutable snapshot, presets/compatibility dan integration/regression lulus |
 | 3 | Completed; [plan](plans/milestone-03.md), [handoff](handoffs/milestone-03.md) | M1–M2 | 135 tests dan public BTCUSDT24h collection/export lulus; revisions/quality/resume/fingerprint dan source caveats tersedia |
-| 4 | Completed; [plan Approved](plans/milestone-04.md), [handoff](handoffs/milestone-04.md) | M2–M3 | 279 tests + local public-export smoke/replay lulus; 23 fitur, HTF no leakage, ordering/shape, train-only normalizer dan semantic parity |
+| 4 | Completed; [plan Approved](plans/milestone-04.md), [handoff](handoffs/milestone-04.md) | M2–M3 | 290 tests setelah perbaikan audit + local public-export smoke/replay lulus; 23 fitur, main/HTF availability, ordering/shape, train-only normalizer dan semantic parity |
 | 5 | Planned; belum Approved | M2–M4 | Long/short, costs, funding, sizing, risk, SL/TP event ordering benar; deterministic equity/trades; margin/liquidation model atau restriction disetujui dan terdokumentasi |
 | 6 | Planned; belum Approved | M3–M5 | Historical → features → baseline → simulator → metrics berjalan; HOLD/random/EMA/Buy & Hold dibanding konsisten |
 | 7 | Planned; belum Approved | M4–M6 | Gymnasium API valid, masking benar, simulator tunggal, reward/accounting konsisten, deterministic/reward integrity tests lulus |

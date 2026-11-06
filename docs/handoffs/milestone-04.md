@@ -104,6 +104,26 @@ live observation contracts terbukti melalui tests. Final regression gate lulus.
 
 Tidak ada task wajib M4 tersisa. Tidak ada blocker M4.
 
+## Perbaikan audit M1–M4
+
+Post-completion audit menemukan dua celah: header cooldown pada final retry M3
+dan embedded availability main candle M4. Perbaikan atas instruksi pengguna
+`oke coba kamu fix hal tersebut` mempertahankan cooldown saat attempt budget
+habis, serta menahan seluruh fitur yang masih bergantung pada delayed main
+candle sampai tersedia. Decision tetap pada close, unavailable berstatus stale,
+normalizer melewatinya dan observation window harus warm kembali.
+Regression baru mencakup retry-after detik/HTTP-date/reset pada HTTP429/503 dan
+retCode10006, PostgreSQL cooldown persistence/worker restart, dependent EMA rows,
+fit exclusion, prefix/recovery dan invalid availability. Hasil verifikasi terbaru
+dicatat pada [testing](../testing.md); initial279 di atas adalah evidence historis.
+
+Kedua temuan ditutup. Final `verify:features` exit0 pada6 November2026
+20:01:21–20:03:10 WIB:77 contracts +33 backend unit +149 Python +31 integration
+=290 tests tanpa skip, seluruh static/export/migration/schema checks lulus.
+Run awal terkena timeout500ms di dua legacy DB tests; rerun fresh lulus dengan
+timeout yang sama. Smoke19:59:52 WIB mempertahankan artifact/normalizer/file hashes
+di atas. Tidak ada migration/dependency/schema change, M5 belum dimulai.
+
 ## Known Issues dan Technical Debt
 
 - Standard-library Python dipilih sesuai plan; full-year throughput/live latency

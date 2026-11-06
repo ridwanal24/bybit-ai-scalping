@@ -59,6 +59,47 @@ def test_htf_missing_and_delayed_availability_never_joins_future():
     assert rows[5]["reason"] is None
 
 
+def test_delayed_main_blocks_dependent_rows_fit_and_observations_until_available():
+    c = small_config()
+    c["features"]["enabled"] = [{"id": "ema_fast_distance", "timeframe": "1m"}]
+    data = candles(6)
+    data[0]["available_at_ms"] = START + 3 * 60000
+    rows = list(feature_rows({"1m": data}, c))
+    assert [r["reason"] for r in rows[:2]] == ["stale", "stale"]
+    assert [r["values"] for r in rows[:2]] == [[None], [None]]
+    assert all(row["reason"] is None for row in rows[2:])
+    m = {
+        "requested_start_ms": START,
+        "requested_end_ms": START + 7 * 60000,
+        "source": "fixture",
+        "symbol": "BTCUSDT",
+    }
+    n = fit(rows, c, m, START, START + 7 * 60000)
+    assert n.payload["count"] == 4
+    builder = ObservationBuilder(c, m, n)
+    results = [builder.push(row, flat(row["decision_ms"])) for row in rows]
+    assert [r["valid"] for r in results] == [False, False, False, True, True, True]
+    assert list(feature_rows({"1m": data[:2]}, c)) == rows[:2]
+
+
+def test_main_availability_at_close_preserves_historical_results():
+    c = small_config()
+    original = streams()
+    explicit = deepcopy(original)
+    for candle in explicit["1m"]:
+        candle["available_at_ms"] = candle["close_time_ms"]
+    assert list(feature_rows(explicit, c)) == list(feature_rows(original, c))
+
+
+@pytest.mark.parametrize("available", [START, True, "invalid", None, 9007199254740992])
+def test_main_availability_invalid_values_are_rejected(available):
+    c = small_config()
+    bar = candles(1)[0]
+    bar["available_at_ms"] = available
+    with pytest.raises(ValueError, match="invalid_availability"):
+        list(feature_rows({"1m": [bar]}, c))
+
+
 def test_train_only_statistics_invariant_to_future_and_heldout_transform_is_frozen():
     c, rows, manifest, normalizer = setup_pipeline()
     changed = deepcopy(rows)

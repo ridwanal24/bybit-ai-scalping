@@ -61,6 +61,16 @@ envelope dan feature variants; tidak ada migration atau DB write M4.
 
 ## Test summary
 
+Perbaikan audit M1–M4 atas instruksi pengguna selesai: final-attempt cooldown tetap
+disimpan/dihormati saat worker restart; delayed main candle dan dependent rows
+unavailable sampai tersedia. `verify:features` exit0 pada6 November2026
+20:01:21–20:03:10 WIB:77 contracts +33 backend +149 Python +31 integration =290
+tests tanpa skip. Static checks/export drift/migrations/schema diff lulus. Rerun
+fresh menutup dua timeout500ms legacy DB tests dari run awal tanpa mengubah timeout.
+Local historical smoke menghasilkan artifact identik; kedua temuan audit ditutup.
+
+Initial M4 verification:
+
 M4: `npm run verify:features` exit0, 6 November2026 19:40:10–19:42:04 WIB.
 77 contract +30 backend unit +142 Python +30 integration =279 tests lulus tanpa
 skip. Build/typecheck/lint/format/export drift, isolated PostgreSQL/HTTP,

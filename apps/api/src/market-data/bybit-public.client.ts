@@ -165,8 +165,18 @@ export class BybitPublicClient {
           error instanceof BybitDataError
             ? error
             : new BybitDataError('upstream_network_or_timeout', true);
-        if (!typed.resumable || typed.blockedUntil !== null || attempt === 3)
+        if (!typed.resumable || typed.blockedUntil !== null) throw typed;
+        if (attempt === 3) {
+          // The attempt budget ends here, but the upstream cooldown still applies
+          // to a later run/worker, including short Retry-After delays.
+          if (retryAfter > 0)
+            throw new BybitDataError(
+              typed.code,
+              true,
+              this.options.now() + retryAfter,
+            );
           throw typed;
+        }
         const delay = Math.max(
           retryAfter,
           1000 * 2 ** attempt + Math.floor(this.options.random() * 250),

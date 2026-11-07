@@ -19,6 +19,14 @@ menghentikan servers yang dimiliki launcher; DB tetap tersedia sampai
 Source API changes perlu build/restart; Vite frontend reload otomatis.
 `npm run build` juga menghasilkan static frontend `apps/web/dist`.
 
+Untuk menjalankan hasil build produksi lokal, hentikan dev launcher lalu jalankan
+`npm run build` dan `npm run start:dashboard`. Buka `http://127.0.0.1:3000`;
+Nest menyajikan built UI dan API dengan prefix `/api` pada port yang sama,
+`NODE_ENV=production`, tanpa Vite server. Readiness berada pada
+`http://127.0.0.1:3000/api/health/ready`. DB portable tetap55432 dan tidak otomatis
+berhenti saat server ditutup. Ini production build lokal, bukan deployment publik.
+Panduan dari clone tanpa tool: [README](../README.md#menjalankan-aplikasi-dari-clone-baru).
+
 Loopback-only, same-origin Vite `/api` proxy; tidak ada CORS wildcard, public
 hosting, account login atau remote deployment. Remote access memerlukan review
 auth/secrets tersendiri sesuai PROJECT_SPEC. Jangan expose dev proxy ke internet.

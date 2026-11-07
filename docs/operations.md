@@ -9,6 +9,11 @@ running sampai `npm run db:stop`. Existing service/DB lain tidak dihentikan.
 Untuk proses terpisah: `db:start`, `dev:api`, `dev:web`. `npm run build` mencakup
 frontend build dan server types; root lint/format mencakup TSX/CSS/HTML.
 
+Production build lokal: `npm run build`, lalu `npm run start:dashboard`.
+Launcher menyajikan compiled UI dan Nest API pada `127.0.0.1:3000`, API di `/api`,
+tanpa Vite. Hentikan dev terlebih dahulu karena port3000 digunakan bersama.
+Setup dari clone baru, dev/prod URLs dan troubleshooting: [README](../README.md#menjalankan-aplikasi-dari-clone-baru).
+
 `npm run verify:dashboard` menjalankan full regression kemudian Playwright Edge
 headless terhadap API3001/Vite5174/dedicated PostgreSQL55435 dan synthetic fixture
 store di `.runtime/dashboard-fixtures/`. Logs/report/screenshots tetap ignored;

@@ -1,5 +1,18 @@
 # Testing dan verifikasi
 
+## Tambahan panduan run dan launcher production lokal
+
+7November2026: README diperluas untuk clone baru tanpa tool, bootstrap/setup,
+dev dan production build lokal. `start:dashboard` menyajikan built UI+API pada
+Nest3000, prefix `/api`, NODE_ENVproduction; tidak memakai Vite preview dan tidak
+mengubah default dev5173/API3000. Build dan focused ESLint/Prettier lulus.
+Actual HTTP+Edge headless smoke selesai UTC07:23:38: static HTML/JS200,
+readiness200, preset API200, activation tetap403, Overview/Configuration terbuka
+tanpa browser page error. Source data/training/holdout tidak diubah. Evidence
+`.runtime/readme-prod-build.log`, `readme-prod-smoke.log/json`. Owned server ditutup
+dan status DB sebelum smoke dipertahankan. Ini smoke tambahan pada launcher;
+tidak mengklaim fresh reinstall atau mengulang546test M10.
+
 ## Hasil M10 — Dashboard dan audit ulang M9
 
 7 November2026, `npm run verify:dashboard` **exit0/PASSED**. Report

@@ -43,41 +43,207 @@ Panduan: [Baselines](docs/baselines.md), [RL environment](docs/rl-environment.md
 [Training](docs/training.md), [Advanced evaluation](docs/evaluation.md),
 [Dashboard](docs/dashboard.md).
 
-## Setup Windows x64
+## Menjalankan aplikasi dari clone baru
 
-Python pada PATH dan internet diperlukan untuk bootstrap pertama. Runtime proyek
-terpisah dari instalasi global; tidak membutuhkan Docker atau GPU.
+Dashboard M10 sudah bisa dibuka di browser. Panduan berikut untuk **Windows x64
+dan PowerShell**, termasuk komputer yang belum memiliki tool development.
+Jalankan semua perintah dari folder repository yang berisi `package.json`.
+Bootstrap otomatis saat ini belum mendukung macOS, Linux, atau Windows ARM.
+
+### 1. Instal kebutuhan awal
+
+Instal dua tool berikut terlebih dahulu:
+
+1. [Git for Windows x64](https://git-scm.com/install/windows), untuk clone/pull repository.
+2. [Python untuk Windows](https://www.python.org/downloads/windows/), versi **3.11 atau lebih baru, x64**.
+   Pastikan perintah `python` tersedia di PATH; pada installer klasik, aktifkan
+   **Add python.exe to PATH**. Python ini hanya untuk menjalankan bootstrap.
+
+Tutup dan buka kembali PowerShell setelah instalasi, lalu cek:
+
+```powershell
+git --version
+python --version
+```
+
+**Tidak perlu menginstal Node.js, npm, uv, PostgreSQL, Docker, Laragon, atau CUDA
+secara manual.** Bootstrap/setup menyiapkan runtime portable dan dependency di
+folder proyek, tanpa mengganti runtime global. Versi proyek dipin di
+[toolchain.json](toolchain.json): Node24.22.2, uv0.13.7, Python3.12.12, dan PostgreSQL17.10-1.
+Siapkan koneksi internet dan ruang disk untuk runtime, dependency CPU PyTorch,
+serta data penelitian. Instalasi pertama dapat memakan waktu.
+
+### 2. Clone repository
+
+Ganti URL contoh dengan URL GitHub repository ini:
+
+```powershell
+git clone "https://github.com/OWNER/REPOSITORY.git" bybit-ai-scalping
+cd bybit-ai-scalping
+```
+
+Jika sudah clone/pull, cukup buka PowerShell di folder repository dan lanjut ke
+langkah berikutnya.
+
+### 3. Bootstrap tool dan setup aplikasi
+
+Jalankan berurutan; tunggu setiap perintah selesai sebelum melanjutkan:
 
 ```powershell
 python scripts/bootstrap.py
 .\.tools\node\node.exe scripts/tasks.mjs setup
-.\.tools\node\npm.cmd run dev:api
 ```
 
-Dashboard lokal setelah setup:
+Perintah pertama mengunduh Node/npm, uv, dan PostgreSQL portable ke `.tools/`,
+serta memverifikasi checksum. Perintah kedua:
+
+- Memasang dependency JavaScript sesuai `package-lock.json`.
+- Memasang Python proyek dan virtual environment `services/quant/.venv/`
+  sesuai `uv.lock`, termasuk stack training CPU.
+- Menyiapkan contracts dan Prisma client.
+- Menginisialisasi/menyalakan database proyek di `127.0.0.1:55432` dan menerapkan migration.
+- Membuat `.env` dengan credential database lokal otomatis jika file belum ada.
+
+Untuk instalasi baru, **tidak perlu menyalin `.env.example` terlebih dahulu**.
+File tersebut masih berisi placeholder `REPLACE_ME`. Setup mempertahankan `.env`
+yang sudah ada. Panduan ini menggunakan database portable proyek; pengaturan
+database existing dijelaskan di [konfigurasi](docs/configuration.md).
+Jangan commit `.env`, `.tools/`, `.runtime/`, `.venv/`, atau `artifacts/`.
+
+### 4A. Jalankan mode development
 
 ```powershell
 .\.tools\node\npm.cmd run dev:dashboard
 ```
 
-Buka `http://127.0.0.1:5173`. Launcher memakai API3000 dan DB proyek55432,
-tidak memakai Laragon/Docker. `npm run verify:dashboard` juga menjalankan
-Playwright dengan PostgreSQL terpisah dan actual quant artifacts.
+Biarkan terminal tetap terbuka, lalu buka **http://127.0.0.1:5173**.
+Launcher membangun aplikasi, menyalakan database proyek jika perlu, lalu
+menjalankan Vite dan API Nest. Frontend memakai reload development; perubahan
+source API memerlukan build/restart launcher.
 
-API default: `http://127.0.0.1:3000/health/live` dan `/health/ready`. Setup membuat
-`.env` lokal jika belum ada, menginisialisasi cluster PostgreSQL milik proyek
-pada port 55432 dan menerapkan migration. Source changes memerlukan build ulang;
-dev command memantau output dist. Secret/runtime tidak di-commit.
+| Layanan dev | Alamat |
+| --- | --- |
+| Dashboard | http://127.0.0.1:5173 |
+| API | http://127.0.0.1:3000 |
+| Liveness | http://127.0.0.1:3000/health/live |
+| Readiness database | http://127.0.0.1:3000/health/ready |
+
+Gunakan satu launcher ini untuk UI dan API sekaligus; tidak perlu menjalankan
+`dev:api` lagi pada port yang sama.
+
+### 4B. Jalankan mode production lokal
+
+Hentikan launcher dev terlebih dahulu dengan **Ctrl+C**, lalu:
 
 ```powershell
-.\.tools\node\npm.cmd run verify:foundation
-.\.tools\node\npm.cmd run verify:configuration
-.\.tools\node\npm.cmd run verify:market-data
-.\.tools\node\npm.cmd run verify:features
-.\.tools\node\npm.cmd run verify:simulation
+.\.tools\node\npm.cmd run build
+.\.tools\node\npm.cmd run start:dashboard
+```
+
+Buka **http://127.0.0.1:3000** dan biarkan terminal tetap terbuka.
+Build menghasilkan API terkompilasi di `apps/api/dist` dan frontend yang
+dioptimalkan di `apps/web/dist`. Launcher menyetel `NODE_ENV=production` untuk
+prosesnya dan menyajikan **UI hasil build beserta API lewat Nest pada satu port**;
+Vite development/preview server tidak digunakan. Tidak perlu mengubah `.env`
+bolak-balik untuk memilih mode dev/prod.
+
+| Layanan production lokal | Alamat |
+| --- | --- |
+| Dashboard | http://127.0.0.1:3000 |
+| API | http://127.0.0.1:3000/api |
+| Liveness | http://127.0.0.1:3000/api/health/live |
+| Readiness database | http://127.0.0.1:3000/api/health/ready |
+
+Setelah source berubah, hentikan server, jalankan `build` lagi, lalu `start:dashboard`.
+Mode ini tetap memakai database dan artefak lokal proyek; server hanya bind ke
+loopback. Deployment publik/VPS, HTTPS, dan autentikasi remote belum disiapkan.
+Dashboard tetap untuk riset; aktivasi Paper/Demo/Real belum tersedia.
+
+### 5. Data pada instalasi baru dan alur percobaan
+
+Clone baru **belum memiliki dataset, model, atau hasil eksperimen** dari mesin
+pengembang. Database lokal dan `artifacts/` tidak disimpan di Git, sehingga
+halaman kosong pada awal penggunaan adalah kondisi yang normal.
+
+Opsional, setelah setup dan sebelum menjalankan launcher, ambil contoh data publik:
+
+```powershell
+.\.tools\node\npm.cmd run smoke:bybit-data
+```
+
+Command ini memakai internet untuk membuat konfigurasi/snapshot, mengunduh
+BTCUSDT **1 Januari 2025 UTC selama 24 jam**, lalu mengekspor dataset untuk worker.
+Tidak memerlukan API key Bybit dan tidak mengirim order. Akses endpoint publik
+Bybit tetap bergantung pada koneksi/region. Refresh browser setelah dataset tersedia.
+Untuk range/dataset sendiri, ikuti [panduan market data](docs/market-data.md).
+
+Untuk mencoba training lewat browser:
+
+1. Buka **Configuration**, pilih/load konfigurasi, lalu **Validate configuration**.
+2. Klik **Save draft**, kemudian **Freeze snapshot**.
+3. Buka **Training**, pilih dataset/range, isi resource limit dan acknowledgement
+   asumsi riset, lalu **Start training**.
+4. Pantau progress/checkpoints atau gunakan **Cancel training**.
+5. Setelah sukses, lihat **Experiments → Training validation** dan **Model registry**.
+
+Advanced multi-seed/walk-forward reports dibuat melalui
+[workflow evaluasi M9](docs/evaluation.md). Data smoke satu hari bukan bukti model
+profitable atau siap dipromosikan.
+
+### 6. Menghentikan aplikasi dan menjalankan kembali
+
+**Ctrl+C** menghentikan server launcher. Job training bersifat persisten;
+gunakan **Cancel training** dahulu jika job tersebut juga ingin dihentikan.
+Database tetap berjalan sampai dihentikan secara terpisah:
+
+```powershell
 .\.tools\node\npm.cmd run db:status
 .\.tools\node\npm.cmd run db:stop
 ```
+
+Untuk penggunaan berikutnya, cukup jalankan `dev:dashboard` atau `start:dashboard`;
+launcher menyalakan kembali database proyek. Bootstrap/setup tidak perlu diulang
+setiap membuka aplikasi. Jangan hapus `.runtime/postgres` untuk sekadar restart,
+karena folder tersebut menyimpan database lokal.
+
+### 7. Setelah `git pull`
+
+Hentikan server terlebih dahulu. Dari root repository:
+
+```powershell
+git pull
+python scripts/bootstrap.py
+.\.tools\node\node.exe scripts/tasks.mjs setup
+```
+
+Bootstrap melewati tool yang sudah tersedia; setup menyinkronkan dependency dan
+menerapkan migration yang belum terpasang tanpa reset database. `.env` existing
+dipertahankan. Sesudahnya, pilih mode dev, atau jalankan `build` dan
+`start:dashboard` untuk mode production lokal. Compatibility model lama tetap
+diperiksa saat kode/runtime berubah; lihat [panduan training](docs/training.md).
+
+### 8. Verifikasi dan masalah umum
+
+Pengecekan cepat: buka alamat readiness sesuai mode; hasil sehat memuat
+`"status":"ok"`. Full regression dapat dijalankan terpisah:
+
+```powershell
+.\.tools\node\npm.cmd run verify:dashboard
+```
+
+Full verification membutuhkan waktu beberapa menit, stack Python yang sudah
+terpasang, dan Microsoft Edge untuk browser tests di Windows. Test memakai
+database/artefak terisolasi; tidak wajib dijalankan setiap kali membuka dashboard.
+
+| Gejala | Langkah yang perlu dilakukan |
+| --- | --- |
+| `python` tidak dikenali atau membuka Microsoft Store | Pastikan Python terinstal dan PATH benar, lalu buka ulang PowerShell. Jika launcher `py` tersedia, gunakan `py -3 scripts/bootstrap.py`. |
+| `.tools/node/node.exe` belum ada | Jalankan bootstrap sampai selesai sebelum setup atau perintah npm proyek. |
+| Download dependency terputus | Periksa koneksi dan jalankan ulang tahap bootstrap/setup yang gagal. |
+| Database gagal terhubung dan `.env` berisi `REPLACE_ME` | Gunakan konfigurasi `.env` hasil setup atau isi credential DB existing yang benar; setup tidak menimpa `.env` existing. |
+| Port3000/5173/55432 terpakai | Hentikan instance aplikasi proyek yang masih berjalan. Launcher tidak otomatis mematikan proses lain. |
+| Error DLL seperti `VCRUNTIME140.dll`/`MSVCP140.dll` | Instal/perbaiki [Microsoft Visual C++ Redistributable x64](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist), lalu coba kembali. |
+| UI kosong dari dataset/model | Isi data penelitian terlebih dahulu; artefak mesin pengembang tidak ikut clone. |
 
 Verification M10 lulus:123 contract tests,37 backend unit,348 Python,31 integration
 dan7 actual browser tests (546 total), static/export checks, migration upgrade/schema

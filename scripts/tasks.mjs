@@ -454,6 +454,9 @@ async function main() {
       await build();
       await run(node, [path.join(root, 'scripts/dashboard-dev.mjs')]);
       return;
+    case 'start:dashboard':
+      await run(node, [path.join(root, 'scripts/dashboard-prod.mjs')]);
+      return;
     case 'contracts:export':
       await npm(['run', 'build', '-w', '@bybit/contracts']);
       await npm(['run', 'export', '-w', '@bybit/contracts']);

@@ -52,6 +52,7 @@
     "smoke:bybit-data": "node scripts/tasks.mjs smoke:bybit-data",
     "contracts:export": "node scripts/tasks.mjs contracts:export",
     "dev:dashboard": "node scripts/tasks.mjs dev:dashboard",
+    "start:dashboard": "node scripts/tasks.mjs start:dashboard",
     "dev:web": "npm run dev -w @bybit/web",
     "verify:dashboard": "node scripts/tasks.mjs verify:dashboard"
   },

@@ -5,7 +5,7 @@ PostgreSQL, dan MaskablePPO. Sumber requirement: [PROJECT_SPEC.md](PROJECT_SPEC.
 
 ## Status aktual
 
-Per 7 November 2026 (Asia/Jakarta), **M8 — RL Training Completed**.
+Per 7 November 2026 (Asia/Jakarta), **M9 — Advanced Evaluation Completed**.
 Foundation/configuration/market data/features M1–M4 tetap tersedia. Public REST ingestion
 memvalidasi/menyimpan historical candles, instrument dan funding, mendukung resume,
 quality report, pinned revisions, fingerprint dan JSONL export.
@@ -29,9 +29,13 @@ shared incremental simulator, net-equity reward dan settlement bootstrap adapter
 M8 disetujui melalui `gas eksekusi m8`: bounded CPU MaskablePPO Small training,
 train-only preprocessing, masked validation/save-load, checkpoints, persistent
 background jobs/progress/cancel/resource watchdog. Model research candidate tersedia.
-Belum ada frontend atau exchange execution; M9 belum disetujui.
+M9 disetujui melalui `lanjut eksekusi M9`: preregistered walk-forward/multi-seed,
+matched baselines, fee/slippage/RR stresses, exit/feature/architecture experiments,
+immutable report/curves dan frozen once-only holdout procedure. Gate riset
+dibekukan sebelum hasil; data publik satu hari belum cukup untuk promotion.
+Belum ada frontend atau exchange execution; M10 belum disetujui.
 Panduan: [Baselines](docs/baselines.md), [RL environment](docs/rl-environment.md),
-[Training](docs/training.md).
+[Training](docs/training.md), [Advanced evaluation](docs/evaluation.md).
 
 ## Setup Windows x64
 
@@ -59,10 +63,10 @@ dev command memantau output dist. Secret/runtime tidak di-commit.
 .\.tools\node\npm.cmd run db:stop
 ```
 
-Verification M5 lulus:84 contract tests,33 backend unit,236 Python,31 integration
-(384 total), static/export checks, migration upgrade/schema diff dan seluruh
-M1–M4/audit regressions. Exact accounting, event ordering, unavailable gates,
-artifact reconciliation, fixture E2E dan public-export replay lulus.
+Verification M9 lulus:120 contract tests,33 backend unit,334 Python,31 integration
+(518 total), static/export checks, migration upgrade/schema diff dan seluruh
+M1–M8 regressions. Preregistered WFO/multi-seed/stresses/retraining, report
+verification, cache reproducibility dan holdout guards diuji.
 Evidence: [testing](docs/testing.md).
 
 Simulation CLI, approved restrictions, policies dan output: [simulation](docs/simulation.md).
@@ -112,16 +116,19 @@ Configuration valid belum berarti siap trading; execution checks tetap pending.
 | [Training](docs/training.md) | CPU MaskablePPO, splits, jobs, checkpoint/metadata/compatibility dan validation |
 | [Plan M8](docs/plans/milestone-08.md) | Scope training yang disetujui |
 | [Handoff M8](docs/handoffs/milestone-08.md) | Hasil aktual dan konteks M9 |
+| [Evaluation](docs/evaluation.md) | Preregistered OOS/seed/stress experiments, reports, gates dan holdout |
+| [Plan M9](docs/plans/milestone-09.md) | Scope advanced evaluation yang disetujui |
+| [Handoff M9](docs/handoffs/milestone-09.md) | Hasil aktual dan konteks M10 |
 | [Handoff M0](docs/handoffs/milestone-00.md) | Hasil, keterbatasan dan instruksi sesi berikutnya |
 
 ## Alur pengembangan
 
 Satu persetujuan berlaku untuk satu milestone. Task normal dalam scope tersebut
 tidak membutuhkan persetujuan ulang. Milestone berikutnya tidak dimulai otomatis.
-Simulation MVP M6 dan RL proof of concept M8 tersedia; target berikutnya advanced evaluation M9, dashboard riset M10,
+Simulation MVP M6, RL proof of concept M8 dan advanced evaluation M9 tersedia; target berikutnya dashboard riset M10,
 Paper M11, Demo M13, dan kemampuan Real M15.
 
 Real Trading harus disabled by default. Persetujuan implementasi fitur Real bukan
 izin transaksi dana asli. Tidak ada jaminan profit atau promosi model otomatis.
 
-Advanced evaluation, dashboard dan trading tetap rancangan milestone berikutnya.
+Dashboard dan trading tetap rancangan milestone berikutnya.

@@ -114,6 +114,7 @@ def submit(root, request_path):
             (request_path.parent / request["configuration_file"]).resolve(strict=True)
         ),
         request["resources"],
+        research=request.get("research_scope") == "advanced_evaluation_v1",
     )
     from bybit_quant.contracts import INTERVALS
 

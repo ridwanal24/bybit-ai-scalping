@@ -62,14 +62,25 @@ def verify_model(directory, expected_id=None):
     validate("model-metadata-v1", metadata)
     c = configuration(metadata["configuration"])
     from bybit_quant.contracts import INTERVALS
-    from bybit_quant.training.preparation import chronological_split, validate_training
+    from bybit_quant.training.preparation import (
+        chronological_split,
+        validate_research_fold,
+        validate_training,
+    )
 
-    validate_training(c, metadata["resources"])
+    research = metadata.get("research_scope") == "advanced_evaluation_v1"
+    validate_training(c, metadata["resources"], research=research)
     split = chronological_split(
         metadata["split"]["train"][0],
         metadata["split"]["holdout"][1],
         INTERVALS[c["market"]["timeframe"]],
     )
+    if metadata["split"]["version"] == "walk_forward_expanding_v1":
+        if not research:
+            raise ValueError("model_research_scope_required")
+        split = validate_research_fold(
+            c, metadata["split"]["train"][0], metadata["split"]["holdout"][1], metadata["split"]
+        )
     if (
         metadata["split"] != split
         or metadata["seed"] != c["training"]["seed"]

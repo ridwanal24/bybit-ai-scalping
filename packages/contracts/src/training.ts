@@ -29,6 +29,15 @@ export const trainingResourcesSchema = z.strictObject({
   max_timesteps: z.number().int().min(8).max(1000000),
   max_checkpoints: z.number().int().min(1).max(32),
 });
+export const researchSplitSchema = z.strictObject({
+  version: z.literal('walk_forward_expanding_v1'),
+  train: range,
+  validation: range,
+  holdout: range,
+  interval_ms: count.min(1),
+  purge_bars: count.min(1),
+  holdout_evaluated: z.literal(false),
+});
 export const trainingRequestSchema = simulationRequestSchema
   .omit({
     actions_file: true,
@@ -42,6 +51,8 @@ export const trainingRequestSchema = simulationRequestSchema
     ppo_epochs: z.number().int().min(1).max(10),
     checkpoint_every_rollouts: z.number().int().min(1).max(1000),
     resources: trainingResourcesSchema,
+    research_scope: z.literal('advanced_evaluation_v1').optional(),
+    research_fold: researchSplitSchema.optional(),
   });
 export const trainingProgressSchema = z.strictObject({
   version: z.literal('1'),
@@ -114,7 +125,8 @@ export const modelMetadataSchema = z.strictObject({
   dataset_fingerprint: hash,
   configuration_snapshot_id: z.uuid(),
   source_configuration_hash: hash,
-  split: trainingSplitSchema,
+  split: z.union([trainingSplitSchema, researchSplitSchema]),
+  research_scope: z.literal('advanced_evaluation_v1').optional(),
   normalizer_id: hash,
   feature_schema_hash: hash,
   action_schema: z.literal('hold-long-short-close_long-close_short-v1'),

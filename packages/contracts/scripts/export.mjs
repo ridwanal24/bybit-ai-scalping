@@ -40,12 +40,19 @@ import {
   rlEpisodeSchema,
   rlTransitionSchema,
   trainingSplitSchema,
+  researchSplitSchema,
   trainingResourcesSchema,
   trainingRequestSchema,
   trainingProgressSchema,
   trainingJobSchema,
   trainingValidationSchema,
   modelMetadataSchema,
+  evaluationRequestSchema,
+  evaluationGatesSchema,
+  evaluationProtocolSchema,
+  evaluationRowSchema,
+  evaluationScreenSchema,
+  evaluationReportSchema,
   SIMULATION_ACCOUNTING_VECTORS,
   SIMULATION_RISK_VECTORS,
 } from '../dist/index.js';
@@ -224,6 +231,7 @@ const outputs = {
   'schemas/rl-episode-v1.schema.json': z.toJSONSchema(rlEpisodeSchema),
   'schemas/rl-transition-v1.schema.json': z.toJSONSchema(rlTransitionSchema),
   'schemas/training-split-v1.schema.json': z.toJSONSchema(trainingSplitSchema),
+  'schemas/research-split-v1.schema.json': z.toJSONSchema(researchSplitSchema),
   'schemas/training-resources-v1.schema.json': z.toJSONSchema(
     trainingResourcesSchema,
   ),
@@ -238,6 +246,22 @@ const outputs = {
     trainingValidationSchema,
   ),
   'schemas/model-metadata-v1.schema.json': z.toJSONSchema(modelMetadataSchema),
+  'schemas/evaluation-request-v1.schema.json': z.toJSONSchema(
+    evaluationRequestSchema,
+  ),
+  'schemas/evaluation-gates-v1.schema.json': z.toJSONSchema(
+    evaluationGatesSchema,
+  ),
+  'schemas/evaluation-protocol-v1.schema.json': z.toJSONSchema(
+    evaluationProtocolSchema,
+  ),
+  'schemas/evaluation-row-v1.schema.json': z.toJSONSchema(evaluationRowSchema),
+  'schemas/evaluation-screen-v1.schema.json': z.toJSONSchema(
+    evaluationScreenSchema,
+  ),
+  'schemas/evaluation-report-v1.schema.json': z.toJSONSchema(
+    evaluationReportSchema,
+  ),
   'schemas/feature-v1.schema.json': z.toJSONSchema(featureSchema),
   'schemas/observation-context-v1.schema.json': z.toJSONSchema(
     observationContextSchema,

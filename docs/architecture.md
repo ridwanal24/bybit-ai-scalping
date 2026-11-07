@@ -2,10 +2,20 @@
 
 Tanggal: 7 November 2026, Asia/Jakarta. Status: rancangan M0 diterima melalui
 `oke ku approve`; foundation M1, configuration M2, market data M3, features M4, simulator M5, baseline M6, RL environment M7 dan CPU training M8 kini
-diimplementasikan; komponen berikutnya tetap rancangan. Dasar: [spesifikasi](../PROJECT_SPEC.md) bagian 7–8,
+diimplementasikan, diikuti advanced evaluation M9; komponen berikutnya tetap rancangan. Dasar: [spesifikasi](../PROJECT_SPEC.md) bagian 7–8,
 24–33, 36, dan [keputusan](decisions.md).
 
 ## Komponen yang sudah diimplementasikan
+
+M9 `bybit_quant.evaluation` membekukan protocol/config/source/code/data/seeds,
+expanding train-only folds/purge dan final holdout sebelum menjalankan persistent
+M8 training jobs. Research scope membuka Medium/Large dan fold khusus tanpa
+mengubah default M8. Shared M5/M6 artifacts menjadi sumber metrics/curves,
+matched baselines, stress counterfactual dan exploratory retraining comparisons.
+Immutable report reader memverifikasi matrix dan linked model/simulation/baseline
+artifacts serta menghitung ulang screen. Local append-only boundary reservations
+dan overlapping once-only consumption melindungi frozen holdout. Tidak ada
+automatic model promotion/activation; [guide](evaluation.md), ADR17.
 
 M8 menambahkan train-only chronological preparation, CPU MaskablePPO Small,
 guarded settled episodes dan custom masked validation yang direplay ke ledger M5.
@@ -20,7 +30,7 @@ logs/checkpoints, cancel dan wall/RSS watchdog. Process identity memakai PID+
 creation time. No DB migration atau HTTP training API M8; controller/CLI menjadi
 foundation yang diintegrasikan backend/dashboard/registry M10. Model archive
 mandiri membawa normalizer/metadata/validation actions dan complete M5 ledger.
-Details/limits: [training](training.md). Advanced evaluation tetap M9.
+Details/limits: [training](training.md). Advanced evaluation: [M9](evaluation.md).
 
 M7 mengekstrak incremental DatasetSession yang dipakai script runner, M6
 baseline dan TradingEnv Gymnasium. Semua financial transitions tetap pada
@@ -270,7 +280,8 @@ M0 hanya membuat dokumentasi. M1 telah membuat `apps/api`, `services/quant`,
 `scripts` dan local runtime yang ignored; M2 menambahkan `packages/contracts` dan
 research configuration API. M3 menambahkan market-data modules/CLI, revisions,
 download/dataset persistence dan ignored exports. M4–M6 menambahkan features,
-simulator dan baselines Python; M7 menambahkan RL environment dan M8 training CPU.
+simulator dan baselines Python; M7 menambahkan RL environment, M8 training CPU
+dan M9 advanced evaluation/reports/holdout procedure.
 `apps/web` dan exchange trading tetap rencana.
 Runtime secret, model dan log
 dikecualikan dari Git.

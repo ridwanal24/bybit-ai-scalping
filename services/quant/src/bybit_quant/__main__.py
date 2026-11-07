@@ -36,9 +36,21 @@ def main() -> None:
         command = commands.add_parser(name)
         command.add_argument("--job", required=True)
         command.add_argument("--root")
+    for name, option in (
+        ("evaluation-register", "request"),
+        ("evaluation-run", "protocol"),
+        ("evaluation-report", "report"),
+        ("evaluation-freeze", "report"),
+        ("evaluation-holdout", "selection"),
+    ):
+        command = commands.add_parser(name)
+        command.add_argument("--" + option, required=True)
+        command.add_argument("--root")
     args = parser.parse_args()
     if args.command != "health":
-        if args.command.startswith("training-"):
+        if args.command.startswith("evaluation-"):
+            from bybit_quant.evaluation.cli import execute
+        elif args.command.startswith("training-"):
             from bybit_quant.training.cli import execute
         elif args.command == "environment-run":
             from bybit_quant.rl.cli import execute

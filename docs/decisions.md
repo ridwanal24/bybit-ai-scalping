@@ -348,7 +348,42 @@ planning bukan izin eksekusi live. **Deferred** memiliki deadline dalam
   risk/funding/reward/schema and complete verified validation ledger. Candidate
   models remain execution_ready=false. M9 approval/promotion gates not granted.
 
-## Keputusan yang masih terbuka setelah M8
+## ADR-17 — Preregistered walk-forward research dan frozen holdout M9
+
+- Status: implemented,7 November2026, `lanjut eksekusi M9`;
+  [plan](plans/milestone-09.md), task9.1–9.19, [guide](evaluation.md).
+- Immutable protocol mendahului compute: exact source/config/code/data, seeds,
+  expanding folds/purge, variants, resource envelope dan numeric research gates.
+  Preserve15% holdout; independent account/normalizer perfold. Alternative random
+  candle split atau post-hoc seed/threshold selection ditolak.
+- Primary3 seeds/2 folds; all-seed descriptive mean/median/std dan trade-pooled PF,
+  paired M6 HOLD/random/EMA/constrained BuyHold pada exact scope. Curves reset
+  antar fold, bukan continuous compounded portfolio atau confidence interval.
+- Fixed2x fee/slip dan RR1.5/3 counterfactuals memakai weights sama tetapi actions/
+  sizing recomputed, deployment incompatible. Exit modes/feature drop/Medium/
+  Large retrain pada lastfold/reference seed saja; exploratory bukan promotion
+  evidence. M8 explicit research scope memungkinkan variants, defaults tetap.
+- Research screen minimum30 unique OOS days/30 trades perseed/PF>=1.1/positive
+  everyseed+stress/beat HOLD+EMA/no riskbreach+DDcap. Gates tidak diturunkan agar
+  smoke lulus. Public satu hari insufficient, terlepas dari outcome keuntungan.
+- Frozen candidate first preregistered seed/lastfold; append-only holdout boundary
+  reservation, atomic fsync started sebelum inference, overlaps across protocols
+  ditolak; failures/crashes tetap consumed. Final holdout memiliki independent
+  positive/PF/trade/DD/risk gates. Semua results execution_ready=false, tanpa
+  otomatis registry promotion atau exchange activation. Stale lock perlu audit.
+- Strict loader code mismatch tetap. Optional reviewed M8 fingerprint+59 protected
+  core hashes+runtime/data/archive checks+identical original validation replay
+  menghasilkan certificate, bukan blanket model compatibility.
+- Verified content-addressed report JSON/Markdown/curves/PNG/actions, full matrix
+  dan independent linked artifact/metric/screen verification. Verified training
+  cache rerun membuktikan deterministic inference; tidak disebut independent
+  training reproduction. No new dependencies/migration/HTTP job API M9.
+- Consequence: repeated simulator replay/verification mahal pada CPU/I/O; full-year
+  throughput dan production/distributed registry belum dibuktikan. Local filesystem
+  owner masih dapat mengedit markers; signed registry/access control tetap scope
+  berikutnya. R10 memiliki gate numerik; market evidence tetap belum cukup.
+
+## Keputusan yang masih terbuka setelah M9
 
 M5 menutup pilihan R05 untuk restricted research saja: lihat ADR-13;
 full exchange liquidation realism tetap di luar kemampuan simulator ini.

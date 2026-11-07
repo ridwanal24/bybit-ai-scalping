@@ -4,13 +4,13 @@ Terakhir diperbarui: 7 November 2026, Asia/Jakarta.
 
 | Aspek | Kondisi aktual |
 | --- | --- |
-| Current phase | Phase 3 — RL Proof of Concept Completed |
-| Current milestone | M8 — RL Training |
-| Milestone approval | Approved melalui `gas eksekusi m8` |
-| Implementation status | Seluruh task8.1–8.16 selesai dan diverifikasi |
-| Milestone status | Completed; M0–M7 tetap Completed |
-| Next milestone | M9 — Advanced Evaluation; belum Approved |
-| Aplikasi/database/model | API data/config, features/simulator/baselines/env, CPU trainer/jobs dan model research candidates |
+| Current phase | Phase 4 — Research Platform; evaluation selesai, dashboard berikutnya |
+| Current milestone | M9 — Advanced Evaluation |
+| Milestone approval | Approved melalui `lanjut eksekusi M9` |
+| Implementation status | Seluruh task9.1–9.19 selesai dan diverifikasi |
+| Milestone status | Completed; M0–M8 tetap Completed |
+| Next milestone | M10 — Dashboard; belum Approved |
+| Aplikasi/database/model | API data/config, shared quant pipeline, CPU jobs/models, preregistered evaluation/report/gates |
 | Trading | Tidak ada credentials Bybit, order atau aktivasi exchange |
 
 ## Approval dan scope
@@ -37,6 +37,22 @@ bar execution, exit/risk/funding dan explicit restricted liquidation envelope.
 Implementasi M5 berada dalam scope plan; tidak memberi approval M6/training/orders.
 
 ## Selesai
+
+M9 Approved melalui `lanjut eksekusi M9`,7 November2026;
+[plan](plans/milestone-09.md) mencakup task9.1–9.19. Expanding folds/purge/train-only
+fit, 3-seed primary/stress evaluation, four matched baselines, exploratory exit/
+feature/Medium/Large retraining, immutable reports/curves dan strict cache tersedia.
+Research screen dipraregistrasi; frozen deterministic candidate dan atomic
+once-only/overlap-safe holdout registry tidak melakukan promotion otomatis.
+Public24h hanya technical smoke dan holdout tetap terkunci. [Guide](evaluation.md).
+
+Final verification M9 PASSED WIB10:49:18–11:00:17:518 tests tanpa skip,
+120 contracts/33 backend/334 Python/31 integration plus static/export/migration
+checks. Public smoke selesai11:09:21,11 actual trainings/4224steps/35rows/
+6 comparisons; cached rerun11 models/0training, report ID dan semantic SHA sama.
+Screen insufficient:21–25trades perseed/612min OOS, negative allseed+stress
+returns/PF0/baseline and daily-risk failures. Holdout tidak dibuka, model tidak
+dipromosikan dan active lease tidak tersisa. Evidence lengkap pada [testing](testing.md).
 
 M8 Approved melalui `gas eksekusi m8`,7 November2026;
 [plan M8](plans/milestone-08.md) membatasi task8.1–8.16. Pinned CPU MaskablePPO
@@ -172,9 +188,9 @@ Evidence dan command tambahan: [testing](testing.md).
 
 ## Remaining tasks dan known issues
 
-Tidak ada task wajib M8 tersisa. M9 memerlukan plan/approval baru. CPU training
-dan model save/load telah berjalan; advanced evaluation/promotion/holdout decision
-belum dilakukan. Python semantic parity, observation shape/artifact dan actual
+Tidak ada task wajib M9 tersisa. M10 memerlukan instruksi baru. CPU training,
+save/load dan advanced evaluation telah berjalan; promotion belum eligible dan
+final holdout publik tidak dievaluasi. Python semantic parity, observation shape/artifact dan actual
 Small network parameter count divalidasi.
 Configuration valid tidak membuktikan exchange support atau trading readiness.
 DB owner/superuser tetap dapat bypass trigger lewat DDL; production privileges
@@ -202,5 +218,5 @@ tetap M8/M11. Pure Python throughput full-year/live latency belum dibenchmark.
 Source hash membuktikan integritas, bukan signature. Caller context/risk budget
 divalidasi dan restricted historical risk enforcement M5 tersedia; live risk belum.
 
-Handoff terbaru: [milestone-08.md](handoffs/milestone-08.md).
+Handoff terbaru: [milestone-09.md](handoffs/milestone-09.md).
 **Waiting for Next Milestone Instruction.**

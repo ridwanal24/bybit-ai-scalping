@@ -9,3 +9,4 @@ export * from './simulation.js';
 export * from './baselines.js';
 export * from './rl.js';
 export * from './training.js';
+export * from './evaluation.js';

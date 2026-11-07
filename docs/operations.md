@@ -1,5 +1,19 @@
 # Operasi lokal
 
+## Advanced evaluation M9
+
+`npm run evaluation:register -- --request FILE` menerbitkan immutable protocol;
+`npm run evaluation:run -- --protocol SHA` menjalankan bounded experiment matrix.
+`npm run evaluation:report -- --report SHA` memverifikasi report dan references.
+`npm run verify:evaluation` menjalankan full regression dengan report
+`.runtime/evaluation-report.json`. Explicit public-data smoke:
+`services/quant/.venv/Scripts/python.exe services/quant/tests/smoke_evaluation.py`.
+Smoke memakai existing M3 export/M8 candidate; 11 training384steps, 35 rows,
+6 baseline comparisons dan cache rerun. Tidak mengunduh candles atau membuka
+holdout. Format request/CLI freeze/once-only policy: [evaluation](evaluation.md).
+Arsipkan reports bersama protocols/models/simulations/baselines/reviews dan
+holdout registry. Jangan hapus consumed markers untuk mengulang final holdout.
+
 ## CPU training/background jobs M8
 
 `npm run training:submit -- --request FILE` membekukan input dan mengembalikan
@@ -25,7 +39,7 @@ diarsipkan bersama linked `artifacts/simulations/<id>/`.
 `.runtime/environment-report.json`. Bounded public smoke helper:
 `services/quant/.venv/Scripts/python.exe services/quant/tests/smoke_environment.py`.
 Dependency sync memakai existing project uv dan `--locked`; NumPy/Gymnasium
-berada pada venv proyek. M8 belum dipasang/dijalankan. Untuk learner berikutnya,
+berada pada venv proyek. Learner M8 sudah memakai adapter berikut:
 gunakan SettledEpisodeWrapper/bootstrap0 dan reject `report.status=invalid`.
 
 ## Baseline offline M6

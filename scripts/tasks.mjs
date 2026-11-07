@@ -414,6 +414,7 @@ async function main() {
     case 'verify:baselines':
     case 'verify:environment':
     case 'verify:training':
+    case 'verify:evaluation':
     case 'verify:features':
     case 'verify:market-data':
     case 'verify': {
@@ -438,21 +439,23 @@ async function main() {
         fs.writeFileSync(
           path.join(
             runtime,
-            task === 'verify:training'
-              ? 'training-report.json'
-              : task === 'verify:environment'
-                ? 'environment-report.json'
-                : task === 'verify:baselines'
-                  ? 'baselines-report.json'
-                  : task === 'verify:simulation'
-                    ? 'simulation-report.json'
-                    : task === 'verify:features'
-                      ? 'features-report.json'
-                      : task === 'verify:market-data'
-                        ? 'market-data-report.json'
-                        : task === 'verify:configuration'
-                          ? 'configuration-report.json'
-                          : 'foundation-report.json',
+            task === 'verify:evaluation'
+              ? 'evaluation-report.json'
+              : task === 'verify:training'
+                ? 'training-report.json'
+                : task === 'verify:environment'
+                  ? 'environment-report.json'
+                  : task === 'verify:baselines'
+                    ? 'baselines-report.json'
+                    : task === 'verify:simulation'
+                      ? 'simulation-report.json'
+                      : task === 'verify:features'
+                        ? 'features-report.json'
+                        : task === 'verify:market-data'
+                          ? 'market-data-report.json'
+                          : task === 'verify:configuration'
+                            ? 'configuration-report.json'
+                            : 'foundation-report.json',
           ),
           JSON.stringify(report, null, 2) + '\n',
         );
@@ -475,6 +478,11 @@ async function main() {
       ]);
       return;
     case 'training:status':
+    case 'evaluation:register':
+    case 'evaluation:run':
+    case 'evaluation:report':
+    case 'evaluation:freeze':
+    case 'evaluation:holdout':
     case 'training:cancel':
       await run(python, [
         '-m',

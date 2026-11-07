@@ -36,7 +36,7 @@ yang konkret sebelum persetujuan milestone tersebut.
 | 6 | Completed; [plan Approved](plans/milestone-06.md), [handoff](handoffs/milestone-06.md) | M3–M5 | 419 tests + four-baseline public-export replay/reload lulus; shared simulator/risk/costs, exact metrics/undefined reasons dan immutable comparison |
 | 7 | Completed; [plan Approved](plans/milestone-07.md), [handoff](handoffs/milestone-07.md) | M4–M6 | 461 tests, Gymnasium checker, shared incremental timeline/masks, net-equity reward/settlement/bootstrap, legacy M6 byte equivalence dan public1200-step replay/reload lulus |
 | 8 | Completed; [plan Approved](plans/milestone-08.md), [handoff](handoffs/milestone-08.md) | M7 | 496 tests + two reproducible1024-step CPU jobs; train-only split/normalization, masked validation/save-load, metadata/checkpoints dan background progress/cancel/limits lulus |
-| 9 | Planned; belum Approved | M6–M8 | Reproducible OOS/multi-seed/walk-forward/sensitivity, ablation/architecture comparison, holdout procedure dan promotion criteria ditetapkan sebelum evaluation keputusan |
+| 9 | Completed; Approved `lanjut eksekusi M9` | M6–M8 | Preregistered OOS/multi-seed/WFO, matched baselines/stresses, exploratory retraining, verified reports/curves dan frozen once-only holdout/gates; short public data insufficient, tanpa promotion |
 | 10 | Planned; belum Approved | M2–M3, M8–M9 | User mengonfigurasi riset, kontrol training, lihat hasil/model comparison dari API nyata, loading/error/responsive/integration tests |
 | 11 | Planned; belum Approved | M4–M10 | Closed candle real-time → inference → risk → virtual fill; persistence/recovery, paper dashboard, no exchange order; risk conformance gate |
 | 12 | Planned; belum Approved | M11 | Environment/credentials terisolasi, account state read, capability/ownership/order lifecycle, idempotency contract tests; live order belum diizinkan |
@@ -185,6 +185,8 @@ Tetapkan smoke budget CPU/timesteps/durasi sebelum run. Evaluator wajib mask-awa
 Jika training gagal/tidak profitable, laporkan tanpa mengubah tujuan teknis.
 
 ### M9 — Advanced Evaluation
+
+Task9.1–9.19 selesai. [Guide](evaluation.md), [handoff](handoffs/milestone-09.md).
 
 - 9.1 Net PnL; 9.2 Drawdown metrics; 9.3 Profit factor; 9.4 Expectancy.
 - 9.5 Trade statistics; 9.6 Equity curve; 9.7 Baseline comparison.

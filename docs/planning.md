@@ -7,12 +7,22 @@ Sumber utama: [PROJECT_SPEC.md](../PROJECT_SPEC.md).
 
 ## Requirement dan batas hasil
 
+M9 diimplementasikan melalui `lanjut eksekusi M9`,7 November2026;
+[plan](plans/milestone-09.md) dan [guide](evaluation.md) menetapkan preregistered
+multi-seed/expanding WFO, paired baselines, fee/slippage/RR counterfactuals,
+exploratory exit/feature/architecture retraining dan verified reports/curves.
+Conservative research gates minimum3 seeds/2 folds/30 OOS days/30 trades per seed,
+PF>=1.1/positive all-seed and stress returns/beat HOLD+EMA/no risk breach dibekukan
+sebelum outcome. Frozen final holdout once-only dengan overlap checks tersedia;
+public satu hari belum eligible dan tidak membuka holdout. Tidak ada model
+promotion/dashboard/orders. M10 memerlukan instruksi berikutnya.
+
 M8 diimplementasikan melalui `gas eksekusi m8`,7 November2026;
 [plan](plans/milestone-08.md) dan [guide](training.md) membekukan CPU Small training,
 chronological70/15/15/train-only preprocessing, masked validation/final candidate,
 save-load/provenance dan bounded persistent jobs. Public smoke1024steps/2epochs/
 1thread/env/max180s/3072MiB ditetapkan sebelum run, dua seed42 repeats. Holdout
-tidak dievaluasi, risk/cost/preset tidak dituning dan M9 belum disetujui.
+tidak dievaluasi dan risk/cost/preset tidak dituning pada M8.
 
 M7 diimplementasikan melalui `lanjutkan eksekusi M7`,7 November2026;
 [plan](plans/milestone-07.md) dan [guide](rl-environment.md) membekukan shared
@@ -289,9 +299,10 @@ ditentukan dari feature horizon/label/episode overlap. Final holdout tidak dipak
 untuk tuning; reuse menuntut holdout baru atau pengungkapan eksplisit.
 
 Promosi Candidate → Validated → Paper Approved → Demo Approved → Real Approved
-memerlukan bukti bertahap, approval manual dan audit. Tidak ada numeric performance
-gate final di M0. M9 harus menetapkannya sebelum evaluasi pemilihan/promosi; hasil
-negatif tetap disimpan. Real juga memerlukan M14 readiness dan izin dana terpisah.
+memerlukan bukti bertahap, approval manual dan audit. Numeric gate belum ada pada
+M0; M9 kini membekukan research screen dan independent final holdout gates sebelum
+hasil, lihat [evaluation](evaluation.md). Hasil negatif tetap disimpan dan public
+smoke belum eligible. Real juga memerlukan M14 readiness dan izin dana terpisah.
 
 ## Risiko, pertanyaan terbuka dan penyelesaiannya
 
@@ -309,7 +320,7 @@ terkait, pengguna memutuskan hal material. Tidak ada blocker pelaksanaan M0.
 | R07 | Daily loss reset, external cashflow, breach action | Equity basis, UTC dan latching diusulkan; finalisasi sebelum risk implementation | Agent + reviewer; M2/M5, conformance M11 |
 | R08 | Reward hacking/double counting | Net equity delta, ledger invariants, deterministic scenarios | Agent; M5/M7 |
 | R09 | Resource training dan cancellation | Satu worker awal, bounded smoke, checkpoints dan failure recovery | Agent; M8 |
-| R10 | Statistical overfit/promotion criteria belum angka | Prespecify gates dan sample size sebelum promotion evaluation; multi-seed/OOS/stress | Agent + reviewer; M9 |
+| R10 | Statistical overfit dan evidence belum cukup | Numeric research/holdout gates dipraregistrasi M9; public24h insufficient, perlu histori/OOS memadai sebelum promotion review | Agent + reviewer; M9 evidence lalu review berikutnya |
 | R11 | Dashboard exposure/auth dan secret storage | Local-only awal; auth review sebelum remote exposure, no secrets in client/log | Agent + reviewer; M10–M12 |
 | R12 | Inference transport/stale/clock/timeout thresholds | Ukur latency; persistent service hanya bila perlu, fail closed untuk entry | Agent; sebelum acceptance M11/M12 |
 | R13 | Account mode, ownership, stop/capability mismatch | Dedicated account usulan; capability validation dan unknown activity block | Agent + reviewer; M12/M13 |

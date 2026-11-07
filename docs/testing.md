@@ -1,5 +1,85 @@
 # Testing dan verifikasi
 
+## Hasil M9 — Advanced Evaluation
+
+Tanggal:7 November2026, Asia/Jakarta. Final `npm run verify:evaluation`
+PASSED pada orchestrator report. Report `.runtime/evaluation-report.json`: UTC03:49:18.845–04:00:17.303
+(WIB10:49:18–11:00:17). **518 tests tanpa skip**:
+120 contracts +33 backend unit +334 Python +31 isolated PostgreSQL/HTTP integration.
+Build/typecheck/ESLint/Ruff/Prettier/export drift, migration fresh/reapply/M1+M2
+upgrades/data preservation/zero schema diff dan seluruh M1–M8 regressions lulus.
+Python334 cases selesai531.69s bersamaan dengan public smoke; tidak ada DB timeout.
+Cluster test ditutup orchestrator. Native SWC/DB memakai owner context seperti
+milestone sebelumnya. No new dependency/migration atau lock update.
+PowerShell wrapper dengan `*>` melaporkan exit1 karena Prisma menulis informational
+config message ke stderr (`NativeCommandError`); seluruh checks dan final report
+PASSED. Untuk capture exit native eksplisit, simpan `$LASTEXITCODE` lalu `exit`
+nilai tersebut sesudah command; jangan menafsirkan stderr config sebagai test failure.
+
+M9 menambah3 TS/19 Python cases: prespecified gates/request budgets, exact
+expanding folds/purge/locked holdout, immutable protocol/source identity, duplicate
+seed/ablation/scope/threshold/budget mutations, boundary reservation, exact named
+cost/RR variants dengan hard risk unchanged, explicit Medium/Large research scope,
+59 protected core hashes, allseed descriptive aggregation dan pooled-trade PF,
+undefined/sparse/negative/risk gate failures, eligible deterministic freeze,
+once-only/failure/race/overlapping holdout consumption. Full synthetic E2E memakai
+11 actual background trainings,35 rows/6 comparisons,5 exploratory retrainings,
+CSV/PNG artifacts, CLI reader dan identical cached rerun tanpa training baru.
+Forged financial metric tetap ditolak meskipun outer/semantic hashes ditulis ulang.
+Synthetic pass/freeze fixtures bukan market evidence atau public holdout access.
+
+Explicit existing-public-data smoke dan reproducibility memakai helper
+`services/quant/tests/smoke_evaluation.py`, dengan immutable protocol sebelum run.
+Planned11 trainings/4224 steps, CPU1/384steps/rollout128/batch64/2epochs perjob,
+max120s/3072MiB/2checkpoints; suite900s/3072MiB, max12trainings/5000totalsteps.
+Primary seeds42/43/44,2 folds; four named stresses perprimary; lastfold firstseed
+AI_EXIT/FIXED_RR/explicit last feature drop/Medium/Large retrain. Cache rerun bukan
+independent retraining. Existing BTCUSDT1 Januari2025 UTC/M3 sealed export,
+original preset/source snapshot, current metadata/declared funding restrictions;
+tidak ada download atau tuning.
+
+Split UTC: fold0 train`[00:00,10:11)`, OOS`[10:12,15:18)`; fold1
+train`[00:00,15:17)`, OOS`[15:18,20:24)`;1bar purge. Untouched final holdout
+`[20:24,24:00)`. Unique OOS hanya612min, jauh di bawah30hari screen requirement.
+All per-fold accounts reset, bukan compounded portfolio curve. Gate minimum
+30closed trades perseed/PF>=1.1/allseed+stresspositive/beatHOLD+EMA/DDcap/no risk
+breach dipraregistrasi. Negative/sparse results tidak disembunyikan.
+
+Actual public11 jobs SUCCEEDED/4224steps dan seluruh initial-vs-final parameter
+hash berbeda. Job elapsed25.890–31.312s, peak sampled RSS344.988MiB. Actual params
+Small47110, drop`rsi:15m`43014, Medium93702, Large236294. 35 evaluation rows dan
+6 paired comparisons tanpa failed cell. Screen `insufficient_evidence`, bukan
+research pass: per-seed trades21/25/25, mean fold returns−1.6910156%/−2.0312662%/
+−2.06592025%, PF0; named stresses tidak positive, tidak beat HOLD/EMA dan beberapa
+episodes menyentuh daily-loss latch. Original hard risk/gates tidak diubah.
+Exploratory results juga loss; bukan kandidat promotion.
+
+Protocol `3146645dd03bc69425c62b24fd41ec2947998fb1a16f54238202aafb650de2a2`;
+report `6a8dbce35c5a25a40999d4963ce25017a5ddb484fb6200e3f0f65b8bcb2b4702`;
+semantic SHA `3d1436527f9cecf237be80adb37c76e83fb69e90759d64c590bf303775ec2a9b`;
+code `cbee12b066489686cf99af5c84cb66c4e7fa7575c1d42fe992abdbd0e5e8fb20`.
+M8 protected59files/replay review lulus: original validation parameter/actions/
+report/metrics identik (net−9.979526USDT). Default loader strict tetap.
+Root register protocol identik dan root report CLI exit0. Freeze ditolak karena
+screen tidak eligible; tidak ada public holdout marker/decisions atau promotion.
+Reference equity PNG diperiksa visual: lima curves/legend/unit/OOS scope terbaca.
+
+Public smoke selesai WIB11:09:21, total1213.474s untuk first run, independent
+artifact verification/freeze denial dan cached rerun (900s budget berlaku per
+runner invocation, bukan keseluruhan helper dua run). `.runtime/evaluation-smoke.json`
+status passed; cached_rerun_identical=true,11 verified cache reuse/35 evaluated
+rows/0 new training submissions, exact same report ID dan semantic SHA. Tidak ada
+active training lease atau public holdout-use registry setelah selesai.
+Direct helper memicu Matplotlib writable-cache fallback warning pada sandbox;
+PowerShell redirection juga memberi wrapper exit1, sedangkan helper assertions,
+terminal `smoke=passed` dan evidence JSON seluruhnya lulus. Root commands sudah
+mengatur local Matplotlib cache; cache warning tidak mengubah figures/results.
+
+Evidence: `.runtime/verify-evaluation-final.log`, `evaluation-report.json`,
+`evaluation-smoke.json`, `smoke-evaluation-final.log`, `evaluation-root-*.log`,
+immutable protocols/reports/cache/reviews dan linked model/simulation/baseline/job
+artifacts. [Guide](evaluation.md), [handoff](handoffs/milestone-09.md).
+
 ## Hasil M8 — RL Training
 
 Tanggal:7 November2026, Asia/Jakarta. Final `npm run verify:training` exit0 PASSED.

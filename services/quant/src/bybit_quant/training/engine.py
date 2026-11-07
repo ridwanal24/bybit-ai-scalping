@@ -157,6 +157,8 @@ def run_training(directory, dataset, c, request, job_id):
         request["range_start_ms"],
         request["range_end_ms"],
         request["resources"],
+        research=request.get("research_scope") == "advanced_evaluation_v1",
+        research_fold=request.get("research_fold"),
     )
     publish_file(
         directory / "normalizer.json", (canonical(normalizer.payload) + "\n").encode("utf-8")
@@ -268,6 +270,8 @@ def run_training(directory, dataset, c, request, job_id):
             "job_id": job_id,
             "checkpoint_every_rollouts": request["checkpoint_every_rollouts"],
         }
+        if request.get("research_scope") is not None:
+            metadata["research_scope"] = request["research_scope"]
         if code_fingerprint() != code:
             raise ValueError("training_code_changed")
         control.check()

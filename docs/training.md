@@ -1,5 +1,9 @@
 # RL Training M8
 
+M9 menambahkan explicit research scope untuk expanding folds dan Medium/Large,
+tanpa mengubah default M8 Small/chronological70-15-15. Request/experiments,
+compatibility attestation, gates dan final holdout: [evaluation](evaluation.md).
+
 CPU MaskablePPO training memakai M7 GuardedEnv/SettledEpisodeWrapper dan simulator
 M5/M4 pipeline yang sama. Model tersimpan sebagai `candidate_research_only`,
 execution_ready=false. M8 tidak melakukan promotion, final-holdout selection,
@@ -165,8 +169,9 @@ Pinned releases: [SB3-Contrib2.7.0](https://pypi.org/project/sb3-contrib/2.7.0/)
 [SB3 source v2.7.0](https://github.com/DLR-RM/stable-baselines3/tree/v2.7.0).
 Diperiksa7 November2026; actual Windows CPU install/training/save-load diuji.
 
-Full-year/production resource envelope, multi-seed inference/walk-forward/
-sensitivity/holdout promotion gates tetap M9+, dashboard/registry API M10.
+Multi-seed inference/walk-forward/sensitivity dan frozen holdout gates kini
+tersedia pada [M9](evaluation.md). Full-year/production resource envelope belum
+dibuktikan; dashboard/registry API tetap M10.
 Restricted simulator market/last/1x/50%, declared funding/current metadata,
 OHLC/full-fill/terminal settlement assumptions tetap berlaku. Model trained atau
 validation loss/profit bukan izin exchange execution.

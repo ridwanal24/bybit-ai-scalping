@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "research_screen_v1"
+    },
+    "min_seeds": {
+      "type": "number",
+      "const": 3
+    },
+    "min_folds": {
+      "type": "number",
+      "const": 2
+    },
+    "min_oos_ms": {
+      "type": "number",
+      "const": 2592000000
+    },
+    "min_trades_per_seed": {
+      "type": "number",
+      "const": 30
+    },
+    "min_profit_factor": {
+      "type": "string",
+      "const": "1.1"
+    },
+    "require_positive_all_seeds": {
+      "type": "boolean",
+      "const": true
+    },
+    "require_stress_positive": {
+      "type": "boolean",
+      "const": true
+    },
+    "require_beat_hold_ema": {
+      "type": "boolean",
+      "const": true
+    },
+    "require_no_risk_breach": {
+      "type": "boolean",
+      "const": true
+    },
+    "holdout_min_trades": {
+      "type": "number",
+      "const": 30
+    },
+    "execution_ready": {
+      "type": "boolean",
+      "const": false
+    }
+  },
+  "required": [
+    "version",
+    "min_seeds",
+    "min_folds",
+    "min_oos_ms",
+    "min_trades_per_seed",
+    "min_profit_factor",
+    "require_positive_all_seeds",
+    "require_stress_positive",
+    "require_beat_hold_ema",
+    "require_no_risk_breach",
+    "holdout_min_trades",
+    "execution_ready"
+  ],
+  "additionalProperties": false
+}

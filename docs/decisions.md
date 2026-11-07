@@ -383,7 +383,34 @@ planning bukan izin eksekusi live. **Deferred** memiliki deadline dalam
   owner masih dapat mengedit markers; signed registry/access control tetap scope
   berikutnya. R10 memiliki gate numerik; market evidence tetap belum cukup.
 
-## Keputusan yang masih terbuka setelah M9
+## ADR-18 — Local research dashboard, bounded quant bridge dan proposal-only deployment M10
+
+- Status: implemented dan verified546tests/7actual browser,7 November2026.
+  Instruksi audit ulang M9 lalu lanjut M10; [plan](plans/milestone-10.md),25tasks.
+- Local React19.3.1/ReactDOM/types19.3.0 pada existing Vite8.3.6; Playwright1.65.0
+  untuk actual browser QA. No charts/runtime state framework tambahan: SVG charts
+  berasal actual backend rows; hash navigation sederhana mencakup6 research pages.
+- Alternative mock frontend atau duplicate TypeScript training/evaluator ditolak.
+  Nest validates config/source/dataset from DB, fixed Python argv/JSON stdin RPC
+  calls existing M8 jobs/M9-M6-M5 readers. Bounded120s/16MiB responses/no shell,
+  origin guard untukresearch mutations; no remote/CORS wildcard/secret transport.
+- M2 immutable snapshots/revision handling dan M3 sealed export identity tetap
+  authoritative. Browser-safe pure contract entry menghindari Node crypto pada
+  bundle; server SHA/canonical semantics tidak berubah. Editable parameter forms
+  plus complete validated JSON; server remains semantic authority.
+- Quant artifacts tetap persistent registry/jobs/evaluation source. No speculative
+  DB mirror/migration/scheduler. Readonly details independently verified; indexed
+  summaries explicit. Proposal history append-only checksum/frozen identities,
+  bukan active model, promotion atau operational approval. Semua activate requests
+  ditolak; Paper/Demo/Real membutuhkan later readiness milestones.
+- Actual backend/DB/browser tests memakai isolated store. Existing full M9 test
+  exports its verified synthetic matrix before tamper test untuk reuse di browser;
+  tidak menggandakan11 training. No public holdout/new market download.
+- Consequence: hashing/ledger verification cukup mahal, UI loading/paging/retry
+  explicit. Local-only process/artifact registry bukan signed/distributed service.
+  Full-year workload/auth remote/runtime trading tetap belum diimplementasikan.
+
+## Keputusan yang masih terbuka setelah M10
 
 M5 menutup pilihan R05 untuk restricted research saja: lihat ADR-13;
 full exchange liquidation realism tetap di luar kemampuan simulator ini.

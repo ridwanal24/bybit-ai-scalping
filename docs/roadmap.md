@@ -37,7 +37,7 @@ yang konkret sebelum persetujuan milestone tersebut.
 | 7 | Completed; [plan Approved](plans/milestone-07.md), [handoff](handoffs/milestone-07.md) | M4–M6 | 461 tests, Gymnasium checker, shared incremental timeline/masks, net-equity reward/settlement/bootstrap, legacy M6 byte equivalence dan public1200-step replay/reload lulus |
 | 8 | Completed; [plan Approved](plans/milestone-08.md), [handoff](handoffs/milestone-08.md) | M7 | 496 tests + two reproducible1024-step CPU jobs; train-only split/normalization, masked validation/save-load, metadata/checkpoints dan background progress/cancel/limits lulus |
 | 9 | Completed; Approved `lanjut eksekusi M9` | M6–M8 | Preregistered OOS/multi-seed/WFO, matched baselines/stresses, exploratory retraining, verified reports/curves dan frozen once-only holdout/gates; short public data insufficient, tanpa promotion |
-| 10 | Planned; belum Approved | M2–M3, M8–M9 | User mengonfigurasi riset, kontrol training, lihat hasil/model comparison dari API nyata, loading/error/responsive/integration tests |
+| 10 | Completed; Approved audit M9 lalu lanjut M10 | M2–M3, M8–M9 |546 tests incl7actual browser; actual config/snapshot/train/cancel/evaluation/chart/trades/model comparison/proposal, desktop/mobile/readiness guards; no execution activation |
 | 11 | Planned; belum Approved | M4–M10 | Closed candle real-time → inference → risk → virtual fill; persistence/recovery, paper dashboard, no exchange order; risk conformance gate |
 | 12 | Planned; belum Approved | M11 | Environment/credentials terisolasi, account state read, capability/ownership/order lifecycle, idempotency contract tests; live order belum diizinkan |
 | 13 | Planned; belum Approved | M11–M12 | Actual Demo entry/exit, fill, protective stop, reconciliation, restart, emergency dan dashboard terverifikasi; Demo evaluation checkpoint |
@@ -199,6 +199,8 @@ Kerjakan prosedur holdout dan pre-registration promotion criteria sebelum run
 evaluasi yang dipakai keputusan; nomor task bukan kewajiban urutan eksekusi.
 
 ### M10 — Dashboard
+
+Seluruh25tasks selesai. [Guide](dashboard.md), [handoff](handoffs/milestone-10.md).
 
 - 10.1 React/Vite setup; 10.2 Routing; 10.3 Layout; 10.4 Navigation; 10.5 Overview.
 - 10.6 Market configuration; 10.7 Feature configuration; 10.8 Risk configuration.

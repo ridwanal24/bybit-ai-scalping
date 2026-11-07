@@ -5,7 +5,7 @@ PostgreSQL, dan MaskablePPO. Sumber requirement: [PROJECT_SPEC.md](PROJECT_SPEC.
 
 ## Status aktual
 
-Per 7 November 2026 (Asia/Jakarta), **M9 — Advanced Evaluation Completed**.
+Per 7 November 2026 (Asia/Jakarta), **M10 — Dashboard Completed**.
 Foundation/configuration/market data/features M1–M4 tetap tersedia. Public REST ingestion
 memvalidasi/menyimpan historical candles, instrument dan funding, mendukung resume,
 quality report, pinned revisions, fingerprint dan JSONL export.
@@ -33,9 +33,15 @@ M9 disetujui melalui `lanjut eksekusi M9`: preregistered walk-forward/multi-seed
 matched baselines, fee/slippage/RR stresses, exit/feature/architecture experiments,
 immutable report/curves dan frozen once-only holdout procedure. Gate riset
 dibekukan sebelum hasil; data publik satu hari belum cukup untuk promotion.
-Belum ada frontend atau exchange execution; M10 belum disetujui.
+Audit ulang M9 menutup early range rejection dan exact baseline set/seed checks;
+report publik tetap valid tanpa membuka holdout. [Audit](docs/audits/milestone-09.md).
+M10 disetujui melalui instruksi cek ulang M9 lalu lanjut M10: dashboard React/Vite
+lokal dengan konfigurasi/snapshots, candlesticks/quality, actual background training
+controls/progress, evaluation/curves/trades, model comparison dan persisted research
+deployment proposals. Tidak ada aktivasi exchange; M11 belum disetujui.
 Panduan: [Baselines](docs/baselines.md), [RL environment](docs/rl-environment.md),
-[Training](docs/training.md), [Advanced evaluation](docs/evaluation.md).
+[Training](docs/training.md), [Advanced evaluation](docs/evaluation.md),
+[Dashboard](docs/dashboard.md).
 
 ## Setup Windows x64
 
@@ -47,6 +53,16 @@ python scripts/bootstrap.py
 .\.tools\node\node.exe scripts/tasks.mjs setup
 .\.tools\node\npm.cmd run dev:api
 ```
+
+Dashboard lokal setelah setup:
+
+```powershell
+.\.tools\node\npm.cmd run dev:dashboard
+```
+
+Buka `http://127.0.0.1:5173`. Launcher memakai API3000 dan DB proyek55432,
+tidak memakai Laragon/Docker. `npm run verify:dashboard` juga menjalankan
+Playwright dengan PostgreSQL terpisah dan actual quant artifacts.
 
 API default: `http://127.0.0.1:3000/health/live` dan `/health/ready`. Setup membuat
 `.env` lokal jika belum ada, menginisialisasi cluster PostgreSQL milik proyek
@@ -63,10 +79,10 @@ dev command memantau output dist. Secret/runtime tidak di-commit.
 .\.tools\node\npm.cmd run db:stop
 ```
 
-Verification M9 lulus:120 contract tests,33 backend unit,334 Python,31 integration
-(518 total), static/export checks, migration upgrade/schema diff dan seluruh
-M1–M8 regressions. Preregistered WFO/multi-seed/stresses/retraining, report
-verification, cache reproducibility dan holdout guards diuji.
+Verification M10 lulus:123 contract tests,37 backend unit,348 Python,31 integration
+dan7 actual browser tests (546 total), static/export checks, migration upgrade/schema
+diff dan seluruh M1–M9 regressions. Actual config/snapshot/training/cancel/report/
+baseline/chart/trade/model/proposal flow serta desktop/mobile/no-overflow diuji.
 Evidence: [testing](docs/testing.md).
 
 Simulation CLI, approved restrictions, policies dan output: [simulation](docs/simulation.md).
@@ -119,16 +135,20 @@ Configuration valid belum berarti siap trading; execution checks tetap pending.
 | [Evaluation](docs/evaluation.md) | Preregistered OOS/seed/stress experiments, reports, gates dan holdout |
 | [Plan M9](docs/plans/milestone-09.md) | Scope advanced evaluation yang disetujui |
 | [Handoff M9](docs/handoffs/milestone-09.md) | Hasil aktual dan konteks M10 |
+| [Audit M9](docs/audits/milestone-09.md) | Temuan completeness checks dan regression fixes sebelum M10 |
+| [Dashboard](docs/dashboard.md) | Local UI/API, config/train/evaluation/model/proposal flow dan tests |
+| [Plan M10](docs/plans/milestone-10.md) | Scope25 dashboard tasks yang disetujui |
+| [Handoff M10](docs/handoffs/milestone-10.md) | Hasil dashboard,546 tests, actual evidence dan konteks M11 |
 | [Handoff M0](docs/handoffs/milestone-00.md) | Hasil, keterbatasan dan instruksi sesi berikutnya |
 
 ## Alur pengembangan
 
 Satu persetujuan berlaku untuk satu milestone. Task normal dalam scope tersebut
 tidak membutuhkan persetujuan ulang. Milestone berikutnya tidak dimulai otomatis.
-Simulation MVP M6, RL proof of concept M8 dan advanced evaluation M9 tersedia; target berikutnya dashboard riset M10,
+Simulation MVP M6, RL proof of concept M8, advanced evaluation M9 dan dashboard riset M10 tersedia; target berikutnya
 Paper M11, Demo M13, dan kemampuan Real M15.
 
 Real Trading harus disabled by default. Persetujuan implementasi fitur Real bukan
 izin transaksi dana asli. Tidak ada jaminan profit atau promosi model otomatis.
 
-Dashboard dan trading tetap rancangan milestone berikutnya.
+Real-time Paper/Demo/Real trading tetap milestone berikutnya. Proposal M10 bukan aktivasi.

@@ -29,6 +29,7 @@ const schema = z.object({
     .string()
     .min(1)
     .default('services/quant/.venv/Scripts/python.exe'),
+  DASHBOARD_ROOT: z.string().min(1).optional(),
 });
 
 export type Environment = z.infer<typeof schema>;

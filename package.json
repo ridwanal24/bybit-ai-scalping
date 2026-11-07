@@ -8,6 +8,7 @@
   },
   "workspaces": [
     "apps/api",
+    "apps/web",
     "packages/contracts"
   ],
   "scripts": {
@@ -20,8 +21,8 @@
     "build": "node scripts/tasks.mjs build",
     "typecheck": "node scripts/tasks.mjs typecheck",
     "lint": "node scripts/tasks.mjs lint",
-    "format": "prettier --write \"apps/api/**/*.{ts,json}\" \"packages/contracts/**/*.{ts,mjs}\" \"packages/contracts/{package,tsconfig}.json\" \"scripts/**/*.mjs\" \"*.{json,mjs}\"",
-    "format:check": "prettier --check \"apps/api/**/*.{ts,json}\" \"packages/contracts/**/*.{ts,mjs}\" \"packages/contracts/{package,tsconfig}.json\" \"scripts/**/*.mjs\" \"*.{json,mjs}\"",
+    "format": "prettier --write \"apps/{api,web}/**/*.{ts,tsx,json,css,html}\" \"packages/contracts/**/*.{ts,mjs}\" \"packages/contracts/{package,tsconfig}.json\" \"scripts/**/*.mjs\" \"*.{json,mjs}\"",
+    "format:check": "prettier --check \"apps/{api,web}/**/*.{ts,tsx,json,css,html}\" \"packages/contracts/**/*.{ts,mjs}\" \"packages/contracts/{package,tsconfig}.json\" \"scripts/**/*.mjs\" \"*.{json,mjs}\"",
     "test": "node scripts/tasks.mjs test",
     "test:integration": "node scripts/tasks.mjs integration",
     "verify:foundation": "node scripts/tasks.mjs verify",
@@ -49,7 +50,10 @@
     "data:download": "node scripts/tasks.mjs data:download",
     "data:export": "node scripts/tasks.mjs data:export",
     "smoke:bybit-data": "node scripts/tasks.mjs smoke:bybit-data",
-    "contracts:export": "node scripts/tasks.mjs contracts:export"
+    "contracts:export": "node scripts/tasks.mjs contracts:export",
+    "dev:dashboard": "node scripts/tasks.mjs dev:dashboard",
+    "dev:web": "npm run dev -w @bybit/web",
+    "verify:dashboard": "node scripts/tasks.mjs verify:dashboard"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

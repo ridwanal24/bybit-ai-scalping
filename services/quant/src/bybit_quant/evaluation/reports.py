@@ -21,6 +21,17 @@ from bybit_quant.training.models import verify_model
 FILES = ("report.json", "report.md", "curves.csv", "equity.png", "drawdown.png")
 
 
+def verify_baseline_strategies(comparison, seed):
+    expected = [
+        {"name": "hold"},
+        {"name": "random", "seed": seed},
+        {"name": "ema_crossover"},
+        {"name": "buy_hold"},
+    ]
+    if [r["strategy"] for r in comparison["results"]] != expected:
+        raise ValueError("evaluation_baseline_strategies_or_seed_mismatch")
+
+
 @exact
 def curve_csv(root, rows):
     output = io.StringIO(newline="")
@@ -319,6 +330,7 @@ def verify_report(root, directory, expected_id=None):
         comparison = verify_comparison(
             root / "artifacts/baselines" / b["comparison_id"], root / "artifacts/simulations"
         )
+        verify_baseline_strategies(comparison, b["seed"])
         primary = next(
             r
             for r in payload["rows"]

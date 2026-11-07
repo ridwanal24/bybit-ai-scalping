@@ -1,5 +1,63 @@
 # Testing dan verifikasi
 
+## Hasil M10 — Dashboard dan audit ulang M9
+
+7 November2026, `npm run verify:dashboard` **exit0/PASSED**. Report
+`.runtime/dashboard-report.json`: UTC06:54:39.781–07:06:40.002
+(WIB13:54:39–14:06:40), **546 tests tanpa skip**:
+123contracts +37backend unit +348Python +31isolated PostgreSQL/HTTP integration
++7actual Playwright browser cases. Python500.83s, browser60.111s;
+expected7/unexpected0/skipped0/flaky0. Build/typecheck/ESLint/Ruff/Prettier/export
+drift, fresh/reapply/M1+M2 migration upgrades/data preservation/zero schema diff,
+seluruh M1–M9 regressions dan allseed/cache/holdout guards lulus.
+
+[Audit M9](audits/milestone-09.md) menutup early sealed-export range admission
+dan exact four-baseline/random seed verification.4cases baru,22focused tests
+passed, archived public report reader exit0; no public holdout/retraining/tuning.
+M10 menambah3contract/4backend/10Python/7browser cases: browser-safe canonical/
+semantic parity, no-activation request contracts, managed IDs/pages/origin/RPC,
+actual background success/checkpoint/log/catalog, verified/paginated dataset/model/
+embedded ledger, immutable proposal/noactivation, bad path/mode/fingerprint dan
+sanitized CLI errors. Supplemental37backend tests/API rebuild/lint juga lulus
+sesudah read-only mark/index stream routing diperluas.
+
+Actual Edge156.0.4314.58 (Chromium),desktop1280×720/mobile390×844:
+
+| Case | Actual result |
+| --- | --- |
+| Overview/market | Verified closed OHLC chart/table/source, backend ready, no page errors |
+| Config/training | Invalid risk rejected, valid restored, DB CRUD/revision/freeze, actual64step Small SUCCEEDED/checkpoints/progress |
+| Cancel/paths | Separate real job CANCELLED/history, client path rejected400 |
+| Evaluation |35rows/6comparisons, allseed reasons, equity/DD/nonempty baseline trades and counterfactual selection |
+| Models/proposals | Comparison/verified archive/note-ack/proposal persisted after reload, activation403/origin403 |
+| Mobile | Loaded chart/form/nav screenshots, no viewport overflow390px |
+| Failure/retry | Explicit network503 state, retry returns actual backend data |
+
+Final fixture `.runtime/dashboard-fixtures/mw61tlw3_5972` berasal full M9 E2E
+yang diexport sesudah verified cached replay dan sebelum tamper test. Bukan fake
+report atau duplicate11training. Store12models/12successful jobs+1cancelled
+(11M9models lalu UI64step training/cancel),1proposal execution_ready=false.
+Source synthetic `fixture` jelas; bukan market performance evidence. No public/
+fixture holdout-use atau active lease. Test ports3001/5174/55433/55435 free;
+owned servers/DB/jobs closed dan devDB55432 tetap stopped. Windows owner context
+dipakai untuk native SWC/DB/Edge/socket; no global browser/runtime upgrade.
+
+Initial full attempt123contracts/37backend/347Python passed dengan1M9fixture
+wall-time failure240s pada last training. Fixture suite cap dinaikkan360s saja;
+research gates/risk/public900s budget tidak berubah. Synthetic cache preflight
+melengkapi fixture, kemudian final full run fresh lulus. First browser preflight
+3passed/1failed atas exact-label locator; combobox role selector diperbaiki,
+preflight berikut7/7passed54.3s, final fresh7/7passed60.111s. QA memperbaiki
+chart axis/container sizing, baseline header/sidebar scroll dan production
+NODE_ENV frontend build. Screenshots desktop/mobile diperiksa visual.
+
+Protocol/report/semantic/code identities pada [handoff](handoffs/milestone-10.md)
+dan `.runtime/dashboard-evidence.json`; source matches fixture protocol dan
+59protected M8core files unchanged. Evidence: `verify-dashboard-final.log`,
+`dashboard-report.json`, `dashboard-browser-report.json`, `dashboard-evidence.json`,
+`m10-stream-unit.log`, fixture browser.json dan empat desktop/mobile screenshots.
+[Dashboard guide](dashboard.md).
+
 ## Hasil M9 — Advanced Evaluation
 
 Tanggal:7 November2026, Asia/Jakarta. Final `npm run verify:evaluation`

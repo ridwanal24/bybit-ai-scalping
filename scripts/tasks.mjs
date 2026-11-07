@@ -53,9 +53,12 @@ async function build() {
   await buildContracts();
   await prisma(['generate']);
   await npm(['run', 'build', '-w', '@bybit/api']);
+  await npm(['run', 'build', '-w', '@bybit/web'], {
+    env: { NODE_ENV: 'production' },
+  });
 }
 
-async function tests() {
+async function tests(dashboardFixture) {
   fs.mkdirSync(path.join(runtime, 'pytest'), { recursive: true });
   await npm(['run', 'test', '-w', '@bybit/contracts']);
   await npm(['run', 'test', '-w', '@bybit/api']);
@@ -68,7 +71,10 @@ async function tests() {
       '--basetemp',
       path.join(runtime, 'pytest', `${Date.now()}_${process.pid}`),
     ],
-    { cwd: quant },
+    {
+      cwd: quant,
+      env: dashboardFixture ? { DASHBOARD_TEST_EXPORT: dashboardFixture } : {},
+    },
   );
 }
 
@@ -76,6 +82,7 @@ async function lint() {
   await run(node, [
     path.join(root, 'node_modules', 'eslint', 'bin', 'eslint.js'),
     'apps/api',
+    'apps/web',
     'packages/contracts',
     'scripts',
     'eslint.config.mjs',
@@ -139,6 +146,34 @@ async function integration() {
 async function buildContracts() {
   await npm(['run', 'build', '-w', '@bybit/contracts']);
   await npm(['run', 'export:check', '-w', '@bybit/contracts']);
+}
+
+async function browserIntegration(fixture) {
+  const suffix = Date.now().toString(36) + '_' + process.pid;
+  const directory = path.join(runtime, 'integration', 'dashboard_' + suffix);
+  let db;
+  try {
+    await requireFreePort(3001);
+    await requireFreePort(5174);
+    db = await startDatabase({
+      directory,
+      port: 55435,
+      database: 'bybit_dashboard_' + suffix,
+    });
+    const env = {
+      DATABASE_URL: db.url,
+      NODE_ENV: 'test',
+      DASHBOARD_ROOT: fixture,
+      DATABASE_TIMEOUT_MS: '2000',
+    };
+    await prisma(['migrate', 'deploy'], env);
+    await run(node, [path.join(root, 'scripts/dashboard-browser.mjs')], {
+      env,
+    });
+  } finally {
+    if (fs.existsSync(path.join(directory, 'owner.json')))
+      await stopDatabase(directory);
+  }
 }
 
 async function upgradeFromM1(directory, suffix) {
@@ -393,6 +428,7 @@ async function main() {
       await prisma(['generate']);
       await npm(['run', 'typecheck', '-w', '@bybit/api']);
       await npm(['run', 'typecheck', '-w', '@bybit/contracts']);
+      await npm(['run', 'typecheck', '-w', '@bybit/web']);
       return;
     case 'lint':
       return lint();
@@ -401,9 +437,22 @@ async function main() {
     case 'integration':
       await build();
       return integration();
+    case 'test:dashboard': {
+      const fixture = path.resolve(root, process.argv[3] ?? '');
+      if (
+        !fixture.startsWith(path.join(runtime, 'dashboard-fixtures') + path.sep)
+      )
+        throw new Error('Managed dashboard fixture path required');
+      await build();
+      return browserIntegration(fixture);
+    }
     case 'dev:api':
       await build();
       await run(node, ['--watch', path.join(api, 'dist', 'main.js')]);
+      return;
+    case 'dev:dashboard':
+      await build();
+      await run(node, [path.join(root, 'scripts/dashboard-dev.mjs')]);
       return;
     case 'contracts:export':
       await npm(['run', 'build', '-w', '@bybit/contracts']);
@@ -415,6 +464,7 @@ async function main() {
     case 'verify:environment':
     case 'verify:training':
     case 'verify:evaluation':
+    case 'verify:dashboard':
     case 'verify:features':
     case 'verify:market-data':
     case 'verify': {
@@ -429,33 +479,42 @@ async function main() {
         await build();
         await npm(['run', 'typecheck', '-w', '@bybit/api']);
         await npm(['run', 'typecheck', '-w', '@bybit/contracts']);
+        await npm(['run', 'typecheck', '-w', '@bybit/web']);
         await lint();
         await npm(['run', 'format:check']);
-        await tests();
+        const dashboardFixture = path.join(
+          runtime,
+          'dashboard-fixtures',
+          Date.now().toString(36) + '_' + process.pid,
+        );
+        await tests(dashboardFixture);
         await integration();
+        await browserIntegration(dashboardFixture);
         report.status = 'passed';
       } finally {
         report.finished_at = new Date().toISOString();
         fs.writeFileSync(
           path.join(
             runtime,
-            task === 'verify:evaluation'
-              ? 'evaluation-report.json'
-              : task === 'verify:training'
-                ? 'training-report.json'
-                : task === 'verify:environment'
-                  ? 'environment-report.json'
-                  : task === 'verify:baselines'
-                    ? 'baselines-report.json'
-                    : task === 'verify:simulation'
-                      ? 'simulation-report.json'
-                      : task === 'verify:features'
-                        ? 'features-report.json'
-                        : task === 'verify:market-data'
-                          ? 'market-data-report.json'
-                          : task === 'verify:configuration'
-                            ? 'configuration-report.json'
-                            : 'foundation-report.json',
+            task === 'verify:dashboard'
+              ? 'dashboard-report.json'
+              : task === 'verify:evaluation'
+                ? 'evaluation-report.json'
+                : task === 'verify:training'
+                  ? 'training-report.json'
+                  : task === 'verify:environment'
+                    ? 'environment-report.json'
+                    : task === 'verify:baselines'
+                      ? 'baselines-report.json'
+                      : task === 'verify:simulation'
+                        ? 'simulation-report.json'
+                        : task === 'verify:features'
+                          ? 'features-report.json'
+                          : task === 'verify:market-data'
+                            ? 'market-data-report.json'
+                            : task === 'verify:configuration'
+                              ? 'configuration-report.json'
+                              : 'foundation-report.json',
           ),
           JSON.stringify(report, null, 2) + '\n',
         );

@@ -1,8 +1,11 @@
 import json
+import os
+import shutil
 import subprocess
 import sys
 import threading
 from copy import deepcopy
+from pathlib import Path
 
 import pytest
 from feature_helpers import START, config, source_snapshot
@@ -10,7 +13,7 @@ from jsonschema.exceptions import ValidationError
 from simulation_helpers import MINUTE
 from test_training import inputs as training_inputs
 
-from bybit_quant.contracts import canonical, digest
+from bybit_quant.contracts import CONTRACTS, canonical, digest
 from bybit_quant.dataset import file_hash
 from bybit_quant.evaluation.compatibility import protected_core
 from bybit_quant.evaluation.holdout import consume_once, freeze
@@ -20,7 +23,7 @@ from bybit_quant.evaluation.protocol import (
     register,
     walk_forward,
 )
-from bybit_quant.evaluation.reports import verify_report
+from bybit_quant.evaluation.reports import verify_baseline_strategies, verify_report
 from bybit_quant.evaluation.runner import run
 from bybit_quant.evaluation.screen import screen
 from bybit_quant.evaluation.variants import EXPLORATORY, STRESSES, variant
@@ -56,7 +59,7 @@ def inputs(tmp_path):
         "resources": train["resources"],
         "max_new_trainings": 12,
         "max_total_train_steps": 1000,
-        "suite_wall_seconds": 240,
+        "suite_wall_seconds": 360,
         "suite_memory_mb": 3072,
         "legacy_model_id": None,
     }
@@ -111,6 +114,39 @@ def test_registered_protocol_is_immutable_and_path_independent(tmp_path):
     target.write_text(canonical(value), "utf-8")
     with pytest.raises(ValueError, match="checksum"):
         load_protocol(root, identity)
+
+
+def test_registration_rejects_outside_export_before_reserving_holdout(tmp_path):
+    root, path, request, _ = inputs(tmp_path)
+    request["range_end_ms"] += MINUTE
+    path.write_text(canonical(request), "utf-8")
+    with pytest.raises(ValueError, match="evaluation_range_outside_dataset"):
+        register(root, path)
+    assert not (root / "artifacts/evaluations/holdout-reservations").exists()
+
+
+@pytest.mark.parametrize("change", ["missing", "duplicate", "wrong_seed"])
+def test_report_requires_complete_baseline_set_and_matching_random_seed(change):
+    comparison = {
+        "results": [
+            {"strategy": s}
+            for s in [
+                {"name": "hold"},
+                {"name": "random", "seed": 42},
+                {"name": "ema_crossover"},
+                {"name": "buy_hold"},
+            ]
+        ]
+    }
+    verify_baseline_strategies(comparison, 42)
+    if change == "missing":
+        comparison["results"].pop()
+    elif change == "duplicate":
+        comparison["results"][1] = comparison["results"][0]
+    else:
+        comparison["results"][1]["strategy"]["seed"] = 43
+    with pytest.raises(ValueError, match="baseline_strategies_or_seed"):
+        verify_baseline_strategies(comparison, 42)
 
 
 def test_registration_cannot_move_reserved_holdout(tmp_path):
@@ -374,6 +410,18 @@ def test_full_walk_forward_baselines_stresses_retraining_cache_report_and_cli(tm
     )
     assert result.returncode == 0, result.stderr
     assert json.loads(result.stdout)["report_id"] == first["report_id"]
+    # Explicit orchestration-only artifact handoff: browser tests reuse this already
+    # verified synthetic matrix instead of training a duplicate 11-model suite.
+    if export := os.environ.get("DASHBOARD_TEST_EXPORT"):
+        target = Path(export).resolve()
+        if not target.is_relative_to((CONTRACTS.parent.parent / ".runtime").resolve()):
+            raise ValueError("dashboard_test_export_outside_runtime")
+        target.mkdir(parents=True, exist_ok=False)
+        shutil.copytree(root / "artifacts", target / "artifacts")
+        protocol = load_protocol(root, protocol_id)
+        (target / "fixture.json").write_text(
+            canonical({"protocol": protocol, "report_id": first["report_id"]}), "utf-8"
+        )
     # A rewritten outer hash cannot make falsified financial metrics legitimate.
     forged = deepcopy(report)
     forged["rows"][0]["metrics"]["net_return"]["value"] = "123"

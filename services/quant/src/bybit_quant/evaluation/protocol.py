@@ -128,6 +128,15 @@ def register(root, request_path):
         request["range_start_ms"],
         request["range_end_ms"],
     )
+    stream = dataset.streams.get("last:" + c["market"]["timeframe"])
+    if (
+        not stream
+        or not stream["start_ms"]
+        <= request["range_start_ms"]
+        < request["range_end_ms"]
+        <= stream["end_ms"]
+    ):
+        raise ValueError("evaluation_range_outside_dataset")
     normalized = {
         k: v for k, v in request.items() if k not in ("configuration_file", "source_snapshot_file")
     }

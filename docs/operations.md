@@ -1,5 +1,21 @@
 # Operasi lokal
 
+## Dashboard M10
+
+`npm run dev:dashboard` membangun contracts/API/React UI, memastikan port3000/5173
+tidak terpakai, menyalakan project DB55432 bila perlu dan menjalankan dua servers
+loopback. Buka `http://127.0.0.1:5173`; Ctrl+C menutup owned servers. DB tetap
+running sampai `npm run db:stop`. Existing service/DB lain tidak dihentikan.
+Untuk proses terpisah: `db:start`, `dev:api`, `dev:web`. `npm run build` mencakup
+frontend build dan server types; root lint/format mencakup TSX/CSS/HTML.
+
+`npm run verify:dashboard` menjalankan full regression kemudian Playwright Edge
+headless terhadap API3001/Vite5174/dedicated PostgreSQL55435 dan synthetic fixture
+store di `.runtime/dashboard-fixtures/`. Logs/report/screenshots tetap ignored;
+owned test jobs/servers/DB ditutup. Tidak memakai credentials Bybit atau membuat
+market downloads/holdout predictions. Actual proposal note tersimpan pada test
+store, bukan active deployment. [Request/limits/flow](dashboard.md).
+
 ## Advanced evaluation M9
 
 `npm run evaluation:register -- --request FILE` menerbitkan immutable protocol;

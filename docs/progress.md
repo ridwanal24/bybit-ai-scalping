@@ -4,13 +4,13 @@ Terakhir diperbarui: 7 November 2026, Asia/Jakarta.
 
 | Aspek | Kondisi aktual |
 | --- | --- |
-| Current phase | Phase 4 — Research Platform; evaluation selesai, dashboard berikutnya |
-| Current milestone | M9 — Advanced Evaluation |
-| Milestone approval | Approved melalui `lanjut eksekusi M9` |
-| Implementation status | Seluruh task9.1–9.19 selesai dan diverifikasi |
-| Milestone status | Completed; M0–M8 tetap Completed |
-| Next milestone | M10 — Dashboard; belum Approved |
-| Aplikasi/database/model | API data/config, shared quant pipeline, CPU jobs/models, preregistered evaluation/report/gates |
+| Current phase | Phase 4 — Research Platform Completed |
+| Current milestone | M10 — Dashboard |
+| Milestone approval | Approved melalui instruksi audit ulang M9 lalu lanjut M10 |
+| Implementation status | Seluruh task10.1–10.25 selesai dan diverifikasi |
+| Milestone status | Completed; M0–M9 tetap Completed |
+| Next milestone | M11 — Paper Trading; belum Approved |
+| Aplikasi/database/model | Local React/Nest research dashboard, shared quant jobs/verified artifacts dan research deployment proposals |
 | Trading | Tidak ada credentials Bybit, order atau aktivasi exchange |
 
 ## Approval dan scope
@@ -37,6 +37,22 @@ bar execution, exit/risk/funding dan explicit restricted liquidation envelope.
 Implementasi M5 berada dalam scope plan; tidak memberi approval M6/training/orders.
 
 ## Selesai
+
+M10 Completed, [handoff](handoffs/milestone-10.md). Final `verify:dashboard` exit0
+PASSED WIB13:54:39–14:06:40:546 tests tanpa skip (123contracts/37backend/348Python/
+31integration/7browser), full static/export/migration upgrade/schema-diff checks.
+Actual browser Edge156.0.4314.58 membuktikan config/freeze/start/SUCCEEDED/cancel/
+report/baselines/curves/nonempty trades/model comparison/proposal persistence serta
+blocked activation/cross-origin,503 retry dan mobile viewport390px.
+Isolated final fixture mempunyai12 successful models/jobs+1cancelled job dan
+1research proposal execution_ready=false; holdout tidak dievaluasi. Seluruh owned
+test ports3001/5174/55433/55435 free, active lease tidak tersisa dan devDB55432
+tetap stopped. [Evidence/testing](testing.md), [guide](dashboard.md).
+
+Audit M9 menemukan dan menutup missing early dataset-range admission serta exact
+baseline strategy/seed checks.22 focused tests/archived public report reader lulus;
+public holdout tidak dipakai ulang. Detail [audit](audits/milestone-09.md).
+Instruksi yang sama menyetujui M10 [plan](plans/milestone-10.md), tanpa ACC pertask.
 
 M9 Approved melalui `lanjut eksekusi M9`,7 November2026;
 [plan](plans/milestone-09.md) mencakup task9.1–9.19. Expanding folds/purge/train-only
@@ -188,7 +204,7 @@ Evidence dan command tambahan: [testing](testing.md).
 
 ## Remaining tasks dan known issues
 
-Tidak ada task wajib M9 tersisa. M10 memerlukan instruksi baru. CPU training,
+Tidak ada task wajib M10 tersisa. M11 memerlukan instruksi baru. CPU training,
 save/load dan advanced evaluation telah berjalan; promotion belum eligible dan
 final holdout publik tidak dievaluasi. Python semantic parity, observation shape/artifact dan actual
 Small network parameter count divalidasi.
@@ -218,5 +234,5 @@ tetap M8/M11. Pure Python throughput full-year/live latency belum dibenchmark.
 Source hash membuktikan integritas, bukan signature. Caller context/risk budget
 divalidasi dan restricted historical risk enforcement M5 tersedia; live risk belum.
 
-Handoff terbaru: [milestone-09.md](handoffs/milestone-09.md).
+Handoff terbaru: [milestone-10.md](handoffs/milestone-10.md).
 **Waiting for Next Milestone Instruction.**

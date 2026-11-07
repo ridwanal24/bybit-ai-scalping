@@ -5,7 +5,7 @@ import {
   NETWORK_PRESETS,
   type ResearchConfiguration,
 } from './schema.js';
-import { canonicalValue, scaledDecimal } from './canonical.js';
+import { canonicalValue, scaledDecimal } from './canonical-value.js';
 
 export type ConfigurationIssue = {
   field: string;

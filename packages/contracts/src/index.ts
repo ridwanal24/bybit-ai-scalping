@@ -10,3 +10,4 @@ export * from './baselines.js';
 export * from './rl.js';
 export * from './training.js';
 export * from './evaluation.js';
+export * from './dashboard.js';

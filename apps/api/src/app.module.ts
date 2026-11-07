@@ -6,12 +6,14 @@ import { ResearchConfigurationsModule } from './research-configurations/configur
 import { MarketDataModule } from './market-data/market-data.module.js';
 import { HealthController } from './health/health.controller.js';
 import { HealthService } from './health/health.service.js';
+import { ResearchModule } from './research/research.module.js';
 
 @Module({
   imports: [
     DatabaseModule,
     ResearchConfigurationsModule,
     MarketDataModule,
+    ResearchModule,
     ConfigModule.forRoot({
       isGlobal: true,
       ignoreEnvFile: true,

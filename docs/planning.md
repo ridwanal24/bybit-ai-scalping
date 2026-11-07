@@ -7,6 +7,16 @@ Sumber utama: [PROJECT_SPEC.md](../PROJECT_SPEC.md).
 
 ## Requirement dan batas hasil
 
+M10 disetujui melalui instruksi audit M9 lalu eksekusi M10,7 November2026;
+[plan](plans/milestone-10.md). [Audit M9](audits/milestone-09.md) menutup dua
+admission/report completeness gaps,22 focused tests dan archived public reader
+lulus sebelum UI implementation. Scope10.1–10.25 mencakup local React/Vite/Nest
+research dashboard dengan actual config/snapshot/dataset/training/evaluation/model
+artifacts. Deployment UI menyimpan proposal riset, bukan status active/Validated
+atau izin Paper/Demo/Real. No new migrations/network market source/order API;
+full regression dan real browser verification mendahului completion. Final546tests
+lulus termasuk7actual browser workflows; [handoff](handoffs/milestone-10.md).
+
 M9 diimplementasikan melalui `lanjut eksekusi M9`,7 November2026;
 [plan](plans/milestone-09.md) dan [guide](evaluation.md) menetapkan preregistered
 multi-seed/expanding WFO, paired baselines, fee/slippage/RR counterfactuals,

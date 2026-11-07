@@ -2,10 +2,27 @@
 
 Tanggal: 7 November 2026, Asia/Jakarta. Status: rancangan M0 diterima melalui
 `oke ku approve`; foundation M1, configuration M2, market data M3, features M4, simulator M5, baseline M6, RL environment M7 dan CPU training M8 kini
-diimplementasikan, diikuti advanced evaluation M9; komponen berikutnya tetap rancangan. Dasar: [spesifikasi](../PROJECT_SPEC.md) bagian 7–8,
+diimplementasikan, diikuti advanced evaluation M9 dan dashboard lokal M10; komponen berikutnya tetap rancangan. Dasar: [spesifikasi](../PROJECT_SPEC.md) bagian 7–8,
 24–33, 36, dan [keputusan](decisions.md).
 
 ## Komponen yang sudah diimplementasikan
+
+M10 `apps/web` React/Vite menyajikan actual config/dataset/job/evaluation/model
+data melalui Nest same-origin proxy. Browser-safe contract entry memisahkan pure
+canonical JSON/semantic validation dari server crypto, tanpa mengubah canonical
+identity semantics M2. UI tidak menghitung ulang ledger atau menyediakan live
+balances/positions palsu. Historical candlestick/equity/DD charts memakai source
+rows yang benar, exact values tetap strings pada metrics/trade tables.
+
+Nest `ResearchModule` memvalidasi body/IDs/pagination/origin dan mengambil DB
+configuration/source snapshots sebelum bounded Python stdin RPC. Fixed argv/no
+shell/no client paths, hidden child,120s/16MiB response cap dan sanitized errors.
+Python adapter memanggil existing M8 jobs dan M9/M6/M5 verifiers. Job tetap hidup
+setelah HTTP/browser ditutup, cancel explicit. No parallel simulator/controller.
+Snapshots/dataset metadata tetap DB; jobs/models/evaluations tetap artifact source
+of truth. New append-only deployment proposals mencatat frozen identities dan
+blockers, tidak mempromosikan atau mengaktifkan model. No new migration;
+[dashboard guide](dashboard.md), ADR18. Runtime execution tetap M11+.
 
 M9 `bybit_quant.evaluation` membekukan protocol/config/source/code/data/seeds,
 expanding train-only folds/purge dan final holdout sebelum menjalankan persistent
@@ -282,7 +299,7 @@ research configuration API. M3 menambahkan market-data modules/CLI, revisions,
 download/dataset persistence dan ignored exports. M4–M6 menambahkan features,
 simulator dan baselines Python; M7 menambahkan RL environment, M8 training CPU
 dan M9 advanced evaluation/reports/holdout procedure.
-`apps/web` dan exchange trading tetap rencana.
+`apps/web` kini diimplementasikan M10; exchange trading tetap rencana.
 Runtime secret, model dan log
 dikecualikan dari Git.
 

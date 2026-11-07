@@ -53,6 +53,8 @@ import {
   evaluationRowSchema,
   evaluationScreenSchema,
   evaluationReportSchema,
+  dashboardStartSchema,
+  dashboardProposalSchema,
   SIMULATION_ACCOUNTING_VECTORS,
   SIMULATION_RISK_VECTORS,
 } from '../dist/index.js';
@@ -261,6 +263,11 @@ const outputs = {
   ),
   'schemas/evaluation-report-v1.schema.json': z.toJSONSchema(
     evaluationReportSchema,
+  ),
+  'schemas/dashboard-start-v1.schema.json':
+    z.toJSONSchema(dashboardStartSchema),
+  'schemas/dashboard-proposal-v1.schema.json': z.toJSONSchema(
+    dashboardProposalSchema,
   ),
   'schemas/feature-v1.schema.json': z.toJSONSchema(featureSchema),
   'schemas/observation-context-v1.schema.json': z.toJSONSchema(

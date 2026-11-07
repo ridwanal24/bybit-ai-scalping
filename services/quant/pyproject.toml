@@ -3,7 +3,7 @@ name = "bybit-quant"
 version = "0.1.0"
 description = "Verified market features and observations; no trading or training yet"
 requires-python = ">=3.12,<3.13"
-dependencies = ["jsonschema==4.26.0"]
+dependencies = ["jsonschema==4.26.0", "gymnasium==1.2.1", "numpy==2.3.4"]
 
 [project.scripts]
 bybit-quant = "bybit_quant.__main__:main"

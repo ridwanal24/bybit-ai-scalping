@@ -30,6 +30,8 @@
     "verify:features": "node scripts/tasks.mjs verify:features",
     "verify:simulation": "node scripts/tasks.mjs verify:simulation",
     "verify:baselines": "node scripts/tasks.mjs verify:baselines",
+    "verify:environment": "node scripts/tasks.mjs verify:environment",
+    "environment:run": "node scripts/tasks.mjs environment:run",
     "baseline:run": "node scripts/tasks.mjs baseline:run",
     "simulation:run": "node scripts/tasks.mjs simulation:run",
     "features:fit": "node scripts/tasks.mjs features:fit",

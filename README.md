@@ -5,7 +5,7 @@ PostgreSQL, dan MaskablePPO. Sumber requirement: [PROJECT_SPEC.md](PROJECT_SPEC.
 
 ## Status aktual
 
-Per 7 November 2026 (Asia/Jakarta), **M6 — Baseline & Simulation MVP Completed**.
+Per 7 November 2026 (Asia/Jakarta), **M7 — RL Environment Completed**.
 Foundation/configuration/market data/features M1–M4 tetap tersedia. Public REST ingestion
 memvalidasi/menyimpan historical candles, instrument dan funding, mendukung resume,
 quality report, pinned revisions, fingerprint dan JSONL export.
@@ -24,8 +24,10 @@ Fixture E2E mencakup LONG+SHORT; hasil bukan baseline/model evaluation.
 M6 menambahkan HOLD, seeded random, EMA crossover dan constrained Buy & Hold
 reference, evaluator/metrics, deterministic replay dan immutable comparison.
 Instruksi `oke lanjutkan eksekusi Milestone 6` menyetujui scope M6.
-Belum ada frontend, training/model atau exchange execution; M7 belum disetujui.
-Panduan dan commands: [Baselines](docs/baselines.md).
+M7 disetujui melalui `lanjutkan eksekusi M7`: Gymnasium reset/step, masks,
+shared incremental simulator, net-equity reward dan settlement bootstrap adapter.
+Belum ada frontend, training/model atau exchange execution; M8 belum disetujui.
+Panduan: [Baselines](docs/baselines.md), [RL environment](docs/rl-environment.md).
 
 ## Setup Windows x64
 
@@ -100,6 +102,9 @@ Configuration valid belum berarti siap trading; execution checks tetap pending.
 | [Baselines](docs/baselines.md) | Empat strategi, metrics, comparison dan offline CLI |
 | [Plan M6](docs/plans/milestone-06.md) | Scope Baseline & Simulation MVP yang disetujui |
 | [Handoff M6](docs/handoffs/milestone-06.md) | Hasil aktual dan konteks M7 |
+| [RL environment](docs/rl-environment.md) | Gymnasium API, masks, rewards, settlement/bootstrap dan offline smoke |
+| [Plan M7](docs/plans/milestone-07.md) | Scope RL environment yang disetujui |
+| [Handoff M7](docs/handoffs/milestone-07.md) | Hasil aktual dan konteks M8 |
 | [Handoff M0](docs/handoffs/milestone-00.md) | Hasil, keterbatasan dan instruksi sesi berikutnya |
 
 ## Alur pengembangan
@@ -112,4 +117,4 @@ Paper M11, Demo M13, dan kemampuan Real M15.
 Real Trading harus disabled by default. Persetujuan implementasi fitur Real bukan
 izin transaksi dana asli. Tidak ada jaminan profit atau promosi model otomatis.
 
-Komponen RL, dashboard dan trading tetap rancangan milestone berikutnya.
+Training RL, dashboard dan trading tetap rancangan milestone berikutnya.

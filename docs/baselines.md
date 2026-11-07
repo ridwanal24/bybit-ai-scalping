@@ -2,6 +2,9 @@
 
 M6 memakai export M3, frozen normalizer/observations M4 dan simulator M5 tunggal.
 Tidak ada network, database, model atau exchange execution pada baseline CLI.
+M7 mengekstrak shared incremental DatasetSession untuk runner dan Gymnasium;
+four-policy public artifacts M6 tetap byte-identical pada actions/ledger/report
+setelah refactor. Source/lock fingerprint membuat content IDs baru berbeda.
 
 ## Menjalankan
 

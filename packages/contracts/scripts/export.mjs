@@ -35,6 +35,10 @@ import {
   baselineRequestSchema,
   baselineMetricsSchema,
   baselineComparisonSchema,
+  rlRequestSchema,
+  rlInfoSchema,
+  rlEpisodeSchema,
+  rlTransitionSchema,
   SIMULATION_ACCOUNTING_VECTORS,
   SIMULATION_RISK_VECTORS,
 } from '../dist/index.js';
@@ -208,6 +212,10 @@ const outputs = {
     baselineComparisonSchema,
   ),
   'fixtures/simulation-risk.json': SIMULATION_RISK_VECTORS,
+  'schemas/rl-request-v1.schema.json': z.toJSONSchema(rlRequestSchema),
+  'schemas/rl-info-v1.schema.json': z.toJSONSchema(rlInfoSchema),
+  'schemas/rl-episode-v1.schema.json': z.toJSONSchema(rlEpisodeSchema),
+  'schemas/rl-transition-v1.schema.json': z.toJSONSchema(rlTransitionSchema),
   'schemas/feature-v1.schema.json': z.toJSONSchema(featureSchema),
   'schemas/observation-context-v1.schema.json': z.toJSONSchema(
     observationContextSchema,

@@ -7,6 +7,12 @@ Sumber utama: [PROJECT_SPEC.md](../PROJECT_SPEC.md).
 
 ## Requirement dan batas hasil
 
+M7 diimplementasikan melalui `lanjutkan eksekusi M7`,7 November2026;
+[plan](plans/milestone-07.md) dan [guide](rl-environment.md) membekukan shared
+incremental timeline, current-information masks, net equity/initial reward,
+raw Gymnasium termination/truncation dan explicit absorbing settlement adapter.
+Tidak ada training M8 atau perubahan risk defaults/normalizer/source data.
+
 Checkpoint M6 diimplementasikan7 November2026 melalui instruksi
 `oke lanjutkan eksekusi Milestone 6`; [plan M6](plans/milestone-06.md) dan
 [baseline guide](baselines.md) menetapkan four-policy shared simulator,

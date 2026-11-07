@@ -4,13 +4,13 @@ Terakhir diperbarui: 7 November 2026, Asia/Jakarta.
 
 | Aspek | Kondisi aktual |
 | --- | --- |
-| Current phase | Phase 2 — Simulation MVP Completed |
-| Current milestone | M6 — Baseline & Simulation MVP |
-| Milestone approval | Approved melalui `oke lanjutkan eksekusi Milestone 6` |
-| Implementation status | Seluruh task6.1–6.8 selesai dan diverifikasi |
-| Milestone status | Completed; M0–M5 tetap Completed |
-| Next milestone | M7 — RL Environment; belum Approved |
-| Aplikasi/database/model | Market/config API, Python features, simulator, baseline evaluator/comparison; model belum dibuat |
+| Current phase | Phase 3 — RL Proof of Concept; environment selesai, training belum |
+| Current milestone | M7 — RL Environment |
+| Milestone approval | Approved melalui `lanjutkan eksekusi M7` |
+| Implementation status | Seluruh task7.1–7.11 selesai dan diverifikasi |
+| Milestone status | Completed; M0–M6 tetap Completed |
+| Next milestone | M8 — RL Training; belum Approved |
+| Aplikasi/database/model | Market/config API, Python features/simulator/baselines dan Gymnasium environment; model belum dibuat |
 | Trading | Tidak ada credentials Bybit, order atau aktivasi exchange |
 
 ## Approval dan scope
@@ -37,6 +37,13 @@ bar execution, exit/risk/funding dan explicit restricted liquidation envelope.
 Implementasi M5 berada dalam scope plan; tidak memberi approval M6/training/orders.
 
 ## Selesai
+
+M7 Approved melalui `lanjutkan eksekusi M7`,7 November2026;
+[plan M7](plans/milestone-07.md) membatasi task7.1–7.11. Gymnasium/NumPy dipin
+bersama; DatasetSession dipakai historical runner/baseline/environment, dengan
+observation M4, Discrete5, current-information masks, reset/step, net-equity reward
+dan explicit settlement/bootstrap wrapper. Streaming transition/reward artifact
+direplay dan direkonsiliasi ke ledger M5. Tidak ada training/model/migration.
 
 M6 Approved melalui `oke lanjutkan eksekusi Milestone 6`,7 November2026;
 [plan M6](plans/milestone-06.md) membatasi task6.1–6.8. HOLD, seeded random,
@@ -78,6 +85,20 @@ Shared accounting/risk vectors, CLI/runner dan capability/envelope gates tersedi
 Tidak ada schema DB/dependency baru, baseline, RL atau exchange order.
 
 ## Test summary
+
+M7 final `verify:environment` exit0,7 November2026 08:35:00–08:39:25 WIB:
+107 contracts +33 backend +290 Python +31 integration =**461 tests tanpa skip**.
+Gymnasium checker, all state/mode/gates, lifecycle/seed, direct backtest equivalence,
+fees/funding/forced exit/negative equity/reward integrity, settlement/bootstrap,
+future/availability, CLI/replay/artifact tamper tests lulus. Build/static/export/
+migration/schema checks dan seluruh M1–M6 regressions lulus; no DB timeout.
+Four legacy M6 public policies memiliki identical action/ledger bytes/report
+setelah refactor. Existing public-export smoke61.587s: HOLD dan NumPy masked-random
+seed42 masing-masing1200 steps, deterministic replay/reload; random14 trades,
+net−21.6276225 USDT/reward−0.0216276225. Root CLI juga exit0/ID identik.
+[Testing](testing.md), [handoff M7](handoffs/milestone-07.md),
+[guide](rl-environment.md). M8 wajib memakai settlement adapter/bootstrap0 dan
+reject invalid rollouts; belum ada learner/training atau promosi model.
 
 M6 final `verify:baselines` exit0,7 November2026 08:10:19–08:13:56 WIB:
 97 contracts +33 backend +258 Python +31 integration =**419 tests tanpa skip**.
@@ -131,9 +152,9 @@ Evidence dan command tambahan: [testing](testing.md).
 
 ## Remaining tasks dan known issues
 
-Tidak ada task wajib M6 tersisa. M7 memerlukan plan/approval baru; training
+Tidak ada task wajib M7 tersisa. M8 memerlukan plan/approval baru; training
 belum dimulai. Python semantic cross-field parity tersedia dan actual observation
-shape/artifact divalidasi. Actual model/tensor library tetap scope M7/M8.
+shape/artifact divalidasi. Actual model/PyTorch/SB3 tetap scope M8.
 Configuration valid tidak membuktikan exchange support atau trading readiness.
 DB owner/superuser tetap dapat bypass trigger lewat DDL; production privileges
 belum menjadi kemampuan foundation/configuration lokal.
@@ -160,5 +181,5 @@ tetap M8/M11. Pure Python throughput full-year/live latency belum dibenchmark.
 Source hash membuktikan integritas, bukan signature. Caller context/risk budget
 divalidasi dan restricted historical risk enforcement M5 tersedia; live risk belum.
 
-Handoff terbaru: [milestone-06.md](handoffs/milestone-06.md).
+Handoff terbaru: [milestone-07.md](handoffs/milestone-07.md).
 **Waiting for Next Milestone Instruction.**

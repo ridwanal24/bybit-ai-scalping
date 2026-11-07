@@ -310,6 +310,42 @@ class Simulator:
         }
 
     @exact
+    def action_mask(self, time_ms, atr, observation_valid, reference):
+        mask = [True, False, False, False, False]
+        if self.status != "running" or not observation_valid or self.pending or self.forced:
+            return mask
+        pos = self.ledger.position
+        if pos:
+            if self.c["exit"]["mode"] != "FIXED_RR":
+                mask[3 if pos.side == 1 else 4] = True
+            return mask
+        due = time_ms + self.policy["execution_latency_ms"]
+        due_open = ((due + self.interval - 1) // self.interval) * self.interval
+        if self._entry_allowed() or due_open + self.interval >= self.end:
+            return mask
+        if type(atr) not in (float, int) or not math.isfinite(atr) or atr <= 0:
+            return mask
+        equity = self.ledger.snapshot(decimal(reference))["equity"]
+        for action, side in ((1, 1), (2, -1)):
+            try:
+                self.execution.entry(side, reference, D(repr(atr)), equity)
+            except ValueError:
+                pass
+            else:
+                mask[action] = True
+        return mask
+
+    def submit_masked(self, time_ms, action, atr, observation_valid, reference):
+        if type(action) is not int or action not in range(5):
+            return self.submit(time_ms, action, atr, observation_valid)
+        if not self.action_mask(time_ms, atr, observation_valid, reference)[action]:
+            self._at(self.decision_time, "decision")
+            self._reject("masked_action")
+            self.submit(time_ms, 0, atr, observation_valid)
+            return False
+        return self.submit(time_ms, action, atr, observation_valid)
+
+    @exact
     def submit(self, time_ms, action, atr, observation_valid):
         self._at(self.decision_time, "decision")
         if self.status != "running":

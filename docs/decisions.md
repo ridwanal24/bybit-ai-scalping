@@ -283,7 +283,37 @@ planning bukan izin eksekusi live. **Deferred** memiliki deadline dalam
   Memory streaming bounded; full-year throughput belum dibuktikan. Standalone
   archive harus membawa linked simulation artifacts. M7 tidak otomatis dimulai.
 
-## Keputusan yang masih terbuka setelah M6
+## ADR-15 — Incremental shared timeline dan settled Gymnasium episodes M7
+
+- Status: implemented,7 November2026, instruksi `lanjutkan eksekusi M7`,
+  [plan M7](plans/milestone-07.md). Scope7.1–7.11, bukan training M8.
+- Extract DatasetSession dipakai historical runner/M6/TradingEnv, bukan rewrite
+  simulator. M4 features/normalizer/context dan M5 exact financial transitions
+  tetap satu source. Existing four M6 public policies terbukti identical script,
+  events/trades/equity bytes dan report setelah refactor; IDs berubah karena
+  source/lock fingerprint, bukan accounting semantics.
+- Gymnasium1.2.1/NumPy2.3.4 dipin/lock sebagai tested compatibility baseline.
+  Alternative: memasang seluruh Torch/SB3 stack sebelum environment stabil.
+  Dipilih dependency minimum; M8 memvalidasi stack learner bersama versinya.
+- Mask dari known current state/reference/ATR/sizing, bukan future fill price.
+  Pending/forced/availability/risk/final boundary gates + execution revalidation.
+  Fresh finite float32 observations; unavailable memakai sentinel/HOLD+info.
+- Reward net delta equity/initial capital, Decimal128 lalu float, tanpa shaping.
+  Costs, funding, losing unrealized dan settlement masuk reward sekali.
+- Raw risk/bankruptcy terminated dan data boundary truncated. Independent
+  settlement memutus portfolio continuation sehingga bootstrap_discount0.
+  SettledEpisodeWrapper mempertahankan raw flags/reason dan truncated sambil
+  terminated=true sebagai absorbing learning boundary untuk standard learner.
+  Alternative: bootstrap terminal flat/reset capital atau menyamakan data boundary
+  dengan risk failure; ditolak. M8 memakai adapter dan reject invalid rollouts.
+- Streaming action/transition hashes + linked M5 replay/report, verifier mengecek
+  setiap step equity/reward terhadap ledger. Gym API checker, deterministic/
+  reward-hacking tests dan fixed local public-export smoke tersedia.
+- Consequence: explicit settlement convention, diagnostic invalid episodes dan
+  unavailable-observation info harus dihormati learner. Tidak ada profit/model/
+  live readiness claim; full-year/learner throughput belum dibenchmark.
+
+## Keputusan yang masih terbuka setelah M7
 
 M5 menutup pilihan R05 untuk restricted research saja: lihat ADR-13;
 full exchange liquidation realism tetap di luar kemampuan simulator ini.

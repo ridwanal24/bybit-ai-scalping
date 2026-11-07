@@ -1,5 +1,18 @@
 # Operasi lokal
 
+## RL environment offline M7
+
+`npm run environment:run -- --request FILE` menjalankan fixed HOLD atau
+masked-random episode, bukan training. Request/CLI/artifacts:
+[RL environment](rl-environment.md). Output `artifacts/environments/<id>/` harus
+diarsipkan bersama linked `artifacts/simulations/<id>/`.
+`npm run verify:environment` menjalankan full regression dengan report
+`.runtime/environment-report.json`. Bounded public smoke helper:
+`services/quant/.venv/Scripts/python.exe services/quant/tests/smoke_environment.py`.
+Dependency sync memakai existing project uv dan `--locked`; NumPy/Gymnasium
+berada pada venv proyek. M8 belum dipasang/dijalankan. Untuk learner berikutnya,
+gunakan SettledEpisodeWrapper/bootstrap0 dan reject `report.status=invalid`.
+
 ## Baseline offline M6
 
 `npm run baseline:run -- --request FILE` membaca strict baseline request dan

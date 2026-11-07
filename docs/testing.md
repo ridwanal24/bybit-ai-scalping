@@ -1,5 +1,62 @@
 # Testing dan verifikasi
 
+## Hasil M7 — RL Environment
+
+Tanggal:7 November2026, Asia/Jakarta. Final `npm run verify:environment` exit0
+PASSED. Report `.runtime/environment-report.json`: UTC01:35:00.231–01:39:25.286
+(WIB08:35:00–08:39:25). **461 tests tanpa skip**:
+107 TypeScript contracts +33 backend unit +290 Python +31 PostgreSQL/HTTP integration.
+Build/typecheck/ESLint/Ruff/Prettier/export drift, isolated migration fresh/reapply/
+M1+M2 upgrades/data preservation/zero schema diff dan seluruh M1–M6 regression lulus.
+No DB timeout; orchestrator menutup test clusters. Owner execution context
+dipakai untuk native SWC/isolated DB sesuai pola M1–M6.
+
+M7 menambah10 TS dan32 Python cases: Gymnasium check_env, spaces/dtype/schema,
+HOLD availability, FLAT/LONG/SHORT dan3 exit modes, sizing/risk/cooldown/pending/
+forced/final interval/latency masks; readonly arrays/ledger, invalid actions,
+seed/reset/close lifecycle dan no position/cost carry. Direct script/environment
+memiliki identical ledger dan observations; future mutation/availability sentinel,
+frozen ATR vs next-open gap revalidation, exact fee arithmetic, signed funding
+before close, unrealized losing HOLD, overtrading, forced holding exit, drawdown,
+negative equity tanpa clipping, one-time settlement/post-settlement observation,
+raw flags/bootstrap wrapper dan immutable reward trace/reload/forgery/CLI exit0/1/2
+lulus. Final checker tidak menghasilkan infinite-Box warnings karena space
+mencakup finite float32 range sesuai M4 contract, tanpa clipping values.
+
+Tambahan direct legacy verification terhadap actual M6 public artifacts:
+HOLD/random42/EMA/Buy & Hold masing-masing identical action scripts, events,
+trades/equity JSONL bytes dan report setelah refactor DatasetSession.
+Evidence `.runtime/environment-legacy-equivalence.json`, ignored stream copies
+`.runtime/m7-legacy-equivalence/`. New content IDs memang berubah karena code/lock
+fingerprint, bukan perubahan accounting. Terarah M5/M6 integration36 tests juga
+lulus sebelum full regression.
+
+Public-export smoke61.587s, selesai08:36:12 WIB: original M3 dataset/frozen M4
+normalizer/preset, episode `[2025-01-01 04:00,2025-01-02 00:00)` UTC, explicit M5
+research policies. HOLD dan NumPy masked-random seed42 masing-masing1200 steps,
+1184 valid/16 warm-up decisions; dua CLI runs/agent identik, ledger replay dan
+per-step reward verifier lulus. Semua `completed_restricted`, raw truncated dan
+bootstrap0, final FLAT. Root npm CLI exit0 dan menghasilkan episode ID sama.
+
+| Agent | Trades | Net USDT | Reward sum | Fees USDT | Final equity USDT |
+| --- | --- | --- | --- | --- | --- |
+| HOLD | 0 | 0 | 0 | 0 | 1000 |
+| Masked-random NumPy seed42 | 14 | −21.6276225 | −0.0216276225 | 13.1191225 | 978.3723775 |
+
+Funding0, no rejected proposals pada smoke masked agent; fill revalidation rejection
+diuji fixture gap. Float reward sum−0.021627622500000002 sesuai Decimal total dengan
+tolerance1e-12. Hasil loss dipertahankan tanpa tuning; tidak ada training/download/
+normalizer refit/credentials/order. M6 Python random baseline adalah agent/RNG
+berbeda; smoke ini bukan klaim performance comparison atau RL training.
+
+Code fingerprint `a258fa632d9016573b45ebf1fcecd517488d87804799b9e3c6b841d88a616f33`.
+HOLD episode `0fed0c26f5623f1ecaff2c0c3a328389d0d506531030cf0d14eefe61a4221bd2`;
+random episode `4585ef20312b005db36624bf7f168384eed5f646f471167a3038b56a57043a2c`.
+Evidence ignored: `.runtime/verify-environment-final.log`, `environment-report.json`,
+`environment-smoke.json/log`, `environment-root-cli.log`,
+`artifacts/environments/<id>/` dan linked M5 simulations. [Guide](rl-environment.md),
+[handoff M7](handoffs/milestone-07.md).
+
 ## Hasil M6 — Baseline & Simulation MVP
 
 Tanggal:7 November2026, Asia/Jakarta. Final `npm run verify:baselines` exit0

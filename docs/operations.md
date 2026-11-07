@@ -1,5 +1,20 @@
 # Operasi lokal
 
+## CPU training/background jobs M8
+
+`npm run training:submit -- --request FILE` membekukan input dan mengembalikan
+UUID job. Pantau `npm run training:status -- --job UUID`; cancel melalui
+`npm run training:cancel -- --job UUID`. Persistent state/progress/log/checkpoint
+di `artifacts/training-jobs/<uuid>/`; successful candidate di `artifacts/models/<id>/`.
+No HTTP/DB training job API M8. [Request, limits dan recovery](training.md).
+`npm run verify:training` menjalankan full regression, report
+`.runtime/training-report.json`. Explicit pre-registered1024-step CPU smoke:
+`services/quant/.venv/Scripts/python.exe services/quant/tests/smoke_training.py`.
+Helper menjalankan dua sequential jobs, bukan full training/holdout evaluation.
+Gunakan `uv sync --locked` untuk pinned CPU stack, tanpa upgrade global Python.
+Archive model membawa validation ledger sendiri; archive job jika logs/checkpoints
+dibutuhkan. Source/runtime/config changes dapat reject load dan butuh review.
+
 ## RL environment offline M7
 
 `npm run environment:run -- --request FILE` menjalankan fixed HOLD atau

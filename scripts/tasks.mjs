@@ -413,6 +413,7 @@ async function main() {
     case 'verify:simulation':
     case 'verify:baselines':
     case 'verify:environment':
+    case 'verify:training':
     case 'verify:features':
     case 'verify:market-data':
     case 'verify': {
@@ -437,19 +438,21 @@ async function main() {
         fs.writeFileSync(
           path.join(
             runtime,
-            task === 'verify:environment'
-              ? 'environment-report.json'
-              : task === 'verify:baselines'
-                ? 'baselines-report.json'
-                : task === 'verify:simulation'
-                  ? 'simulation-report.json'
-                  : task === 'verify:features'
-                    ? 'features-report.json'
-                    : task === 'verify:market-data'
-                      ? 'market-data-report.json'
-                      : task === 'verify:configuration'
-                        ? 'configuration-report.json'
-                        : 'foundation-report.json',
+            task === 'verify:training'
+              ? 'training-report.json'
+              : task === 'verify:environment'
+                ? 'environment-report.json'
+                : task === 'verify:baselines'
+                  ? 'baselines-report.json'
+                  : task === 'verify:simulation'
+                    ? 'simulation-report.json'
+                    : task === 'verify:features'
+                      ? 'features-report.json'
+                      : task === 'verify:market-data'
+                        ? 'market-data-report.json'
+                        : task === 'verify:configuration'
+                          ? 'configuration-report.json'
+                          : 'foundation-report.json',
           ),
           JSON.stringify(report, null, 2) + '\n',
         );
@@ -471,11 +474,21 @@ async function main() {
         ...process.argv.slice(3),
       ]);
       return;
+    case 'training:status':
+    case 'training:cancel':
+      await run(python, [
+        '-m',
+        'bybit_quant',
+        task.replace(':', '-'),
+        ...process.argv.slice(3),
+      ]);
+      return;
     case 'features:fit':
     case 'features:build':
     case 'simulation:run':
     case 'baseline:run':
     case 'environment:run':
+    case 'training:submit':
       await buildContracts();
       await run(python, [
         '-m',

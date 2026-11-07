@@ -5,7 +5,7 @@ PostgreSQL, dan MaskablePPO. Sumber requirement: [PROJECT_SPEC.md](PROJECT_SPEC.
 
 ## Status aktual
 
-Per 7 November 2026 (Asia/Jakarta), **M7 — RL Environment Completed**.
+Per 7 November 2026 (Asia/Jakarta), **M8 — RL Training Completed**.
 Foundation/configuration/market data/features M1–M4 tetap tersedia. Public REST ingestion
 memvalidasi/menyimpan historical candles, instrument dan funding, mendukung resume,
 quality report, pinned revisions, fingerprint dan JSONL export.
@@ -26,8 +26,12 @@ reference, evaluator/metrics, deterministic replay dan immutable comparison.
 Instruksi `oke lanjutkan eksekusi Milestone 6` menyetujui scope M6.
 M7 disetujui melalui `lanjutkan eksekusi M7`: Gymnasium reset/step, masks,
 shared incremental simulator, net-equity reward dan settlement bootstrap adapter.
-Belum ada frontend, training/model atau exchange execution; M8 belum disetujui.
-Panduan: [Baselines](docs/baselines.md), [RL environment](docs/rl-environment.md).
+M8 disetujui melalui `gas eksekusi m8`: bounded CPU MaskablePPO Small training,
+train-only preprocessing, masked validation/save-load, checkpoints, persistent
+background jobs/progress/cancel/resource watchdog. Model research candidate tersedia.
+Belum ada frontend atau exchange execution; M9 belum disetujui.
+Panduan: [Baselines](docs/baselines.md), [RL environment](docs/rl-environment.md),
+[Training](docs/training.md).
 
 ## Setup Windows x64
 
@@ -105,16 +109,19 @@ Configuration valid belum berarti siap trading; execution checks tetap pending.
 | [RL environment](docs/rl-environment.md) | Gymnasium API, masks, rewards, settlement/bootstrap dan offline smoke |
 | [Plan M7](docs/plans/milestone-07.md) | Scope RL environment yang disetujui |
 | [Handoff M7](docs/handoffs/milestone-07.md) | Hasil aktual dan konteks M8 |
+| [Training](docs/training.md) | CPU MaskablePPO, splits, jobs, checkpoint/metadata/compatibility dan validation |
+| [Plan M8](docs/plans/milestone-08.md) | Scope training yang disetujui |
+| [Handoff M8](docs/handoffs/milestone-08.md) | Hasil aktual dan konteks M9 |
 | [Handoff M0](docs/handoffs/milestone-00.md) | Hasil, keterbatasan dan instruksi sesi berikutnya |
 
 ## Alur pengembangan
 
 Satu persetujuan berlaku untuk satu milestone. Task normal dalam scope tersebut
 tidak membutuhkan persetujuan ulang. Milestone berikutnya tidak dimulai otomatis.
-Simulation MVP tersedia pada M6; target berikutnya RL proof of concept M8, dashboard riset M10,
+Simulation MVP M6 dan RL proof of concept M8 tersedia; target berikutnya advanced evaluation M9, dashboard riset M10,
 Paper M11, Demo M13, dan kemampuan Real M15.
 
 Real Trading harus disabled by default. Persetujuan implementasi fitur Real bukan
 izin transaksi dana asli. Tidak ada jaminan profit atau promosi model otomatis.
 
-Training RL, dashboard dan trading tetap rancangan milestone berikutnya.
+Advanced evaluation, dashboard dan trading tetap rancangan milestone berikutnya.

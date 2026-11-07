@@ -39,6 +39,13 @@ import {
   rlInfoSchema,
   rlEpisodeSchema,
   rlTransitionSchema,
+  trainingSplitSchema,
+  trainingResourcesSchema,
+  trainingRequestSchema,
+  trainingProgressSchema,
+  trainingJobSchema,
+  trainingValidationSchema,
+  modelMetadataSchema,
   SIMULATION_ACCOUNTING_VECTORS,
   SIMULATION_RISK_VECTORS,
 } from '../dist/index.js';
@@ -216,6 +223,21 @@ const outputs = {
   'schemas/rl-info-v1.schema.json': z.toJSONSchema(rlInfoSchema),
   'schemas/rl-episode-v1.schema.json': z.toJSONSchema(rlEpisodeSchema),
   'schemas/rl-transition-v1.schema.json': z.toJSONSchema(rlTransitionSchema),
+  'schemas/training-split-v1.schema.json': z.toJSONSchema(trainingSplitSchema),
+  'schemas/training-resources-v1.schema.json': z.toJSONSchema(
+    trainingResourcesSchema,
+  ),
+  'schemas/training-request-v1.schema.json': z.toJSONSchema(
+    trainingRequestSchema,
+  ),
+  'schemas/training-progress-v1.schema.json': z.toJSONSchema(
+    trainingProgressSchema,
+  ),
+  'schemas/training-job-v1.schema.json': z.toJSONSchema(trainingJobSchema),
+  'schemas/training-validation-v1.schema.json': z.toJSONSchema(
+    trainingValidationSchema,
+  ),
+  'schemas/model-metadata-v1.schema.json': z.toJSONSchema(modelMetadataSchema),
   'schemas/feature-v1.schema.json': z.toJSONSchema(featureSchema),
   'schemas/observation-context-v1.schema.json': z.toJSONSchema(
     observationContextSchema,

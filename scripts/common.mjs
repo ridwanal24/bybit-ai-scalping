@@ -38,6 +38,7 @@ export function environment(extra = {}) {
     UV_NO_MODIFY_PATH: '1',
     SWC_NATIVE_BINDING_CACHE: path.join(tools, 'swc-cache'),
     RUFF_CACHE_DIR: path.join(tools, 'ruff-cache'),
+    MPLCONFIGDIR: path.join(runtime, 'matplotlib-cache'),
     npm_config_cache: path.join(tools, 'npm-cache'),
     npm_config_update_notifier: 'false',
     npm_config_audit: 'false',

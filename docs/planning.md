@@ -7,6 +7,13 @@ Sumber utama: [PROJECT_SPEC.md](../PROJECT_SPEC.md).
 
 ## Requirement dan batas hasil
 
+M8 diimplementasikan melalui `gas eksekusi m8`,7 November2026;
+[plan](plans/milestone-08.md) dan [guide](training.md) membekukan CPU Small training,
+chronological70/15/15/train-only preprocessing, masked validation/final candidate,
+save-load/provenance dan bounded persistent jobs. Public smoke1024steps/2epochs/
+1thread/env/max180s/3072MiB ditetapkan sebelum run, dua seed42 repeats. Holdout
+tidak dievaluasi, risk/cost/preset tidak dituning dan M9 belum disetujui.
+
 M7 diimplementasikan melalui `lanjutkan eksekusi M7`,7 November2026;
 [plan](plans/milestone-07.md) dan [guide](rl-environment.md) membekukan shared
 incremental timeline, current-information masks, net equity/initial reward,

@@ -3,14 +3,15 @@
 `bybit_quant.rl.TradingEnv` implements Gymnasium reset/step/spaces/action_masks
 di atas incremental `simulation.DatasetSession`. Session yang sama dipakai
 runner script, M6 baseline dan artifact publisher M5. Tidak ada simulator,
-accounting, indicator atau order execution kedua. M7 tidak melatih model.
+accounting, indicator atau order execution kedua. M7 tidak melatih model;
+[M8 training](training.md) kini memakai environment/settlement adapter ini.
 
 ## Setup dan menjalankan
 
 Gymnasium1.2.1 dan NumPy2.3.4 dipin bersama pada Python3.12.12, dengan
 cloudpickle/farama-notifications dan wheels/hashes dalam `services/quant/uv.lock`.
 Versi ini adalah compatibility baseline yang diuji, bukan klaim latest. Torch,
-SB3 dan sb3-contrib belum dipasang; stack MaskablePPO tetap scope M8.
+SB3 dan sb3-contrib tidak dipasang pada M7; pinned CPU stack kini tersedia M8.
 
 ```powershell
 .\.tools\uv\uv.exe sync --project services/quant --locked --cache-dir .tools/uv-cache
@@ -141,7 +142,8 @@ Python CLI exit0=valid restricted episode, exit2=invalid diagnostic tetap tersim
 exit1=sanitized incompatible input/artifact. Root npm wrapper meneruskan keberhasilan
 atau kegagalan proses. Invalid status bukan usable successful training sample.
 Default env sink hanya menyimpan counts; MemorySink hanya explicit bounded tests.
-JSONL streaming; full-year throughput/training resource budget belum dibuktikan.
+JSONL streaming; full-year throughput/long-training resource envelope belum
+dibuktikan. Bounded CPU smoke budget M8 sudah diuji; lihat [training](training.md).
 
 ## Sources dan limitations
 
@@ -155,4 +157,5 @@ Windows compatibility dibuktikan actual checker/regression, bukan diasumsikan.
 Restricted market/last/1x/50%, declared funding schedule/last-open proxy/current
 metadata, OHLC ambiguities, full-fill assumptions dan artificial settlement M5
 tetap berlaku. M7 bukan model training, profit evidence, exchange liquidation
-realism, OOS validation atau approval trading. M8 memerlukan scope/instruksi baru.
+realism, OOS validation atau approval trading. Scope M8 disetujui terpisah melalui
+`gas eksekusi m8`; M9 tetap scope baru.

@@ -4,7 +4,7 @@ Scope mengikuti [approved plan M5](plans/milestone-05.md), disetujui `kerjakan`
 pada6 November2026. Engine Python tunggal ini memproses posisi virtual dan exact
 ledger, bukan mengirim order exchange. [Baseline M6](baselines.md) kini memakai
 engine/runner yang sama. [Gymnasium/reward M7](rl-environment.md) memakai
-incremental session yang sama; training M8 belum diimplementasikan.
+incremental session yang sama; [training M8](training.md) kini memakai engine ini.
 
 ## Batas validitas yang wajib diakui
 

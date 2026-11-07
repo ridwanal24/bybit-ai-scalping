@@ -1,0 +1,895 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1"
+    },
+    "split": {
+      "type": "string",
+      "const": "validation"
+    },
+    "start_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "end_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "steps": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "action_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "parameter_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "reward_sum": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    },
+    "report": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "1"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "completed_restricted",
+            "terminated_restricted",
+            "invalid"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "termination": {
+          "type": "string",
+          "enum": [
+            "truncated",
+            "terminated",
+            "invalid"
+          ]
+        },
+        "simulation_policy_version": {
+          "type": "string",
+          "const": "restricted_bar_v1"
+        },
+        "numeric_policy": {
+          "type": "string",
+          "const": "decimal128_currency18_adverse_v1"
+        },
+        "initial_capital": {
+          "type": "string",
+          "maxLength": 300,
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        "final_wallet": {
+          "type": "string",
+          "maxLength": 300,
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        "final_equity": {
+          "type": "string",
+          "maxLength": 300,
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        "realized": {
+          "type": "string",
+          "maxLength": 300,
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        "fees": {
+          "type": "string",
+          "maxLength": 300,
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        "funding": {
+          "type": "string",
+          "maxLength": 300,
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        "net_equity_change": {
+          "type": "string",
+          "maxLength": 300,
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        "final_position": {
+          "type": "string",
+          "enum": [
+            "FLAT",
+            "LONG",
+            "SHORT"
+          ]
+        },
+        "events": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "trades": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "equity_points": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "observations_valid": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "observations_unavailable": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "rejections": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "policy": {
+          "type": "object",
+          "properties": {
+            "simulation_policy_version": {
+              "type": "string",
+              "const": "restricted_bar_v1"
+            },
+            "acknowledge_research_only": {
+              "type": "boolean",
+              "const": true
+            },
+            "acknowledge_current_metadata": {
+              "type": "boolean",
+              "const": true
+            },
+            "acknowledge_declared_funding_schedule": {
+              "type": "boolean",
+              "const": true
+            },
+            "require_exchange_liquidation": {
+              "type": "boolean",
+              "const": false
+            },
+            "funding_price_proxy": {
+              "type": "string",
+              "const": "boundary_last_open"
+            },
+            "execution_latency_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 600000
+            },
+            "safety_reserve": {
+              "type": "string",
+              "maxLength": 300,
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+            },
+            "funding_schedule": {
+              "minItems": 1,
+              "maxItems": 1000,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "start_ms": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "end_ms": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "interval_ms": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "anchor_ms": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "start_ms",
+                  "end_ms",
+                  "interval_ms",
+                  "anchor_ms"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "simulation_policy_version",
+            "acknowledge_research_only",
+            "acknowledge_current_metadata",
+            "acknowledge_declared_funding_schedule",
+            "require_exchange_liquidation",
+            "funding_price_proxy",
+            "execution_latency_ms",
+            "safety_reserve",
+            "funding_schedule"
+          ],
+          "additionalProperties": false
+        },
+        "execution_ready": {
+          "type": "boolean",
+          "const": false
+        },
+        "liquidation_model": {
+          "type": "string",
+          "const": "not_modeled_collateral_envelope_only"
+        },
+        "historical_metadata": {
+          "type": "string",
+          "const": "current_observation_reference_only"
+        },
+        "funding_schedule_validity": {
+          "type": "string",
+          "const": "researcher_declared_not_exchange_verified"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "reason",
+        "termination",
+        "simulation_policy_version",
+        "numeric_policy",
+        "initial_capital",
+        "final_wallet",
+        "final_equity",
+        "realized",
+        "fees",
+        "funding",
+        "net_equity_change",
+        "final_position",
+        "events",
+        "trades",
+        "equity_points",
+        "observations_valid",
+        "observations_unavailable",
+        "rejections",
+        "policy",
+        "execution_ready",
+        "liquidation_model",
+        "historical_metadata",
+        "funding_schedule_validity"
+      ],
+      "additionalProperties": false
+    },
+    "simulation_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "net_profit": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "maxLength": 300,
+                  "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                },
+                "reason": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "net_return": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "maxLength": 300,
+                  "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                },
+                "reason": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "max_drawdown": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "maxLength": 300,
+                  "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                },
+                "reason": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "profit_factor": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "maxLength": 300,
+                  "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                },
+                "reason": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "win_rate": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "maxLength": 300,
+                  "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                },
+                "reason": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "average_win": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "maxLength": 300,
+                  "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                },
+                "reason": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "average_loss": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "maxLength": 300,
+                  "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                },
+                "reason": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "expectancy": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "maxLength": 300,
+                  "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                },
+                "reason": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "average_holding_ms": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "maxLength": 300,
+                  "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                },
+                "reason": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "sampled_exposure": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "maxLength": 300,
+                  "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                },
+                "reason": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "fees": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "maxLength": 300,
+                  "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                },
+                "reason": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "funding": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "maxLength": 300,
+                  "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                },
+                "reason": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "slippage_cost": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "maxLength": 300,
+                  "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                },
+                "reason": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "sharpe": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "maxLength": 300,
+                  "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                },
+                "reason": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "value",
+                "reason"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "net_profit",
+        "net_return",
+        "max_drawdown",
+        "profit_factor",
+        "win_rate",
+        "average_win",
+        "average_loss",
+        "expectancy",
+        "average_holding_ms",
+        "sampled_exposure",
+        "fees",
+        "funding",
+        "slippage_cost",
+        "sharpe"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "version",
+    "split",
+    "start_ms",
+    "end_ms",
+    "steps",
+    "action_sha256",
+    "parameter_sha256",
+    "reward_sum",
+    "report",
+    "simulation_id",
+    "metrics"
+  ],
+  "additionalProperties": false
+}

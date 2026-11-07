@@ -1,11 +1,26 @@
 # Arsitektur sistem
 
 Tanggal: 7 November 2026, Asia/Jakarta. Status: rancangan M0 diterima melalui
-`oke ku approve`; foundation M1, configuration M2, market data M3, features M4, simulator M5, baseline M6 dan RL environment M7 kini
+`oke ku approve`; foundation M1, configuration M2, market data M3, features M4, simulator M5, baseline M6, RL environment M7 dan CPU training M8 kini
 diimplementasikan; komponen berikutnya tetap rancangan. Dasar: [spesifikasi](../PROJECT_SPEC.md) bagian 7–8,
 24–33, 36, dan [keputusan](decisions.md).
 
 ## Komponen yang sudah diimplementasikan
+
+M8 menambahkan train-only chronological preparation, CPU MaskablePPO Small,
+guarded settled episodes dan custom masked validation yang direplay ke ledger M5.
+Policy/value architecture/config tetap M2, features/normalizer M4, risk/timeline M5,
+API/masks/reward M7. Invalid episodes tidak masuk learner; final holdout tidak
+dievaluasi. Final checkpoint diterbitkan sebagai research candidate sesudah
+save/load, parameter/action equality dan independent artifact verification.
+
+Persistent job controller Python memakai hidden supervisor/worker, single active
+filesystem lease, immutable input copies, atomic progress/status, append-only
+logs/checkpoints, cancel dan wall/RSS watchdog. Process identity memakai PID+
+creation time. No DB migration atau HTTP training API M8; controller/CLI menjadi
+foundation yang diintegrasikan backend/dashboard/registry M10. Model archive
+mandiri membawa normalizer/metadata/validation actions dan complete M5 ledger.
+Details/limits: [training](training.md). Advanced evaluation tetap M9.
 
 M7 mengekstrak incremental DatasetSession yang dipakai script runner, M6
 baseline dan TradingEnv Gymnasium. Semua financial transitions tetap pada
@@ -19,7 +34,7 @@ fees/funding/terminal settlement. Data boundary raw truncated, risk/invalid
 terminated; settled-episode wrapper memberi absorbing learning boundary agar
 tidak bootstrap ke reset capital. Streaming transition/reward artifact direplay
 dan direkonsiliasi setiap step terhadap ledger M5. NumPy2.3.4/Gymnasium1.2.1
-dipin/lock; tidak ada Torch/SB3/training/migration. [Guide](rl-environment.md).
+dipin/lock pada M7; Torch/SB3 training kini M8, tanpa migration baru. [Guide](rl-environment.md).
 
 `apps/api` adalah NestJS 12 ESM dengan ConfigModule (env tervalidasi),
 DatabaseService (Prisma 7/PostgreSQL driver adapter), HealthService/Controller,
@@ -52,7 +67,7 @@ request/envelope breach tidak menjadi success atau invented liquidation. Journal
 trade/equity/report disimpan streaming pada content-addressed local artifact;
 reload merekonsiliasi wallet/events/trades/equity. Code/schema/fixture/lock hashes
 dan runtime version disimpan, tanpa migration/backend simulator kedua. CLI dan
-batas validitas: [simulation](simulation.md). Training tetap M8.
+batas validitas: [simulation](simulation.md). Training M8 memakai engine ini.
 
 M6 `baselines` menambahkan policy HOLD/random/EMA/Buy & Hold dan evaluator pada
 runner yang sama. Runner memberi policy closed M4 main indicators (termasuk
@@ -255,8 +270,8 @@ M0 hanya membuat dokumentasi. M1 telah membuat `apps/api`, `services/quant`,
 `scripts` dan local runtime yang ignored; M2 menambahkan `packages/contracts` dan
 research configuration API. M3 menambahkan market-data modules/CLI, revisions,
 download/dataset persistence dan ignored exports. M4–M6 menambahkan features,
-simulator dan baselines Python; M7 menambahkan RL environment. `apps/web`,
-training RL dan trading tetap rencana.
+simulator dan baselines Python; M7 menambahkan RL environment dan M8 training CPU.
+`apps/web` dan exchange trading tetap rencana.
 Runtime secret, model dan log
 dikecualikan dari Git.
 
@@ -272,5 +287,5 @@ Environment backtest/paper/demo/real bersifat eksplisit dan terpisah dalam confi
 credential, namespace state dan adapter. Real tidak resume otomatis setelah restart.
 Dedicated bot account disarankan; account yang tidak dapat diverifikasi diblokir.
 Runtime/ORM/dependency foundation sudah dipin dan diuji M1. Gymnasium/NumPy
-dipin dan diuji M7. PyTorch/SB3/sb3-contrib serta compatibility keseluruhan
-training stack tetap dipin/diverifikasi pada M8.
+dipin dan diuji M7. PyTorch2.8.0+cpu/SB3 dan sb3-contrib2.7.0 dipin dan diuji
+bersama M8; psutil7.1.0 menyediakan worker resource/process monitoring.

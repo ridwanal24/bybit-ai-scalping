@@ -29,9 +29,18 @@ def main() -> None:
     baseline.add_argument("--request", required=True)
     environment = commands.add_parser("environment-run")
     environment.add_argument("--request", required=True)
+    training = commands.add_parser("training-submit")
+    training.add_argument("--request", required=True)
+    training.add_argument("--root")
+    for name in ("training-status", "training-cancel", "training-supervise", "training-worker"):
+        command = commands.add_parser(name)
+        command.add_argument("--job", required=True)
+        command.add_argument("--root")
     args = parser.parse_args()
     if args.command != "health":
-        if args.command == "environment-run":
+        if args.command.startswith("training-"):
+            from bybit_quant.training.cli import execute
+        elif args.command == "environment-run":
             from bybit_quant.rl.cli import execute
         elif args.command == "baseline-run":
             from bybit_quant.baselines.cli import execute

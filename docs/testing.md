@@ -1,5 +1,63 @@
 # Testing dan verifikasi
 
+## Hasil M8 — RL Training
+
+Tanggal:7 November2026, Asia/Jakarta. Final `npm run verify:training` exit0 PASSED.
+Report `.runtime/training-report.json`: UTC02:10:09.438–02:14:49.083
+(WIB09:10:09–09:14:49). **496 tests tanpa skip**:
+117 contracts +33 backend unit +315 Python +31 isolated PostgreSQL/HTTP integration.
+Build/typecheck/ESLint/Ruff/Prettier/export drift, migration fresh/reapply/M1+M2
+upgrades/data preservation/zero schema diff dan seluruh M1–M7 regressions lulus.
+No DB timeout; test clusters ditutup oleh orchestrator. Owner context dipakai
+untuk native SWC/DB sesuai pola milestone sebelumnya.
+
+M8 menambah10 TS/25 Python cases: split alignment/rounding/half-open scopes,
+train-only means/scales invariant terhadap validation/holdout mutation, unsupported
+architecture/normalizer/rollout overshoot/budget rejection, real64-step optimizer
+parameter changes, actual10502-param fixture network, checkpoint/retention/after-
+optimization hash, exact metadata/load compatibility/checksum, mask-aware validation
+replay dan two-run CPU weight/action/report reproducibility. Episode cycling tidak
+melintasi validation; invalid/bankrupt transition ditolak sebelum learner, bootstrap
+adapter tetap aktif. Real background success/lease/progress/publication, cancellation,
+actual worker wall/RSS termination, sanitized failure, PID reuse/dead-supervisor
+recovery dan concurrent Windows reader atomic progress lulus.
+
+Initial background test mereproduksi PermissionError saat status reader membuka
+progress file pada Windows; atomic replace sekarang bounded-retry20×10ms.
+Actual background test dan dedicated reader regression lulus. Pinned CPU stack
+Torch2.8.0+cpu/SB3+contrib2.7.0/Gym1.2.1/NumPy2.3.4/psutil7.1.0 terpasang; CUDA
+tidak dipakai. `uv lock --check --offline` juga lulus setelah metadata docs update.
+
+Pre-registered public smoke selesai09:11:24 WIB,78.808s: dua independent background
+jobs, original Small preset/seed42/1024steps/rollout128/batch64/2epochs/CPU1, max
+wall180s/RSS3072MiB/8 checkpoint retention. Dataset M3 existing24h; no new candles.
+Split train `[00:00,16:48)`, validation `[16:48,20:24)`, untouched holdout
+`[20:24,24:00)` UTC1 Januari2025. New normalizer fit783 rows hanya train.
+
+| Evidence | Hasil |
+| --- | --- |
+| Job duration | 32.875s /35.391s |
+| Sampled peak worker RSS | 341.012 /341.098MiB |
+| Training/params/checkpoints | 1024 steps /47110 params /8 checkpoints per run |
+| Two-run reproducibility | Identical normalized statistics, parameter SHA, validation actions/report |
+| Validation | 216 steps,6 trades, FLAT, completed_restricted |
+| Gross / fees / funding | −4.317 /5.662526 /0 USDT |
+| Net / return / final equity | −9.979526 /−0.009979526 /990.020474 USDT |
+| Reload | Same parameters and deterministic masked validation, ledger/metrics verified |
+| Root status/cancel terminal | Both exit0; terminal cancellation idempotent, no active lease |
+
+Holdout tidak menghasilkan decisions/metrics; validation loss tidak dituning atau
+dipakai memilih best checkpoint. Candidate final requested update, execution_ready
+false; profit bukan acceptance gate. ZIP bytes/model IDs boleh berbeda karena
+job identity/timestamps; CPU weights/actions/reports adalah boundary repeatability.
+
+Parameter SHA `f53176318550af3eb17fe8cb15f1c45a09b39e93c66c2ff7418da4d8136ea3f9`;
+code fingerprint `472b5acd801b17c326148c35affa4e62ab6a02307728f7ab3889ff405dc0af7c`.
+Evidence `.runtime/verify-training-final.log`, `training-report.json`,
+`training-smoke.json/log`, `training-root-status.log`, `training-root-cancel.log`,
+`artifacts/training-jobs/<uuid>/`, `artifacts/models/<id>/` beserta embedded
+validation ledger. [Guide](training.md), [handoff M8](handoffs/milestone-08.md).
+
 ## Hasil M7 — RL Environment
 
 Tanggal:7 November2026, Asia/Jakarta. Final `npm run verify:environment` exit0

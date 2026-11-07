@@ -313,7 +313,42 @@ planning bukan izin eksekusi live. **Deferred** memiliki deadline dalam
   unavailable-observation info harus dihormati learner. Tidak ada profit/model/
   live readiness claim; full-year/learner throughput belum dibenchmark.
 
-## Keputusan yang masih terbuka setelah M7
+## ADR-16 — Bounded CPU MaskablePPO, train-scoped preprocessing dan persistent jobs M8
+
+- Status: implemented,7 November2026, `gas eksekusi m8`;
+  [plan M8](plans/milestone-08.md), task8.1–8.16.
+- Chronological70/15/15 aligned splits, train-only normalization, explicit episode
+  boundaries/cycling, validation with separate account, holdout unevaluated. No
+  random candle shuffle/refit validation/cross-split positions.
+- Small pi/vf[64,64], MaskablePPO/MlpPolicy CPU1 env/thread, configured hyperparams,
+  explicit epochs/resource budget. Reject unsupported architecture or rollout
+  rounding overshoot, check actual parameter count and trained parameter change.
+- Pin Torch2.8.0+cpu official CPU index, SB3/contrib2.7.0 with existing Gym1.2.1/
+  NumPy2.3.4. Actual Windows training/reload proven; seed/threads/deterministic
+  algorithms recorded. Alternative latest stack upgrade without compatibility
+  proof ditolak; no CUDA/Optuna/distributed training M8.
+- Reuse M7 masks/absorbing settlement, reject invalid samples before learner.
+  Custom deterministic masked validation replays into M5 artifacts/exact metrics.
+  Final candidate is final requested update; no best-checkpoint selection on
+  holdout or efficacy/promotion claim. Save/load repeats identical parameters/
+  validation decisions/report. Metadata/checksum/config/runtime/code gate precedes
+  deserialization. ZIP bytes/IDs may differ; CPU weights/actions reproducibility
+  is the checked boundary, not cross-platform bitwise portability.
+- Local Python persistent hidden supervisor/worker, exclusive lease/locks, atomic
+  status/progress, checkpoint retention/cancellation/watchdog and failure recovery.
+  Alternative database job/registry/dashboard implementation now deferred to M10;
+  CLI supplies actual M8 background/progress capability without unrelated migration.
+  Windows reader-vs-replace sharing race resolved with bounded atomic retry.
+- Resource limits are CPU thread/env/step cap and sampled RSS/wall watchdog,
+  not OS affinity/kernel memory cap. Cancellation/process kill uses verified PID+
+  creation time, with2s cooperative grace. Failed/cancelled/limited jobs have no
+  successful model ID. Known power-loss/admission/commit orphan recovery is manual;
+  no unsafe automatic resume of RNG/optimizer/episode state.
+- Model archive includes frozen config/normalizer/splits/source/runtime/seed/code/
+  risk/funding/reward/schema and complete verified validation ledger. Candidate
+  models remain execution_ready=false. M9 approval/promotion gates not granted.
+
+## Keputusan yang masih terbuka setelah M8
 
 M5 menutup pilihan R05 untuk restricted research saja: lihat ADR-13;
 full exchange liquidation realism tetap di luar kemampuan simulator ini.

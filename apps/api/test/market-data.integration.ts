@@ -50,7 +50,15 @@ describe('market data PostgreSQL/HTTP/resume/export integration', () => {
     configurations: ResearchConfigurationsService;
   const fixture = fixtureTransport();
   let snapshotId: string;
+  const previousDashboardRoot = process.env.DASHBOARD_ROOT;
+  const dashboardRoot = path.join(
+    root,
+    '.runtime',
+    'market-download-ui',
+    randomUUID(),
+  );
   beforeAll(async () => {
+    process.env.DASHBOARD_ROOT = dashboardRoot;
     const module = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(BybitPublicClient)
       .useValue(fixture.client)
@@ -87,6 +95,8 @@ describe('market data PostgreSQL/HTTP/resume/export integration', () => {
   });
   afterAll(async () => {
     await app?.close();
+    if (previousDashboardRoot === undefined) delete process.env.DASHBOARD_ROOT;
+    else process.env.DASHBOARD_ROOT = previousDashboardRoot;
   });
   async function create(extra: Record<string, unknown> = {}) {
     return service.create({
@@ -96,6 +106,112 @@ describe('market data PostgreSQL/HTTP/resume/export integration', () => {
       ...extra,
     });
   }
+
+  it('starts a background HTTP download, persists progress, exports for training, and retries export failure', async () => {
+    const created = await create();
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    fixture.controls.hold = () => gate;
+    const exportSpy = vi
+      .spyOn(service, 'exportDataset')
+      .mockRejectedValueOnce(new Error('fixture export failure'));
+    try {
+      await request(app.getHttpServer())
+        .post(`/market-data/downloads/${created.download_id}/start`)
+        .send({})
+        .expect(202);
+      await request(app.getHttpServer())
+        .post(`/market-data/downloads/${created.download_id}/start`)
+        .send({})
+        .expect(409);
+      const pending = await request(app.getHttpServer())
+        .get('/market-data/downloads?limit=100')
+        .expect(200);
+      const row = pending.body.items.find(
+        (d: { id: string }) => d.id === created.download_id,
+      );
+      expect(row).toMatchObject({
+        status: 'RUNNING',
+        preparing: true,
+        exported: false,
+        symbol: 'BTCUSDT',
+      });
+      expect(row.leaseToken).toBeUndefined();
+      release();
+      await vi.waitFor(
+        async () => {
+          expect(await service.download(created.download_id)).toMatchObject({
+            status: 'COMPLETED',
+            last_error: 'download_export_failed',
+          });
+        },
+        { timeout: 10000 },
+      );
+      await request(app.getHttpServer())
+        .post(`/market-data/downloads/${created.download_id}/start`)
+        .send({})
+        .expect(202);
+      await vi.waitFor(
+        async () => {
+          const rows = await service.downloads(
+            100,
+            0,
+            path.join(dashboardRoot, 'artifacts', 'datasets'),
+          );
+          expect(
+            rows.items.find((d) => d.id === created.download_id),
+          ).toMatchObject({
+            status: 'COMPLETED',
+            dataset_status: 'READY',
+            preparing: false,
+            exported: true,
+            last_error: null,
+          });
+        },
+        { timeout: 10000 },
+      );
+      const manifest = JSON.parse(
+        await fs.readFile(
+          path.join(
+            dashboardRoot,
+            'artifacts',
+            'datasets',
+            created.dataset_id,
+            'manifest.json',
+          ),
+          'utf8',
+        ),
+      );
+      expect(manifest.configuration_snapshot_id).toBe(snapshotId);
+      expect(manifest.files.length).toBeGreaterThan(0);
+    } finally {
+      release();
+      exportSpy.mockRestore();
+    }
+  });
+
+  it('rejects cross-origin download mutations and untrusted start options', async () => {
+    const created = await create();
+    await request(app.getHttpServer())
+      .post('/market-data/downloads')
+      .set('Origin', 'https://evil.example')
+      .send({ configurationSnapshotId: snapshotId })
+      .expect(403);
+    await request(app.getHttpServer())
+      .post(`/market-data/downloads/${created.download_id}/start`)
+      .set('Origin', 'https://evil.example')
+      .send({})
+      .expect(403);
+    await request(app.getHttpServer())
+      .post(`/market-data/downloads/${created.download_id}/start`)
+      .send({ exportRoot: '../../outside' })
+      .expect(400);
+    expect((await service.download(created.download_id)).status).toBe(
+      'PENDING',
+    );
+  });
 
   it('collects, reads ascending and exports immutable fixtures consumable in Python', async () => {
     const response = await request(app.getHttpServer())

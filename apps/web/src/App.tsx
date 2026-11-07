@@ -19,6 +19,7 @@ import { Configuration, type Snapshot } from './Configuration';
 import { Training } from './Training';
 import { Experiments } from './Experiments';
 import { Models } from './Models';
+import { MarketDownloads } from './MarketDownloads';
 const routes = [
   ['overview', 'Overview', '◈'],
   ['configuration', 'Configuration', '⚙'],
@@ -27,8 +28,22 @@ const routes = [
   ['experiments', 'Experiments', '⌁'],
   ['models', 'Model registry', '▣'],
 ] as const;
-function Market({ datasets }: { datasets: Dataset[] }) {
+function Market({
+  datasets,
+  onRefresh,
+  onTrain,
+}: {
+  datasets: Dataset[];
+  onRefresh: () => void;
+  onTrain: (datasetId: string, snapshot: Snapshot) => void;
+}) {
   const [id, setId] = useState(datasets[0]?.id ?? '');
+  useEffect(() => {
+    if (!id && datasets[0]) {
+      setId(datasets[0].id);
+      setStream(datasets[0].manifest.streams[0]?.id ?? 'last:1m');
+    }
+  }, [id, datasets]);
   const [stream, setStream] = useState(
     datasets[0]?.manifest.streams[0]?.id ?? 'last:1m',
   );
@@ -49,10 +64,14 @@ function Market({ datasets }: { datasets: Dataset[] }) {
         <div>
           <p className="eyebrow">SEALED HISTORICAL EXPORTS</p>
           <h1>Market data</h1>
-          <p>Closed bars and quality evidence. No live market feed.</p>
+          <p>
+            Download historical prices, inspect quality, and prepare datasets
+            for training.
+          </p>
         </div>
         <Badge>{datasets.length} datasets</Badge>
       </div>
+      <MarketDownloads onRefresh={onRefresh} onTrain={onTrain} />
       <section className="panel">
         <div className="filter-row">
           <label>
@@ -92,8 +111,7 @@ function Market({ datasets }: { datasets: Dataset[] }) {
         </div>
         {!id ? (
           <Empty title="No verified dataset exports">
-            Download and seal historical data through the market-data API before
-            training.
+            Download historical prices above to create your first dataset.
           </Empty>
         ) : resource.loading ? (
           <Loading label="Verifying historical export…" />
@@ -382,6 +400,12 @@ export default function App() {
   const [route, setRoute] = useState(location.hash.slice(1) || 'overview');
   const [revision, setRevision] = useState(0);
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
+  const [trainingDataset, setTrainingDataset] = useState<string>();
+  const trainDataset = useCallback((datasetId: string, value: Snapshot) => {
+    setSnapshot(value);
+    setTrainingDataset(datasetId);
+    location.hash = 'training';
+  }, []);
   const refresh = useCallback(() => setRevision((x) => x + 1), []);
   const resource = useResource<Catalog>(
     '/research/catalog?limit=100',
@@ -514,10 +538,15 @@ export default function App() {
                   datasets={resource.data.datasets}
                 />
               ) : route === 'market' ? (
-                <Market datasets={resource.data.datasets} />
+                <Market
+                  datasets={resource.data.datasets}
+                  onRefresh={refresh}
+                  onTrain={trainDataset}
+                />
               ) : route === 'training' ? (
                 <Training
                   catalog={resource.data}
+                  initialDataset={trainingDataset}
                   snapshot={snapshot}
                   onRefresh={refresh}
                 />

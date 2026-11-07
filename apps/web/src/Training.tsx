@@ -7,12 +7,16 @@ export function Training({
   catalog,
   snapshot,
   onRefresh,
+  initialDataset,
 }: {
   catalog: Catalog;
   snapshot: Snapshot | null;
   onRefresh: () => void;
+  initialDataset?: string;
 }) {
-  const [dataset, setDataset] = useState(catalog.datasets[0]?.id ?? '');
+  const [dataset, setDataset] = useState(
+    initialDataset ?? catalog.datasets[0]?.id ?? '',
+  );
   const [jobId, setJobId] = useState<string>();
   const [detail, setDetail] = useState<Job>();
   const [busy, setBusy] = useState(false);

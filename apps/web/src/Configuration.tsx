@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   FEATURE_IDS,
+  INTERVAL_MS,
   NETWORK_PRESETS,
   TIMEFRAMES,
   canonicalJson,
@@ -43,6 +44,27 @@ export function Configuration({
   const [error, setError] = useState<Error>();
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
+  const [symbols, setSymbols] = useState<string[]>([]);
+  const [symbolsError, setSymbolsError] = useState(false);
+  const [symbolsLoading, setSymbolsLoading] = useState(true);
+  const [symbolSearch, setSymbolSearch] = useState('');
+  const [symbolsAttempt, setSymbolsAttempt] = useState(0);
+  useEffect(() => {
+    const ctrl = new AbortController();
+    setSymbolsLoading(true);
+    setSymbolsError(false);
+    api<{ items: string[] }>('/market-data/symbols', { signal: ctrl.signal })
+      .then((result) => {
+        if (!ctrl.signal.aborted) setSymbols(result.items);
+      })
+      .catch(() => {
+        if (!ctrl.signal.aborted) setSymbolsError(true);
+      })
+      .finally(() => {
+        if (!ctrl.signal.aborted) setSymbolsLoading(false);
+      });
+    return () => ctrl.abort();
+  }, [symbolsAttempt]);
   useEffect(() => {
     const ctrl = new AbortController();
     Promise.all([
@@ -146,15 +168,79 @@ export function Configuration({
           <div className="form-grid">
             {tab === 'Market' && (
               <>
-                {field('market', 'symbol', 'Symbol')}
+                <label>
+                  Search symbols
+                  <input
+                    type="search"
+                    value={symbolSearch}
+                    onChange={(e) => setSymbolSearch(e.target.value)}
+                    placeholder="Search Bybit symbols"
+                  />
+                </label>
+                <label>
+                  Symbol
+                  <select
+                    aria-label="Symbol"
+                    value={config.market.symbol}
+                    disabled={symbolsLoading || symbolsError}
+                    onChange={(e) =>
+                      edit((v) => {
+                        v.market.symbol = e.target.value;
+                      })
+                    }
+                  >
+                    <option value={config.market.symbol}>
+                      {config.market.symbol}
+                      {!symbols.includes(config.market.symbol) &&
+                      !symbolsLoading &&
+                      !symbolsError
+                        ? ' (not currently listed)'
+                        : ''}
+                    </option>
+                    {symbols
+                      .filter(
+                        (symbol) =>
+                          symbol !== config.market.symbol &&
+                          symbol.includes(symbolSearch.trim().toUpperCase()),
+                      )
+                      .map((symbol) => (
+                        <option key={symbol}>{symbol}</option>
+                      ))}
+                  </select>
+                  <small>
+                    {symbolsLoading
+                      ? 'Loading Bybit symbols…'
+                      : 'Active Bybit USDT perpetual contracts.'}
+                  </small>
+                </label>
+                {symbolsError && (
+                  <div className="notice full-width" role="alert">
+                    Could not load symbols from Bybit. Your current symbol is
+                    preserved.
+                    <button onClick={() => setSymbolsAttempt((n) => n + 1)}>
+                      Retry symbols
+                    </button>
+                  </div>
+                )}
                 <label>
                   Timeframe
                   <select
+                    aria-label="Timeframe"
                     value={config.market.timeframe}
                     onChange={(e) =>
                       edit((v) => {
                         v.market.timeframe = e.target
                           .value as typeof v.market.timeframe;
+                        v.market.secondary_timeframes =
+                          v.market.secondary_timeframes.filter(
+                            (tf) =>
+                              INTERVAL_MS[tf] > INTERVAL_MS[v.market.timeframe],
+                          );
+                        v.features.enabled = v.features.enabled.filter(
+                          (f) =>
+                            f.timeframe === v.market.timeframe ||
+                            v.market.secondary_timeframes.includes(f.timeframe),
+                        );
                       })
                     }
                   >
@@ -163,36 +249,73 @@ export function Configuration({
                     ))}
                   </select>
                 </label>
-                <label>
-                  Secondary timeframes
-                  <input
-                    value={config.market.secondary_timeframes.join(',')}
-                    onChange={(e) =>
-                      edit((v) => {
-                        v.market.secondary_timeframes = e.target.value
-                          .split(',')
-                          .map((x) => x.trim())
-                          .filter(
-                            Boolean,
-                          ) as typeof v.market.secondary_timeframes;
-                      })
-                    }
-                  />
+                <fieldset className="full-width">
+                  <legend>Secondary timeframes</legend>
+                  <div className="checkbox-grid">
+                    {TIMEFRAMES.filter(
+                      (tf) =>
+                        INTERVAL_MS[tf] > INTERVAL_MS[config.market.timeframe],
+                    ).map((tf) => (
+                      <label className="check" key={tf}>
+                        <input
+                          type="checkbox"
+                          checked={config.market.secondary_timeframes.includes(
+                            tf,
+                          )}
+                          onChange={(e) =>
+                            edit((v) => {
+                              v.market.secondary_timeframes = TIMEFRAMES.filter(
+                                (item) =>
+                                  item === tf
+                                    ? e.target.checked
+                                    : v.market.secondary_timeframes.includes(
+                                        item,
+                                      ),
+                              );
+                              v.features.enabled = v.features.enabled.filter(
+                                (f) =>
+                                  f.timeframe === v.market.timeframe ||
+                                  v.market.secondary_timeframes.includes(
+                                    f.timeframe,
+                                  ),
+                              );
+                            })
+                          }
+                        />
+                        {tf}
+                      </label>
+                    ))}
+                  </div>
                   <small>
-                    Comma-separated; streams must exist in the dataset.
+                    Select higher timeframes; streams must exist in the dataset.
                   </small>
-                </label>
-                {field(
-                  'market',
-                  'historical_start_ms',
-                  'Historical start (UTC ms)',
-                  'number',
-                )}
-                {field(
-                  'market',
-                  'historical_end_ms',
-                  'Historical end (UTC ms)',
-                  'number',
+                </fieldset>
+                {(['historical_start_ms', 'historical_end_ms'] as const).map(
+                  (key) => (
+                    <label key={key}>
+                      {key === 'historical_start_ms'
+                        ? 'Historical start (UTC)'
+                        : 'Historical end (UTC)'}
+                      <input
+                        type="datetime-local"
+                        step={60}
+                        required
+                        value={new Date(config.market[key])
+                          .toISOString()
+                          .slice(0, 16)}
+                        onChange={(e) => {
+                          const timestamp = Date.parse(e.target.value + 'Z');
+                          if (Number.isFinite(timestamp))
+                            edit((v) => {
+                              v.market[key] = timestamp;
+                            });
+                        }}
+                      />
+                      <small>
+                        UTC time. Must align with the main timeframe.
+                      </small>
+                    </label>
+                  ),
                 )}
                 <div className="notice">
                   Mode: backtest · linear USDT perpetual. Execution remains
@@ -614,6 +737,7 @@ export function Configuration({
             {datasets.length === 1 ? '' : 's'} available. Match symbol,
             timeframe and coverage before training.
           </p>
+          <a href="#market">Download historical prices</a>
         </aside>
       </div>
     </>

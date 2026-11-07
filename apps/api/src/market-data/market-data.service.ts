@@ -60,6 +60,8 @@ export function marketPublicValue(value: unknown): unknown {
 
 @Injectable()
 export class MarketDataService {
+  private readonly background = new Map<string, Promise<void>>();
+  private readonly starting = new Set<string>();
   constructor(
     @Inject(DatabaseService) private readonly database: DatabaseService,
     @Inject(ResearchConfigurationsService)
@@ -159,6 +161,87 @@ export class MarketDataService {
       lease_expires: run.leaseExpires,
       blocked_until: run.blockedUntil,
       last_error: run.lastError,
+    };
+  }
+
+  async downloads(limit: number, offset: number, exportRoot: string) {
+    const rows = await this.database.client.marketDataDownload.findMany({
+      take: limit,
+      skip: offset,
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      include: { dataset: true },
+    });
+    const items = await Promise.all(
+      rows.map(async (run) => {
+        const request = descriptorSchema.parse(run.dataset.request);
+        const exported =
+          run.dataset.status === 'READY' &&
+          (await fs
+            .access(path.join(exportRoot, run.datasetId, 'manifest.json'))
+            .then(
+              () => true,
+              () => false,
+            ));
+        return {
+          id: run.id,
+          dataset_id: run.datasetId,
+          snapshot_id: run.dataset.snapshotId,
+          status: run.status,
+          dataset_status: run.dataset.status,
+          exported,
+          preparing: this.background.has(run.id),
+          symbol: request.symbol,
+          start_ms: request.start_ms,
+          end_ms: request.end_ms,
+          streams: request.streams.map((s) => s.id),
+          checkpoint: run.checkpoint,
+          blocked_until: run.blockedUntil,
+          lease_expires: run.leaseExpires,
+          last_error: run.lastError,
+        };
+      }),
+    );
+    return { items, limit, offset };
+  }
+
+  async start(id: string, exportRoot: string) {
+    if (this.background.has(id) || this.starting.has(id))
+      throw new ConflictException({ code: 'market_worker_busy' });
+    this.starting.add(id);
+    let acquired: Awaited<ReturnType<MarketDataService['acquire']>>;
+    try {
+      acquired = await this.acquire(id);
+    } finally {
+      this.starting.delete(id);
+    }
+    const task = this.runAcquired(id, acquired, 1000, 1800)
+      .then(async () => {
+        const dataset = await this.getDataset(acquired.run.datasetId);
+        if (dataset.status === 'READY') {
+          await this.exportDataset(dataset.id, exportRoot);
+          await this.database.client.marketDataDownload.updateMany({
+            where: { id, status: 'COMPLETED' },
+            data: { lastError: null },
+          });
+        }
+      })
+      .catch(async () => {
+        // Ingestion records its own error; export failures need a retryable status too.
+        await this.database.client.marketDataDownload
+          .updateMany({
+            where: { id, status: 'COMPLETED' },
+            data: { lastError: 'download_export_failed' },
+          })
+          .catch(() => {});
+      })
+      .finally(() => {
+        this.background.delete(id);
+      });
+    this.background.set(id, task);
+    return {
+      id,
+      dataset_id: acquired.run.datasetId,
+      status: acquired.run.status,
     };
   }
 
@@ -318,6 +401,15 @@ export class MarketDataService {
     )
       throw new BadRequestException({ code: 'invalid_download_budget' });
     const { run, token } = await this.acquire(id);
+    return this.runAcquired(id, { run, token }, maxPages, maxSeconds);
+  }
+
+  private async runAcquired(
+    id: string,
+    { run, token }: Awaited<ReturnType<MarketDataService['acquire']>>,
+    maxPages: number,
+    maxSeconds: number,
+  ) {
     if (token === null) return this.download(id);
     const descriptor = descriptorSchema.parse(run.dataset.request);
     let cp = checkpointSchema.parse(run.checkpoint);

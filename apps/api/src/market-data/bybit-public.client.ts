@@ -45,6 +45,8 @@ export class BybitPublicClient {
   private readonly options: Required<BybitClientOptions>;
   private lastStart = -Infinity;
   private queue = Promise.resolve();
+  private symbolsCache?: { items: string[]; expires: number };
+  private symbolsRequest?: Promise<string[]>;
 
   constructor(
     @Optional() @Inject(BYBIT_CLIENT_OPTIONS) options?: BybitClientOptions,
@@ -224,6 +226,73 @@ export class BybitPublicClient {
     )
       throw new BybitDataError('invalid_server_time');
     return n;
+  }
+
+  async symbols(): Promise<string[]> {
+    if (this.symbolsCache && this.symbolsCache.expires > this.options.now())
+      return [...this.symbolsCache.items];
+    this.symbolsRequest ??= this.loadSymbols();
+    try {
+      return [...(await this.symbolsRequest)];
+    } finally {
+      this.symbolsRequest = undefined;
+    }
+  }
+
+  private async loadSymbols(): Promise<string[]> {
+    const symbols = new Set<string>();
+    const seen = new Set<string>();
+    let cursor = '';
+    for (let page = 0; page < 100; page++) {
+      const data = z
+        .object({
+          category: z.literal('linear'),
+          list: z
+            .array(
+              z.object({
+                symbol: z.string().min(1).max(100),
+                contractType: z.string(),
+                status: z.string(),
+                quoteCoin: z.string(),
+                settleCoin: z.string(),
+              }),
+            )
+            .max(1000),
+          nextPageCursor: z.string().optional(),
+        })
+        .safeParse(
+          await this.get('/v5/market/instruments-info', {
+            category: 'linear',
+            status: 'Trading',
+            limit: '1000',
+            ...(cursor ? { cursor } : {}),
+          }),
+        );
+      if (!data.success)
+        throw new BybitDataError('invalid_instrument_response');
+      for (const item of data.data.list) {
+        if (
+          item.contractType === 'LinearPerpetual' &&
+          item.status === 'Trading' &&
+          item.quoteCoin === 'USDT' &&
+          item.settleCoin === 'USDT' &&
+          /^[A-Z0-9]+USDT$/.test(item.symbol)
+        )
+          symbols.add(item.symbol);
+      }
+      const next = data.data.nextPageCursor ?? '';
+      if (!next) {
+        const items = [...symbols].sort();
+        if (!items.length) throw new BybitDataError('instrument_not_found');
+        this.symbolsCache = { items, expires: this.options.now() + 300000 };
+        return items;
+      }
+      if (seen.has(next))
+        throw new BybitDataError('non_progressing_instrument_cursor');
+      seen.add(next);
+      cursor = next;
+    }
+    throw new BybitDataError('instrument_page_budget_exceeded');
   }
 
   async instrument(symbol: string): Promise<InstrumentObservation> {

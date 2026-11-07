@@ -29,6 +29,34 @@ tidak diklaim berlaku pada seluruh periode historical.
 
 ## Membuat dan menjalankan download
 
+### Melalui dashboard
+
+1. Atur symbol, main/secondary timeframes, dan tanggal UTC di **Configuration → Market**.
+2. Klik **Validate configuration** dan **Save draft**.
+3. Buka **Market data**, pilih konfigurasi tersimpan, lalu klik **Download historical data**.
+4. Pantau status, jumlah halaman, dan stream yang selesai. Pindah halaman atau
+   reload browser tidak menghentikan worker backend. Backend harus tetap berjalan.
+5. Bila status PAUSED, klik **Resume download**. Saat cooldown Bybit masih aktif,
+   tombol menunggu sampai batas waktunya. Setelah restart backend, lease worker
+   lama dapat perlu hingga 120 detik untuk kedaluwarsa sebelum bisa dilanjutkan.
+6. Hasil READY diekspor otomatis ke `artifacts/datasets/<dataset-id>/`, atau
+   direktori yang sama di bawah `DASHBOARD_ROOT` bila diatur. Klik **Open Training**
+   untuk memakai dataset dan snapshot asal. Hasil QUALITY_FAILED tidak ditawarkan
+   untuk training. Jika ekspor gagal, klik **Retry dataset preparation**.
+
+Snapshot dibuat otomatis dari revision draft yang dipilih. Perubahan konfigurasi
+harus disimpan sebelum mulai download. Range maksimum 366 hari/2 juta candle;
+worker dashboard memakai budget 1000 halaman/1800 detik per invocation. Bila
+budget habis, lanjutkan ID yang sama melalui tombol Resume.
+
+`GET /market-data/downloads` menyediakan riwayat/progres dengan pagination.
+`POST /market-data/downloads/:id/start` dengan body `{}` mengakuisisi lease lalu
+mengembalikan HTTP 202; download dan ekspor berjalan di background. Endpoint create
+dan start menolak mutation lintas origin. Lease token dan path ekspor tidak diterima
+dari browser. Tidak ada API key atau order yang diperlukan.
+
+### Melalui API dan CLI
+
 Buat config dan snapshot melalui workflow M2, lalu POST /market-data/downloads:
 
 ```json

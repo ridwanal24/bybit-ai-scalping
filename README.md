@@ -175,7 +175,15 @@ Command ini memakai internet untuk membuat konfigurasi/snapshot, mengunduh
 BTCUSDT **1 Januari 2025 UTC selama 24 jam**, lalu mengekspor dataset untuk worker.
 Tidak memerlukan API key Bybit dan tidak mengirim order. Akses endpoint publik
 Bybit tetap bergantung pada koneksi/region. Refresh browser setelah dataset tersedia.
-Untuk range/dataset sendiri, ikuti [panduan market data](docs/market-data.md).
+Untuk range/dataset sendiri, atur **Configuration → Market**, lalu klik
+**Save draft**. Buka **Market data**, pilih konfigurasi tersimpan, dan klik
+**Download historical data**. Dashboard membekukan snapshot, menjalankan download
+di backend, dan mengekspor hasil yang lolos quality check secara otomatis.
+Progres tetap tersimpan setelah pindah halaman atau refresh. Jika terjeda,
+klik **Resume download**; tunggu cooldown bila Bybit membatasi akses.
+Setelah status **Ready for training**, klik **Open Training** untuk membawa
+dataset dan snapshot yang sesuai ke form training.
+Alur CLI tetap tersedia di [panduan market data](docs/market-data.md).
 
 Untuk mencoba training lewat browser:
 

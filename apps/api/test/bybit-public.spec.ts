@@ -7,6 +7,89 @@ import {
 const response = (result: unknown, retCode = 0) =>
   new Response(JSON.stringify({ retCode, result }));
 describe('public Bybit transport', () => {
+  it('lists all active USDT perpetual symbols across pages and caches the catalog', async () => {
+    let calls = 0;
+    let now = 1000;
+    const item = {
+      symbol: 'BTCUSDT',
+      contractType: 'LinearPerpetual',
+      status: 'Trading',
+      quoteCoin: 'USDT',
+      settleCoin: 'USDT',
+    };
+    const client = new BybitPublicClient({
+      minIntervalMs: 0,
+      now: () => now,
+      fetcher: async (url) => {
+        calls++;
+        const params = new URL(url).searchParams;
+        expect(params.get('category')).toBe('linear');
+        expect(params.get('status')).toBe('Trading');
+        expect(params.has('symbol')).toBe(false);
+        return response({
+          category: 'linear',
+          list: params.has('cursor')
+            ? [{ ...item, symbol: 'ETHUSDT' }, item]
+            : [
+                item,
+                {
+                  ...item,
+                  symbol: 'BTCUSDC',
+                  quoteCoin: 'USDC',
+                  settleCoin: 'USDC',
+                },
+                { ...item, symbol: 'OLDUSDT', status: 'Closed' },
+                {
+                  ...item,
+                  symbol: 'FUTUREUSDT',
+                  contractType: 'LinearFutures',
+                },
+              ],
+          nextPageCursor: params.has('cursor') ? '' : 'page2',
+        });
+      },
+    });
+    const results = await Promise.all([client.symbols(), client.symbols()]);
+    expect(results).toEqual([
+      ['BTCUSDT', 'ETHUSDT'],
+      ['BTCUSDT', 'ETHUSDT'],
+    ]);
+    results[0]!.push('MUTATED');
+    expect(await client.symbols()).toEqual(['BTCUSDT', 'ETHUSDT']);
+    expect(calls).toBe(2);
+    now += 300001;
+    await client.symbols();
+    expect(calls).toBe(4);
+  });
+
+  it('rejects broken symbol pagination and allows retry after a failed catalog request', async () => {
+    let broken = true;
+    const client = new BybitPublicClient({
+      minIntervalMs: 0,
+      fetcher: async () =>
+        response({
+          category: 'linear',
+          list: broken
+            ? []
+            : [
+                {
+                  symbol: 'BTCUSDT',
+                  contractType: 'LinearPerpetual',
+                  status: 'Trading',
+                  quoteCoin: 'USDT',
+                  settleCoin: 'USDT',
+                },
+              ],
+          nextPageCursor: broken ? 'same' : '',
+        }),
+    });
+    await expect(client.symbols()).rejects.toMatchObject({
+      code: 'non_progressing_instrument_cursor',
+    });
+    broken = false;
+    expect(await client.symbols()).toEqual(['BTCUSDT']);
+  });
+
   it('uses fixed public GET endpoint without credentials and rejects redirects', async () => {
     const client = new BybitPublicClient({
       minIntervalMs: 0,

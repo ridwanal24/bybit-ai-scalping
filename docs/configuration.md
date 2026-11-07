@@ -6,6 +6,18 @@ immutable. M3 memakai snapshot tersebut untuk dataset request yang terpisah;
 range subset/references download tidak memodifikasi config atau snapshot asal.
 Environment server dan konfigurasi penelitian tetap terpisah.
 
+Pada dashboard **Configuration → Market**, symbol dipilih dari katalog Bybit
+USDT linear perpetual berstatus Trading. Pencarian menyaring pilihan; katalog
+diambil lewat API server `GET /market-data/symbols`, mencakup seluruh halaman
+Bybit, dan disimpan dalam cache selama lima menit. Jika Bybit tidak tersedia,
+symbol yang sudah tersimpan dipertahankan dan tombol retry tersedia.
+
+Secondary timeframes dipilih dengan checkbox, tanpa pemisah koma/titik koma.
+Pilihan harus lebih tinggi dari timeframe utama. Melepas timeframe juga menghapus
+fitur yang memakai timeframe tersebut. Historical start/end memakai pemilih
+tanggal dan jam **UTC**, lalu disimpan sebagai epoch milliseconds. Batas waktu
+tetap harus selaras dengan candle timeframe utama dan end harus setelah start.
+
 Root `.env` lokal dibuat `npm run setup` hanya jika file belum ada. Password DB
 generated acak; tidak dicetak atau di-commit. `.env.example` hanya template.
 Environment proses yang diberikan eksplisit mengalahkan `.env`. API dijalankan

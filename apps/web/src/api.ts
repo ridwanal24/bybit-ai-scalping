@@ -79,6 +79,16 @@ export type Proposal = {
   execution_ready: false;
 };
 const messages: Record<string, string> = {
+  market_worker_busy:
+    'Another download is active. Wait for it to finish or pause before starting another.',
+  download_cooldown:
+    'Bybit is temporarily limiting requests. Resume after the cooldown shown in the download history.',
+  download_range_outside_snapshot_or_budget:
+    'Choose a historical range of at most 366 days within the saved configuration.',
+  download_record_budget_exceeded:
+    'This range and its timeframes exceed the download limit. Shorten the range or select fewer timeframes.',
+  stale_revision:
+    'This configuration changed. Refresh configurations and select the saved revision again.',
   invalid_or_unavailable_research_artifact:
     'The artifact or research settings could not be verified. Check the dataset, snapshot and limits.',
   training_worker_busy:

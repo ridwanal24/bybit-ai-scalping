@@ -10,12 +10,35 @@ import {
   ParseUUIDPipe,
   Post,
   Query,
+  Req,
+  HttpCode,
+  ForbiddenException,
   UseFilters,
   type ArgumentsHost,
   type ExceptionFilter,
 } from '@nestjs/common';
 import { z } from 'zod';
 import { MarketDataService, marketPublicValue } from './market-data.service.js';
+import { BybitPublicClient } from './bybit-public.client.js';
+import { ConfigService } from '@nestjs/config';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+type LocalRequest = { headers: Record<string, string | string[] | undefined> };
+function mutationGuard(request: LocalRequest) {
+  if (request.headers.origin === undefined) return;
+  try {
+    const origin = new URL(String(request.headers.origin));
+    if (
+      origin.host === request.headers.host &&
+      ['http:', 'https:'].includes(origin.protocol)
+    )
+      return;
+  } catch {
+    /* reject malformed origins */
+  }
+  throw new ForbiddenException({ code: 'cross_origin_mutation_forbidden' });
+}
 
 @Catch()
 class MarketDataFilter implements ExceptionFilter {
@@ -68,13 +91,52 @@ function pagination(input: unknown, rows = false) {
 @Controller('market-data')
 @UseFilters(MarketDataFilter)
 export class MarketDataController {
+  private readonly exportRoot: string;
   constructor(
     @Inject(MarketDataService) private readonly service: MarketDataService,
-  ) {}
+    @Inject(BybitPublicClient) private readonly client: BybitPublicClient,
+    @Inject(ConfigService) config: ConfigService,
+  ) {
+    this.exportRoot = path.join(
+      path.resolve(
+        config.get<string>('DASHBOARD_ROOT') ??
+          fileURLToPath(new URL('../../../../', import.meta.url)),
+      ),
+      'artifacts',
+      'datasets',
+    );
+  }
+
+  @Get('symbols')
+  async symbols() {
+    return { items: await this.client.symbols() };
+  }
 
   @Post('downloads')
-  create(@Body() body: unknown) {
+  create(@Body() body: unknown, @Req() req: LocalRequest) {
+    mutationGuard(req);
     return this.service.create(body);
+  }
+
+  @Get('downloads')
+  async downloads(@Query() query: unknown) {
+    const p = pagination(query);
+    return marketPublicValue(
+      await this.service.downloads(p.limit, p.offset, this.exportRoot),
+    );
+  }
+
+  @Post('downloads/:id/start')
+  @HttpCode(202)
+  async start(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: LocalRequest,
+  ) {
+    mutationGuard(req);
+    if (!z.strictObject({}).safeParse(body).success)
+      throw new BadRequestException({ code: 'invalid_download_request' });
+    return marketPublicValue(await this.service.start(id, this.exportRoot));
   }
 
   @Get('downloads/:id')

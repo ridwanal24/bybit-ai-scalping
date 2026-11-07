@@ -25,9 +25,13 @@ def main() -> None:
     build.add_argument("--context", required=True)
     simulation = commands.add_parser("simulation-run")
     simulation.add_argument("--request", required=True)
+    baseline = commands.add_parser("baseline-run")
+    baseline.add_argument("--request", required=True)
     args = parser.parse_args()
     if args.command != "health":
-        if args.command == "simulation-run":
+        if args.command == "baseline-run":
+            from bybit_quant.baselines.cli import execute
+        elif args.command == "simulation-run":
             from bybit_quant.simulation.cli import execute
         else:
             from bybit_quant.feature_cli import execute

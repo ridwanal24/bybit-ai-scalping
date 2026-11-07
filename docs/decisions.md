@@ -260,7 +260,30 @@ planning bukan izin eksekusi live. **Deferred** memiliki deadline dalam
 - Consequence: no production readiness/profit claim, unsupported configs ditolak,
   full-year throughput/backup/registry/resume/jobs masih milestone terkait.
 
-## Keputusan yang belum ditutup
+## ADR-14 — Causal baselines, shared replay dan constrained reference M6
+
+- Status: implemented,7 November2026; [plan M6](plans/milestone-06.md) Approved
+  melalui `oke lanjutkan eksekusi Milestone 6`.
+- Semua policy memakai runner M5, M4 valid observations/current ledger context,
+  same costs/risk/sizing/next-open/funding. Random local seeded Python instance;
+  EMA berasal dari main-timeframe M4 fast/slow periods, bukan normalized values.
+- Alternative: simulator vectorized kedua atau reference exposure100% tanpa
+  stops. Dipilih shared execution agar accounting/constraints bisa dibandingkan.
+  Buy & Hold dilabeli constrained perpetual single-attempt long reference;
+  bukan spot benchmark. Protection/forced exit tetap aktif, no reentry.
+- Evaluator streaming merekam script, replay melalui publisher/verifier M5,
+  menuntut report identik lalu mengikat strategy/seed/script/linked simulation
+  di immutable comparison. Verifier mengecek common provenance dan recompute
+  metrics, tidak hanya trusting outer hash. Tidak ada dependency/migration.
+- Metrics memakai exact net accounting dan sampled equity/open exposure. Undefined
+  memakai null+reason; invalid run tidak diberi performance metrics. Separate
+  slippage attribution/Sharpe belum tersedia, alasannya eksplisit. Tidak ada
+  ranking/promotion gate atau klaim OOS/live readiness.
+- Consequence: dua simulator passes plus verification meningkatkan biaya CPU/I/O.
+  Memory streaming bounded; full-year throughput belum dibuktikan. Standalone
+  archive harus membawa linked simulation artifacts. M7 tidak otomatis dimulai.
+
+## Keputusan yang masih terbuka setelah M6
 
 M5 menutup pilihan R05 untuk restricted research saja: lihat ADR-13;
 full exchange liquidation realism tetap di luar kemampuan simulator ini.

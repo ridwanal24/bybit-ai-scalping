@@ -1,16 +1,16 @@
 # Progress proyek
 
-Terakhir diperbarui: 6 November 2026, Asia/Jakarta.
+Terakhir diperbarui: 7 November 2026, Asia/Jakarta.
 
 | Aspek | Kondisi aktual |
 | --- | --- |
-| Current phase | Phase 2 — Simulation MVP |
-| Current milestone | M5 — Trading Simulator |
-| Milestone approval | Approved melalui `kerjakan` setelah implementation plan M5 disajikan |
-| Implementation status | Seluruh task5.1–5.27 selesai dan diverifikasi |
-| Milestone status | Completed; M0–M4 tetap Completed |
-| Next milestone | M6 — Baseline & Simulation MVP; belum Approved |
-| Aplikasi/database/model | Market/config API, Python features dan restricted simulator; model belum dibuat |
+| Current phase | Phase 2 — Simulation MVP Completed |
+| Current milestone | M6 — Baseline & Simulation MVP |
+| Milestone approval | Approved melalui `oke lanjutkan eksekusi Milestone 6` |
+| Implementation status | Seluruh task6.1–6.8 selesai dan diverifikasi |
+| Milestone status | Completed; M0–M5 tetap Completed |
+| Next milestone | M7 — RL Environment; belum Approved |
+| Aplikasi/database/model | Market/config API, Python features, simulator, baseline evaluator/comparison; model belum dibuat |
 | Trading | Tidak ada credentials Bybit, order atau aktivasi exchange |
 
 ## Approval dan scope
@@ -37,6 +37,13 @@ bar execution, exit/risk/funding dan explicit restricted liquidation envelope.
 Implementasi M5 berada dalam scope plan; tidak memberi approval M6/training/orders.
 
 ## Selesai
+
+M6 Approved melalui `oke lanjutkan eksekusi Milestone 6`,7 November2026;
+[plan M6](plans/milestone-06.md) membatasi task6.1–6.8. HOLD, seeded random,
+main-EMA crossover dan constrained perpetual Buy & Hold reference memakai
+simulator M5 dengan risk/costs yang sama. Evaluator merekam/replay scripts,
+merekonsiliasi net metrics, dan menerbitkan immutable comparison dengan verifier.
+Tidak ada dependency/migration/download/refit atau scope RL/orders baru.
 
 M0: requirement/MVP/architecture, risiko, roadmap, keputusan dan dokumentasi dasar.
 M1: Node/uv/PostgreSQL portable, Python isolated, NestJS/Prisma, migration metadata,
@@ -71,6 +78,17 @@ Shared accounting/risk vectors, CLI/runner dan capability/envelope gates tersedi
 Tidak ada schema DB/dependency baru, baseline, RL atau exchange order.
 
 ## Test summary
+
+M6 final `verify:baselines` exit0,7 November2026 08:10:19–08:13:56 WIB:
+97 contracts +33 backend +258 Python +31 integration =**419 tests tanpa skip**.
+Build/typecheck/lint/format/export drift, isolated PostgreSQL/HTTP, fresh/reapply/
+upgrade/data preservation/schema diff dan seluruh regression M1–M5 lulus.
+Sandbox SWC cache SID mismatch diselesaikan lewat existing owner context,
+tanpa mengubah dependency, ACL atau production timeouts. Public-export smoke
+91.921s replay/reload: HOLD0 trade/net0; random seed42 13/net−21.376356;
+EMA9/net−11.7493405; Buy & Hold0/net0 (single attempt rejected stop distance).
+Tidak ada tuning atas losses/zero trades. [Testing](testing.md),
+[handoff M6](handoffs/milestone-06.md), [guide](baselines.md).
 
 M5 final `verify:simulation` exit0,6 November2026 20:53:03–20:55:05 WIB:
 84 contracts +33 backend +236 Python +31 integration =384 tests tanpa skip.
@@ -113,7 +131,7 @@ Evidence dan command tambahan: [testing](testing.md).
 
 ## Remaining tasks dan known issues
 
-Tidak ada task wajib M5 tersisa. M6 memerlukan plan/approval baru; training
+Tidak ada task wajib M6 tersisa. M7 memerlukan plan/approval baru; training
 belum dimulai. Python semantic cross-field parity tersedia dan actual observation
 shape/artifact divalidasi. Actual model/tensor library tetap scope M7/M8.
 Configuration valid tidak membuktikan exchange support atau trading readiness.
@@ -142,5 +160,5 @@ tetap M8/M11. Pure Python throughput full-year/live latency belum dibenchmark.
 Source hash membuktikan integritas, bukan signature. Caller context/risk budget
 divalidasi dan restricted historical risk enforcement M5 tersedia; live risk belum.
 
-Handoff terbaru: [milestone-05.md](handoffs/milestone-05.md).
+Handoff terbaru: [milestone-06.md](handoffs/milestone-06.md).
 **Waiting for Next Milestone Instruction.**

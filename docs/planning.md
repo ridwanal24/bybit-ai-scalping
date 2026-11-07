@@ -7,6 +7,14 @@ Sumber utama: [PROJECT_SPEC.md](../PROJECT_SPEC.md).
 
 ## Requirement dan batas hasil
 
+Checkpoint M6 diimplementasikan7 November2026 melalui instruksi
+`oke lanjutkan eksekusi Milestone 6`; [plan M6](plans/milestone-06.md) dan
+[baseline guide](baselines.md) menetapkan four-policy shared simulator,
+constrained perpetual Buy & Hold reference, exact net metrics/undefined reasons
+dan immutable replay/comparison. Ini bounded existing public-export verification,
+bukan full-year/OOS efficacy, RL atau exchange execution. Tidak mengubah defaults
+risk, original config/snapshot, normalizer atau restrictions M5.
+
 | Requirement / bagian spesifikasi | Hasil dan batas | Milestone |
 | --- | --- | --- |
 | 1–5, 38, 41–45: workflow, maintenance | Satu milestone per approval, progress, ADR, handoff, bukti test | Semua |

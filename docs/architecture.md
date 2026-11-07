@@ -1,7 +1,7 @@
 # Arsitektur sistem
 
-Tanggal: 6 November 2026, Asia/Jakarta. Status: rancangan M0 diterima melalui
-`oke ku approve`; foundation M1, configuration M2, market data M3, features M4 dan simulator M5 kini
+Tanggal: 7 November 2026, Asia/Jakarta. Status: rancangan M0 diterima melalui
+`oke ku approve`; foundation M1, configuration M2, market data M3, features M4, simulator M5 dan baseline M6 kini
 diimplementasikan; komponen berikutnya tetap rancangan. Dasar: [spesifikasi](../PROJECT_SPEC.md) bagian 7–8,
 24–33, 36, dan [keputusan](decisions.md).
 
@@ -38,7 +38,16 @@ request/envelope breach tidak menjadi success atau invented liquidation. Journal
 trade/equity/report disimpan streaming pada content-addressed local artifact;
 reload merekonsiliasi wallet/events/trades/equity. Code/schema/fixture/lock hashes
 dan runtime version disimpan, tanpa migration/backend simulator kedua. CLI dan
-batas validitas: [simulation](simulation.md). Baseline/RL tetap M6/M7/M8.
+batas validitas: [simulation](simulation.md). RL tetap M7/M8.
+
+M6 `baselines` menambahkan policy HOLD/random/EMA/Buy & Hold dan evaluator pada
+runner yang sama. Runner memberi policy closed M4 main indicators (termasuk
+prehistory) dan current ledger context; action hanya pada observation valid.
+Streaming action scripts direplay melalui artifact pipeline M5; report dua pass
+wajib sama. Comparison content-addressed mengikat strategy/seed, script SHA dan
+simulation IDs, lalu verifier memeriksa common provenance dan recompute metrics.
+Tidak ada simulator/migration/dependency baru atau backend execution. Detail
+constrained reference dan sampled metrics: [baselines](baselines.md).
 
 M4 Python memakai verified streaming dataset loader, semantic configuration
 validator yang conformant dengan TypeScript, seeded/rolling indicator state,
@@ -231,8 +240,8 @@ docs/
 M0 hanya membuat dokumentasi. M1 telah membuat `apps/api`, `services/quant`,
 `scripts` dan local runtime yang ignored; M2 menambahkan `packages/contracts` dan
 research configuration API. M3 menambahkan market-data modules/CLI, revisions,
-download/dataset persistence dan ignored exports. `apps/web`, features/simulator
-dan trading tetap rencana.
+download/dataset persistence dan ignored exports. M4–M6 menambahkan features,
+simulator dan baselines Python. `apps/web`, RL dan trading tetap rencana.
 Runtime secret, model dan log
 dikecualikan dari Git.
 

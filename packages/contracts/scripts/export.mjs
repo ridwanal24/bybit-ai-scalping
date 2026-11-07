@@ -31,6 +31,10 @@ import {
   simulationEquitySchema,
   simulationReportSchema,
   simulationManifestSchema,
+  baselineStrategySchema,
+  baselineRequestSchema,
+  baselineMetricsSchema,
+  baselineComparisonSchema,
   SIMULATION_ACCOUNTING_VECTORS,
   SIMULATION_RISK_VECTORS,
 } from '../dist/index.js';
@@ -191,6 +195,18 @@ const outputs = {
     simulationManifestSchema,
   ),
   'fixtures/simulation-accounting.json': SIMULATION_ACCOUNTING_VECTORS,
+  'schemas/baseline-strategy-v1.schema.json': z.toJSONSchema(
+    baselineStrategySchema,
+  ),
+  'schemas/baseline-request-v1.schema.json': z.toJSONSchema(
+    baselineRequestSchema,
+  ),
+  'schemas/baseline-metrics-v1.schema.json': z.toJSONSchema(
+    baselineMetricsSchema,
+  ),
+  'schemas/baseline-comparison-v1.schema.json': z.toJSONSchema(
+    baselineComparisonSchema,
+  ),
   'fixtures/simulation-risk.json': SIMULATION_RISK_VECTORS,
   'schemas/feature-v1.schema.json': z.toJSONSchema(featureSchema),
   'schemas/observation-context-v1.schema.json': z.toJSONSchema(

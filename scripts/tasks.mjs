@@ -411,6 +411,7 @@ async function main() {
       return;
     case 'verify:configuration':
     case 'verify:simulation':
+    case 'verify:baselines':
     case 'verify:features':
     case 'verify:market-data':
     case 'verify': {
@@ -435,15 +436,17 @@ async function main() {
         fs.writeFileSync(
           path.join(
             runtime,
-            task === 'verify:simulation'
-              ? 'simulation-report.json'
-              : task === 'verify:features'
-                ? 'features-report.json'
-                : task === 'verify:market-data'
-                  ? 'market-data-report.json'
-                  : task === 'verify:configuration'
-                    ? 'configuration-report.json'
-                    : 'foundation-report.json',
+            task === 'verify:baselines'
+              ? 'baselines-report.json'
+              : task === 'verify:simulation'
+                ? 'simulation-report.json'
+                : task === 'verify:features'
+                  ? 'features-report.json'
+                  : task === 'verify:market-data'
+                    ? 'market-data-report.json'
+                    : task === 'verify:configuration'
+                      ? 'configuration-report.json'
+                      : 'foundation-report.json',
           ),
           JSON.stringify(report, null, 2) + '\n',
         );
@@ -468,6 +471,7 @@ async function main() {
     case 'features:fit':
     case 'features:build':
     case 'simulation:run':
+    case 'baseline:run':
       await buildContracts();
       await run(python, [
         '-m',

@@ -6,3 +6,4 @@ export * from './compatibility.js';
 export * from './market-data.js';
 export * from './features.js';
 export * from './simulation.js';
+export * from './baselines.js';

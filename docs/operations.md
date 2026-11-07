@@ -1,5 +1,18 @@
 # Operasi lokal
 
+## Baseline offline M6
+
+`npm run baseline:run -- --request FILE` membaca strict baseline request dan
+menerbitkan comparison beserta action scripts di `artifacts/baselines/<id>/`,
+dengan linked immutable ledgers di `artifacts/simulations/<id>/`. Tidak memakai
+DB/network/credentials. Exit0=restricted valid, exit2=contains invalid diagnostics,
+exit1=input/artifact incompatible; lihat [baselines](baselines.md).
+`npm run verify:baselines` menjalankan full static/unit/Python/isolated DB regression
+dan menulis `.runtime/baselines-report.json`. Explicit local public-export smoke:
+`services/quant/.venv/Scripts/python.exe services/quant/tests/smoke_baselines.py`.
+Tidak otomatis download/refit bila artifact asal tidak tersedia. Simpan linked
+simulation artifacts bersama comparison saat backup; hash bukan signature.
+
 Target implementasi: Windows x64/PowerShell, satu mesin CPU. Belum ada UI,
 training, order exchange atau deployment model.
 M2 menambahkan research configuration API; tidak membutuhkan server baru.

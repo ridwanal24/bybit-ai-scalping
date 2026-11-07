@@ -1,5 +1,55 @@
 # Testing dan verifikasi
 
+## Hasil M6 — Baseline & Simulation MVP
+
+Tanggal:7 November2026, Asia/Jakarta. Final `npm run verify:baselines` exit0
+PASSED; `.runtime/baselines-report.json` UTC01:10:19.060–01:13:56.627
+(WIB08:10:19–08:13:56). **419 tests lulus tanpa skip**:
+97 contracts,33 backend unit,258 Python,31 PostgreSQL/HTTP integration.
+Build/typecheck/ESLint/Ruff/Prettier/schema export drift dan migration
+fresh/reapply/upgrades/data preservation/zero schema diff lulus. Tidak ada test
+DB timeout pada final verification. Test cluster dihentikan oleh orchestrator.
+
+M6 menambah13 TypeScript dan22 Python cases: strict seed/strategy/request,
+HOLD/single-attempt Buy & Hold, seeded state-aware random, EMA cross/close-then-
+entry/Fixed RR/risk gate/gap, independent net metric example/breakeven/undefined,
+four-policy fixture trades/replay/reload, future mutation prefix, different seeds,
+duplicate rejection, mixed-policy provenance dan metric/script tamper detection,
+invalid SHORT shock diagnostics serta CLI exit0/1/2/replay/redaction.
+
+Initial sandbox attempt gagal saat native SWC memvalidasi pemilik cache (SID
+sandbox berbeda); final full verification berjalan dengan owner context seperti
+M1–M5. Tidak ada penggantian native dependency, pelemahan ACL atau timeout.
+Initial invalid fixture memakai LONG downside yang tidak menembus collateral
+1x/50%; corrected SHORT upside shock membuktikan diagnostic invalid branch.
+
+Explicit public-export smoke selesai08:09:52 WIB,91.921s, dua CLI runs dengan
+byte-identical output dan independent reload. Existing data/normalizer M3/M4,
+episode20h, preset/risk/costs asli, seed42 dibekukan sebelum outcomes. Semua
+hasil `completed_restricted`; tidak ada download, refit, tuning atau order.
+Root `npm run baseline:run -- --request .runtime/baselines-smoke/request.json`
+juga exit0 dengan comparison ID identik; log `.runtime/baselines-root-cli.log`.
+
+| Strategi | Trades | Net USDT | Fees USDT | Funding USDT |
+| --- | --- | --- | --- | --- |
+| HOLD | 0 | 0 | 0 | 0 |
+| Random seed42 | 13 | −21.376356 | 12.177356 | 0 |
+| EMA crossover | 9 | −11.7493405 | 8.4768405 | 0 |
+| Buy & Hold constrained reference | 0 | 0 | 0 | 0 |
+
+Reference single entry ditolak `stop_distance_outside_limits`; bukan filled
+Buy & Hold yang breakeven. Random348/EMA44 entry proposals ditolak dengan reason
+yang sama; hasil dan preset dipertahankan. Fixture membuktikan reference actual
+trade dan full pipeline; public zero-trade tidak ditutup-tutupi. Negative smoke
+tidak berarti technical failure atau readiness/profitability gate.
+
+Comparison `d4f107dc48082e2b315c64e06218317e73d6d51eba157d38279fec358ad08d15`;
+code fingerprint `291e4e3c70af1f382b54b9ed9a89aabe46d429875e89368539b28ca1d147a373`.
+Evidence ignored: `.runtime/verify-baselines-final.log`, `baselines-report.json`,
+`baselines-smoke.json`, `baselines-smoke.log`, `artifacts/baselines/<id>/` dan
+linked `artifacts/simulations/<id>/`. Detail scope/limitations:
+[guide](baselines.md), [handoff M6](handoffs/milestone-06.md).
+
 ## Hasil M5 — Trading Simulator
 
 Tanggal:6 November2026, Asia/Jakarta. Final

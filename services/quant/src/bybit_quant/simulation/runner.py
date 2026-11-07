@@ -27,7 +27,17 @@ def action_stream(records, start, end, interval):
 
 @exact
 def run_dataset(
-    dataset, c, normalizer, policy, start, end, *, actions=(), callback=None, sink=None
+    dataset,
+    c,
+    normalizer,
+    policy,
+    start,
+    end,
+    *,
+    actions=(),
+    callback=None,
+    sink=None,
+    strategy=None,
 ):
     if callback is not None and not callable(callback):
         raise ValueError("invalid_policy_callback")
@@ -47,7 +57,9 @@ def run_dataset(
     builder = ObservationBuilder(c, dataset.manifest, normalizer)
     scripts = iter(action_stream(actions, start, end, INTERVALS[main]))
     next_action = next(scripts, None)
-    if callback is not None and next_action is not None:
+    if (callback is not None and strategy is not None) or (
+        next_action is not None and (callback is not None or strategy is not None)
+    ):
         raise ValueError("callback_and_script_mutually_exclusive")
     try:
         for bar in dataset.candles(main):
@@ -67,7 +79,10 @@ def run_dataset(
                 if not sim.begin_bar(bar, rate) or not sim.end_bar(bar):
                     break
             # ATR is advanced only after executions for this bar; entry intent freezes it.
-            atr = atr_engine.push(bar)["values"].get("atr")
+            indicators = atr_engine.push(bar)
+            atr = indicators["values"].get("atr")
+            if strategy is not None:
+                strategy.observe(indicators)
             row = next(features)
             if row["decision_ms"] != closed:
                 raise ValueError("feature_market_timestamp_mismatch")
@@ -80,7 +95,10 @@ def run_dataset(
             else:
                 reason = observation["reason"]
                 sim.unavailable[reason] += 1
-            if callback is not None:
+            if strategy is not None:
+                if observation["valid"]:
+                    sim.submit(closed, strategy.decide(closed, context), atr, True)
+            elif callback is not None:
                 if observation["valid"]:
                     sim.submit(closed, callback(closed, observation), atr, True)
             else:

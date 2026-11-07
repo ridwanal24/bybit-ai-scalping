@@ -5,7 +5,7 @@ PostgreSQL, dan MaskablePPO. Sumber requirement: [PROJECT_SPEC.md](PROJECT_SPEC.
 
 ## Status aktual
 
-Per 6 November 2026 (Asia/Jakarta), **M5 — Trading Simulator Completed**.
+Per 7 November 2026 (Asia/Jakarta), **M6 — Baseline & Simulation MVP Completed**.
 Foundation/configuration/market data/features M1–M4 tetap tersedia. Public REST ingestion
 memvalidasi/menyimpan historical candles, instrument dan funding, mendukung resume,
 quality report, pinned revisions, fingerprint dan JSONL export.
@@ -21,7 +21,11 @@ M4 standalone smoke menghasilkan1185 observations x299 dengan synthetic FLAT
 context. M5 memakai ledger-generated context; scripted public-export smoke
 menghasilkan1 SHORT trade, net−1.8665445 dan final equity998.1334555 USDT.
 Fixture E2E mencakup LONG+SHORT; hasil bukan baseline/model evaluation.
-Belum ada frontend, training/model atau exchange execution. M6 belum disetujui.
+M6 menambahkan HOLD, seeded random, EMA crossover dan constrained Buy & Hold
+reference, evaluator/metrics, deterministic replay dan immutable comparison.
+Instruksi `oke lanjutkan eksekusi Milestone 6` menyetujui scope M6.
+Belum ada frontend, training/model atau exchange execution; M7 belum disetujui.
+Panduan dan commands: [Baselines](docs/baselines.md).
 
 ## Setup Windows x64
 
@@ -93,16 +97,19 @@ Configuration valid belum berarti siap trading; execution checks tetap pending.
 | [Simulation](docs/simulation.md) | Ledger, event/risk/funding policies, restrictions dan CLI |
 | [Plan M5](docs/plans/milestone-05.md) | Scope simulator yang disetujui |
 | [Handoff M5](docs/handoffs/milestone-05.md) | Hasil aktual dan konteks M6 |
+| [Baselines](docs/baselines.md) | Empat strategi, metrics, comparison dan offline CLI |
+| [Plan M6](docs/plans/milestone-06.md) | Scope Baseline & Simulation MVP yang disetujui |
+| [Handoff M6](docs/handoffs/milestone-06.md) | Hasil aktual dan konteks M7 |
 | [Handoff M0](docs/handoffs/milestone-00.md) | Hasil, keterbatasan dan instruksi sesi berikutnya |
 
 ## Alur pengembangan
 
 Satu persetujuan berlaku untuk satu milestone. Task normal dalam scope tersebut
 tidak membutuhkan persetujuan ulang. Milestone berikutnya tidak dimulai otomatis.
-Simulation MVP ditargetkan pada M6, RL proof of concept M8, dashboard riset M10,
+Simulation MVP tersedia pada M6; target berikutnya RL proof of concept M8, dashboard riset M10,
 Paper M11, Demo M13, dan kemampuan Real M15.
 
 Real Trading harus disabled by default. Persetujuan implementasi fitur Real bukan
 izin transaksi dana asli. Tidak ada jaminan profit atau promosi model otomatis.
 
-Komponen setelah foundation/configuration/market data tetap rancangan masa depan.
+Komponen RL, dashboard dan trading tetap rancangan milestone berikutnya.
